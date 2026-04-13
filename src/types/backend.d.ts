@@ -93,6 +93,7 @@ export interface ICourse {
     languages: string[];
     authors: string[];
     isPublished: boolean;
+    modules?: IModule[];
 
     createdBy?: string;
     isDeleted?: boolean;
@@ -149,6 +150,43 @@ export interface IRole {
     description: string;
     isActive: boolean;
     permissions: IPermission[] | string[];
+
+    createdBy?: string;
+    isDeleted?: boolean;
+    deletedAt?: boolean | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface ILesson {
+    _id?: string;
+    name: string;
+    content?: string;
+    isActive?: boolean;
+    isFree?: boolean;
+    order?: number;
+    type: 'video' | 'article';
+    module?: string | IModule;
+    metadata?: {
+        videoUrl?: string;
+        duration?: number;
+    };
+
+    createdBy?: string;
+    isDeleted?: boolean;
+    deletedAt?: boolean | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface IModule {
+    _id?: string;
+    name: string;
+    description?: string;
+    order?: number;
+    isActive?: boolean;
+    course: string | ICourse;
+    lessons?: ILesson[];
 
     createdBy?: string;
     isDeleted?: boolean;

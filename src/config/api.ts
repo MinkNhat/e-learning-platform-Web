@@ -1,4 +1,4 @@
-import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers } from '@/types/backend';
+import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -112,6 +112,38 @@ export const callFetchCourse = (query: string) => {
 
 export const callFetchCourseById = (id: string) => {
     return axios.get<IBackendRes<ICourse>>(`/api/v1/courses/${id}`);
+}
+
+/**
+ * 
+Module Module
+ */
+export const callCreateModule = (module: IModule) => {
+    return axios.post<IBackendRes<IModule>>(`/api/v1/modules`, { ...module })
+}
+
+export const callUpdateModule = (module: IModule, moduleId: string) => {
+    return axios.patch<IBackendRes<IModule>>(`/api/v1/modules/${moduleId}`, { ...module })
+}
+
+export const callDeleteModule = (moduleId: string) => {
+    return axios.delete<IBackendRes<IModule>>(`/api/v1/modules/${moduleId}`);
+}
+
+/**
+ * 
+Module Lesson
+ */
+export const callCreateLesson = (lesson: ILesson) => {
+    return axios.post<IBackendRes<ILesson>>(`/api/v1/lessons`, { ...lesson })
+}
+
+export const callUpdateLesson = (lesson: ILesson, lessonId: string) => {
+    return axios.patch<IBackendRes<ILesson>>(`/api/v1/lessons/${lessonId}`, { ...lesson })
+}
+
+export const callDeleteLesson = (lessonId: string) => {
+    return axios.delete<IBackendRes<ILesson>>(`/api/v1/lessons/${lessonId}`);
 }
 
 /**
