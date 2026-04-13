@@ -23,6 +23,7 @@ import UserPage from './pages/admin/user';
 import { fetchAccount } from './redux/slice/accountSlide';
 import LayoutApp from './components/share/layout.app';
 import CoursePage from './pages/admin/course';
+import AdminCourseDetailPage from './pages/admin/course/detail';
 import ClientCoursePage from './pages/course';
 import ClientCourseDetailPage from './pages/course/detail';
 
@@ -99,6 +100,13 @@ export default function App() {
           element:
             <ProtectedRoute>
               <CoursePage />
+            </ProtectedRoute>,
+        },
+        {
+          path: "course/:id",
+          element:
+            <ProtectedRoute>
+              <AdminCourseDetailPage />
             </ProtectedRoute>,
         },
         {

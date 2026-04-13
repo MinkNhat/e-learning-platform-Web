@@ -1,10 +1,11 @@
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ICourse } from "@/types/backend";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns, ProFormSelect } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
 import { useState, useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 import { callDeleteCourse } from "@/config/api";
 import queryString from 'query-string';
@@ -12,12 +13,11 @@ import { fetchCourse } from "@/redux/slice/courseSlide";
 import Access from "@/components/share/access";
 import { ALL_PERMISSIONS } from "@/config/permissions";
 import ModalCourse from "@/components/admin/course/modal.course";
-import ViewDetailCourse from "@/components/admin/course/view.course";
 
 const CoursePage = () => {
+    const navigate = useNavigate();
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [dataInit, setDataInit] = useState<ICourse | null>(null);
-    const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
 
     const tableRef = useRef<ActionType>();
 
@@ -132,7 +132,7 @@ const CoursePage = () => {
         {
             title: 'Actions',
             hideInSearch: true,
-            width: 50,
+            width: 80,
             render: (_value, entity, _index, _action) => (
                 <Space>
                     <EditOutlined
@@ -146,13 +146,14 @@ const CoursePage = () => {
                             setDataInit(entity);
                         }}
                     />
-                    <a href="#" onClick={(e) => {
-                        e.preventDefault();
-                        setOpenViewDetail(true);
-                        setDataInit(entity);
-                    }}>
-                        View
-                    </a>
+                    <EyeOutlined
+                        style={{
+                            fontSize: 20,
+                            color: '#1890ff',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => navigate(`/admin/course/${entity._id}`)}
+                    />
                     <Access
                         permission={ALL_PERMISSIONS.COURSES.DELETE}
                         hideChildren
@@ -258,12 +259,6 @@ const CoursePage = () => {
                 openModal={openModal}
                 setOpenModal={setOpenModal}
                 reloadTable={reloadTable}
-                dataInit={dataInit}
-                setDataInit={setDataInit}
-            />
-            <ViewDetailCourse
-                onClose={setOpenViewDetail}
-                open={openViewDetail}
                 dataInit={dataInit}
                 setDataInit={setDataInit}
             />

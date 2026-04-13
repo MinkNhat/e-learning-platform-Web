@@ -9,3 +9,9 @@
         padding: 10px 0 20px 0;
     }
 }
+
+.collapseNoPadding {
+    :global(.ant-collapse-content-box) {
+        padding: 0 16px !important;
+    }
+}

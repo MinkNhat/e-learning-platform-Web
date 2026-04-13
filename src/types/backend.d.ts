@@ -183,7 +183,7 @@ export interface IModule {
     _id?: string;
     name: string;
     description?: string;
-    order?: number;
+    order: number;
     isActive?: boolean;
     course: string | ICourse;
     lessons?: ILesson[];
