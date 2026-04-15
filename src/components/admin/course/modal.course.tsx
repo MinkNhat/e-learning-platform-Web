@@ -1,9 +1,11 @@
-import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProFormCheckbox } from "@ant-design/pro-components";
-import { Col, Form, Row, message, notification } from "antd";
+import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProFormCheckbox, ProFormTextArea } from "@ant-design/pro-components";
+import { Col, Form, Row, message, notification, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import { isMobile } from 'react-device-detect';
 import { useState } from "react";
 import { callCreateCourse, callUpdateCourse } from "@/config/api";
 import { ICourse } from "@/types/backend";
+import { COURSE_LEVEL_LIST } from "@/config/enum";
 
 interface IProps {
     openModal: boolean;
@@ -16,9 +18,10 @@ interface IProps {
 const ModalCourse = (props: IProps) => {
     const { openModal, setOpenModal, reloadTable, dataInit, setDataInit } = props;
     const [form] = Form.useForm();
+    debugger
 
     const submitCourse = async (valuesForm: any) => {
-        const { title, shortDescription, description, objectives, requirement, price, slug, level, languages, authors, isPublished, isProcessLimit } = valuesForm;
+        const { title, shortDescription, description, objectives, requirement, price, level, languages, authors, thumbnail } = valuesForm;
         
         if (dataInit?._id) {
             //update
@@ -26,15 +29,13 @@ const ModalCourse = (props: IProps) => {
                 title,
                 shortDescription,
                 description,
-                objectives: objectives ? objectives.split(',').map((item: string) => item.trim()) : [],
+                objectives: objectives ? objectives.split(';').map((item: string) => item.trim()) : [],
                 requirement,
                 price,
-                slug,
                 level,
-                languages: languages ? languages.split(',').map((item: string) => item.trim()) : [],
-                authors: authors ? authors.split(',').map((item: string) => item.trim()) : [],
-                isPublished: isPublished || false,
-                isProcessLimit: isProcessLimit || false,
+                languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
+                authors: authors ? authors.split(';').map((item: string) => item.trim()) : [],
+                thumbnail: thumbnail?.originFileObj || dataInit.thumbnail,
             }
 
             const res = await callUpdateCourse(course, dataInit._id);
@@ -54,15 +55,13 @@ const ModalCourse = (props: IProps) => {
                 title,
                 shortDescription,
                 description,
-                objectives: objectives ? objectives.split(',').map((item: string) => item.trim()) : [],
+                objectives: objectives ? objectives.split(';').map((item: string) => item.trim()) : [],
                 requirement,
                 price,
-                slug,
                 level,
-                languages: languages ? languages.split(',').map((item: string) => item.trim()) : [],
-                authors: authors ? authors.split(',').map((item: string) => item.trim()) : [],
-                isPublished: isPublished || false,
-                isProcessLimit: isProcessLimit || false,
+                languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
+                authors: authors ? authors.split(';').map((item: string) => item.trim()) : [],
+                thumbnail: thumbnail?.originFileObj,
             }
             
             const res = await callCreateCourse(course);
@@ -87,15 +86,14 @@ const ModalCourse = (props: IProps) => {
 
     const initialValues = dataInit?._id ? {
         ...dataInit,
-        objectives: dataInit.objectives?.join(', '),
-        languages: dataInit.languages?.join(', '),
-        authors: dataInit.authors?.join(', '),
+        objectives: dataInit.objectives?.join('; '),
+        languages: dataInit.languages?.join('; '),
+        authors: dataInit.authors?.join('; '),
     } : {};
 
     return (
         <>
             <ModalForm
-                title={<>{dataInit?._id ? "Cập nhật Khóa Học" : "Tạo mới Khóa Học"}</>}
                 open={openModal}
                 modalProps={{
                     onCancel: () => { handleReset() },
@@ -104,8 +102,8 @@ const ModalCourse = (props: IProps) => {
                     width: isMobile ? "100%" : 900,
                     keyboard: false,
                     maskClosable: false,
-                    okText: <>{dataInit?._id ? "Cập nhật" : "Tạo mới"}</>,
-                    cancelText: "Hủy"
+                    okText: <>{dataInit?._id ? "Update" : "Create"}</>,
+                    cancelText: "Cancel",
                 }}
                 scrollToFirstError={true}
                 preserve={false}
@@ -116,97 +114,96 @@ const ModalCourse = (props: IProps) => {
                 <Row gutter={16}>
                     <Col lg={24} md={24} sm={24} xs={24}>
                         <ProFormText
-                            label="Tên Khóa Học"
+                            label="Course Name"
                             name="title"
-                            rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                            placeholder="Nhập tên khóa học"
+                            rules={[{ required: true, message: 'Please enter the value' }]}
+                            placeholder="Enter course name"
                         />
                     </Col>
-                    <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProFormText
-                            label="Slug"
-                            name="slug"
-                            rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                            placeholder="Nhập slug"
-                        />
-                    </Col>
-                    <Col lg={6} md={6} sm={24} xs={24}>
+                    <Col lg={6} md={6} sm={12} xs={12}>
                         <ProFormDigit
-                            label="Giá"
+                            label="Price"
                             name="price"
-                            rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                            placeholder="Nhập giá"
+                            rules={[{ required: true, message: 'Please enter the value' }]}
+                            placeholder="Enter price"
                             min={0}
                         />
                     </Col>
-                    <Col lg={6} md={6} sm={24} xs={24}>
+                    <Col lg={6} md={6} sm={12} xs={12}>
                         <ProFormSelect
                             name="level"
                             label="Level"
-                            valueEnum={{
-                                INTERN: 'INTERN',
-                                FRESHER: 'FRESHER',
-                                JUNIOR: 'JUNIOR',
-                                MIDDLE: 'MIDDLE',
-                                SENIOR: 'SENIOR',
-                            }}
-                            placeholder="Chọn level"
-                            rules={[{ required: true, message: 'Vui lòng chọn level!' }]}
+                            valueEnum={COURSE_LEVEL_LIST.reduce((acc, level) => {
+                                acc[level.value] = level.label;
+                                return acc;
+                            }, {} as Record<string, string>)}
+                            placeholder="Choose level"
+                            rules={[{ required: true, message: 'Please enter the value' }]}
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
                         <ProFormText
-                            label="Mô tả ngắn"
+                            label="Short Description"
                             name="shortDescription"
-                            rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                            placeholder="Nhập mô tả ngắn"
+                            rules={[{ required: true, message: 'Please enter the value' }]}
+                            placeholder="Enter short description"
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProFormText
-                            label="Mô tả chi tiết"
+                        <ProFormTextArea
+                            label="Detailed Description"
                             name="description"
-                            rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                            placeholder="Nhập mô tả chi tiết"
+                            rules={[{ required: true, message: 'Please enter the value' }]}
+                            placeholder="Enter detailed description"
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProFormText
-                            label="Yêu cầu"
+                        <ProFormTextArea
+                            label="Requirement"
                             name="requirement"
-                            placeholder="Nhập yêu cầu"
+                            placeholder="Enter requirement"
                         />
                     </Col>
-                    <Col lg={12} md={12} sm={24} xs={24}>
+                    <Col lg={24} md={24} sm={24} xs={24}>
                         <ProFormText
-                            label="Mục tiêu (cách nhau bằng dấu phẩy)"
+                            label="Objectives"
                             name="objectives"
-                            placeholder="Ví dụ: Mục tiêu 1, Mục tiêu 2"
+                            placeholder="e.g.; Objective 1; Objective 2"
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
                         <ProFormText
-                            label="Ngôn ngữ (cách nhau bằng dấu phẩy)"
+                            label="Languages"
                             name="languages"
-                            placeholder="Ví dụ: Tiếng Việt, Tiếng Anh"
+                            placeholder="e.g.; Vietnamese; English"
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
                         <ProFormText
-                            label="Tác giả (cách nhau bằng dấu phẩy)"
+                            label="CO-Authors"
                             name="authors"
-                            placeholder="Ví dụ: Tác giả 1, Tác giả 2"
+                            placeholder="e.g.; Author 1; Author 2 (included creator)"
                         />
                     </Col>
-                    <Col lg={6} md={12} sm={24} xs={24}>
-                        <ProFormCheckbox name="isPublished">
-                            Công bố
-                        </ProFormCheckbox>
-                    </Col>
-                    <Col lg={6} md={12} sm={24} xs={24}>
-                        <ProFormCheckbox name="isProcessLimit">
-                            Hạn chế tiến độ
-                        </ProFormCheckbox>
+                    <Col lg={12} md={12} sm={24} xs={24}>
+                        <Form.Item
+                            label="Thumbnail"
+                            name="thumbnail"
+                            valuePropName="file"
+                            getValueFromEvent={(e) => e?.fileList?.[0]}
+                            rules={[{ required: !dataInit?._id, message: 'Please upload thumbnail' }]}
+                        >
+                            <Upload
+                                name="thumbnail"
+                                accept="image/*"
+                                maxCount={1}
+                                beforeUpload={() => false}
+                            >
+                                <button type="button" style={{ border: '1px solid #d9d9d9', borderRadius: '2px', padding: '4px 15px', cursor: 'pointer' }}>
+                                    <UploadOutlined /> Upload Thumbnail
+                                </button>
+                            </Upload>
+                        </Form.Item>
                     </Col>
                 </Row>
             </ModalForm>

@@ -84,15 +84,15 @@ export interface ICourse {
     objectives: string[];
     requirement: string;
     price: number;
-    slug: string;
+    slug?: string;
     thumbnail?: string;
     level: string;
     rating?: number;
     enrollmentCount?: number;
-    isProcessLimit: boolean;
+    isProcessLimit?: boolean;
     languages: string[];
     authors: string[];
-    isPublished: boolean;
+    isPublished?: boolean;
     modules?: IModule[];
 
     createdBy?: string;

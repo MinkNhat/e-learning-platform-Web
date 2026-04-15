@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { ICourse } from "@/types/backend";
 import { callFetchCourseById } from "@/config/api";
-import { Card, Descriptions, Spin, Tag, notification } from "antd";
+import { Card, Col, Descriptions, Image, Row, Spin, Tag, notification } from "antd";
 import dayjs from 'dayjs';
 import ModuleManager from './module';
 import { Typography } from 'antd';
@@ -13,6 +13,7 @@ const AdminCourseDetail = () => {
     const { id: courseId } = useParams<{ id: string }>();
     const [courseDetail, setCourseDetail] = useState<ICourse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
     useEffect(() => {
         const init = async () => {
@@ -54,10 +55,21 @@ const AdminCourseDetail = () => {
             {courseDetail && (
                 <>
                     <Card style={{ marginBottom: '16px' }}>
-                        <Title level={4}>{courseDetail.title}</Title>
-                        <Text style={{marginBottom: '8px', marginTop: '-8px', display: 'block'}}>
-                            {courseDetail.description}
-                        </Text>
+                        <Row gutter={16} style={{ marginBottom: '8px' }}>
+                            <Col lg={6} md={6} sm={6} xs={6}>
+                                <Image
+                                    width={200}
+                                    src={`${BASE_URL}/images/thumbnails/${courseDetail?.thumbnail}`}
+                                    style={{borderRadius: '4px'}}
+                                />
+                            </Col>
+                            <Col lg={18} md={18} sm={18} xs={18}>
+                                <Title level={4}>{courseDetail.title}</Title>
+                                <Text style={{marginBottom: '8px', marginTop: '-8px', display: 'block'}}>
+                                    {courseDetail.description}
+                                </Text>
+                            </Col>
+                        </Row>
 
                         <Descriptions bordered column={2} size="middle">
                             <Descriptions.Item label="Price">{courseDetail.price?.toLocaleString('vi-VN')}</Descriptions.Item>
@@ -77,6 +89,8 @@ const AdminCourseDetail = () => {
                                 {dayjs(courseDetail.updatedAt).format('DD-MM-YYYY HH:mm:ss')}
                             </Descriptions.Item>
                         </Descriptions>
+
+                       
                     </Card>
 
                     <Card title="Lessons" headStyle={{ borderBottom: 'none' }} bodyStyle={{ paddingTop: 0 }}>

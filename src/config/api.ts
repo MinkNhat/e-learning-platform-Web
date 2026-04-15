@@ -42,34 +42,6 @@ export const callUploadSingleFile = (file: any, folderType: string) => {
     });
 }
 
-
-
-
-/**
- * 
-Module Company
- */
-// export const callCreateCompany = (name: string, address: string, description: string, logo: string) => {
-//     return axios.post<IBackendRes<ICompany>>('/api/v1/companies', { name, address, description, logo })
-// }
-
-// export const callUpdateCompany = (id: string, name: string, address: string, description: string, logo: string) => {
-//     return axios.patch<IBackendRes<ICompany>>(`/api/v1/companies/${id}`, { name, address, description, logo })
-// }
-
-// export const callDeleteCompany = (id: string) => {
-//     return axios.delete<IBackendRes<ICompany>>(`/api/v1/companies/${id}`);
-// }
-
-// export const callFetchCompany = (query: string) => {
-//     return axios.get<IBackendRes<IModelPaginate<ICompany>>>(`/api/v1/companies?${query}`);
-// }
-
-// export const callFetchCompanyById = (id: string) => {
-//     return axios.get<IBackendRes<ICompany>>(`/api/v1/companies/${id}`);
-// }
-
-
 /**
  * 
 Module User
@@ -95,11 +67,38 @@ export const callFetchUser = (query: string) => {
 Module Course
  */
 export const callCreateCourse = (course: ICourse) => {
-    return axios.post<IBackendRes<ICourse>>('/api/v1/courses', { ...course })
+    const formData = new FormData();
+    Object.entries(course).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((item) => { formData.append(key, item)});
+        } else {
+            formData.append(key, value);
+        }
+    });
+
+    return axios.post<IBackendRes<ICourse>>('/api/v1/courses', formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
 }
 
 export const callUpdateCourse = (course: ICourse, id: string) => {
-    return axios.patch<IBackendRes<ICourse>>(`/api/v1/courses/${id}`, { ...course })
+    const formData = new FormData();
+    Object.entries(course).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((item) => { formData.append(key, item)});
+        } 
+        else {
+            formData.append(key, value);
+        }
+    });
+
+    return axios.patch<IBackendRes<ICourse>>(`/api/v1/courses/${id}`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
 }
 
 export const callDeleteCourse = (id: string) => {
