@@ -40,6 +40,9 @@ export const ALL_PERMISSIONS = {
         CREATE: { method: "POST", apiPath: '/api/v1/lessons', module: "LESSONS" },
         UPDATE: { method: "PATCH", apiPath: '/api/v1/lessons/:id', module: "LESSONS" },
         DELETE: { method: "DELETE", apiPath: '/api/v1/lessons/:id', module: "LESSONS" },
+    },
+    PAYMENTS: {
+        CREATE: { method: "POST", apiPath: '/api/v1/payments/create', module: "PAYMENTS" },
     }
 }
 
@@ -54,4 +57,5 @@ export const ALL_MODULES = {
     CATEGORIES: 'CATEGORIES',
     MODULES: 'MODULES',
     LESSONS: 'LESSONS',
+    PAYMENTS: 'PAYMENTS',
 }
