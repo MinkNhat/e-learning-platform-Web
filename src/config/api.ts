@@ -1,4 +1,4 @@
-import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson } from '@/types/backend';
+import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -70,7 +70,7 @@ export const callCreateCourse = (course: ICourse) => {
     const formData = new FormData();
     Object.entries(course).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-            value.forEach((item) => { formData.append(key, item)});
+            value.forEach((item) => { formData.append(`${key}[]`, item) });
         } else {
             formData.append(key, value);
         }
@@ -87,7 +87,7 @@ export const callUpdateCourse = (course: ICourse, id: string) => {
     const formData = new FormData();
     Object.entries(course).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-            value.forEach((item) => { formData.append(key, item)});
+            value.forEach((item) => { formData.append(`${key}[]`, item) });
         } 
         else {
             formData.append(key, value);
@@ -111,6 +111,26 @@ export const callFetchCourse = (query: string) => {
 
 export const callFetchCourseById = (id: string) => {
     return axios.get<IBackendRes<ICourse>>(`/api/v1/courses/${id}`);
+}
+
+/**
+ * 
+Module Category
+ */
+export const callCreateCategory = (category: ICategory) => {
+    return axios.post<IBackendRes<ICategory>>('/api/v1/categories', { ...category })
+}
+
+export const callUpdateCategory = (category: ICategory, id: string) => {
+    return axios.patch<IBackendRes<ICategory>>(`/api/v1/categories/${id}`, { ...category })
+}
+
+export const callDeleteCategory = (id: string) => {
+    return axios.delete<IBackendRes<ICategory>>(`/api/v1/categories/${id}`);
+}
+
+export const callFetchCategory = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<ICategory>>>(`/api/v1/categories?${query}`);
 }
 
 /**

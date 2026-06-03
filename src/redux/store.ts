@@ -8,6 +8,7 @@ import userReducer from './slice/userSlide';
 import courseReducer from './slice/courseSlide';
 import permissionReducer from './slice/permissionSlide';
 import roleReducer from './slice/roleSlide';
+import categoryReducer from './slice/categorySlide';
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +16,8 @@ export const store = configureStore({
     user: userReducer,
     course: courseReducer,
     permission: permissionReducer,
-    role: roleReducer
+    role: roleReducer,
+    category: categoryReducer
   },
 });
 

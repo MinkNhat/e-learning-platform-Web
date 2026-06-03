@@ -8,6 +8,7 @@ import {
     MenuUnfoldOutlined,
     BugOutlined,
     ScheduleOutlined,
+    TagsOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Dropdown, Space, message, Avatar, Button } from 'antd';
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -51,6 +52,11 @@ const LayoutAdmin = () => {
                 && item.method === ALL_PERMISSIONS.ROLES.GET_PAGINATE.method
             )
 
+            const viewCategory = permissions.find(item =>
+                item.apiPath === ALL_PERMISSIONS.CATEGORIES.GET_PAGINATE.apiPath
+                && item.method === ALL_PERMISSIONS.CATEGORIES.GET_PAGINATE.method
+            )
+
             const viewPermission = permissions.find(item =>
                 item.apiPath === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE.apiPath
                 && item.method === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE.method
@@ -71,6 +77,11 @@ const LayoutAdmin = () => {
                     label: <Link to='/admin/course'>Course</Link>,
                     key: '/admin/course',
                     icon: <ScheduleOutlined />
+                }] : []),
+                ...(viewCategory ? [{
+                    label: <Link to='/admin/category'>Category</Link>,
+                    key: '/admin/category',
+                    icon: <TagsOutlined />
                 }] : []),
                 ...(viewPermission ? [{
                     label: <Link to='/admin/permission'>Permission</Link>,

@@ -20,6 +20,7 @@ import DashboardPage from './pages/admin/dashboard';
 import PermissionPage from './pages/admin/permission';
 import RolePage from './pages/admin/role';
 import UserPage from './pages/admin/user';
+import CategoryPage from './pages/admin/category';
 import { fetchAccount } from './redux/slice/accountSlide';
 import LayoutApp from './components/share/layout.app';
 import CoursePage from './pages/admin/course';
@@ -108,6 +109,13 @@ export default function App() {
             <ProtectedRoute>
               <AdminCourseDetailPage />
             </ProtectedRoute>,
+        },
+        {
+          path: "category",
+          element:
+            <ProtectedRoute>
+              <CategoryPage />
+            </ProtectedRoute>
         },
         {
           path: "permission",

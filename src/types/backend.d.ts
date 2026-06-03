@@ -102,6 +102,22 @@ export interface ICourse {
     updatedAt?: string;
 }
 
+export interface ICategory {
+    _id?: string;
+    name: string;
+    description?: string;
+    slug: string;
+    level: number;
+    isActive: boolean;
+    parent?: ICategory | string;
+
+    createdBy?: string;
+    isDeleted?: boolean;
+    deletedAt?: boolean | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
 export interface IResume {
     _id?: string;
     email: string;
