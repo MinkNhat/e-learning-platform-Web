@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IModule, ILesson } from "@/types/backend";
 import { callCreateModule, callUpdateModule, callDeleteModule } from "@/config/api";
 import { Button, Collapse, Empty, Form, Input, Modal, Popconfirm, Space, Tag, message, notification } from "antd";
@@ -22,6 +22,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
     const handleAddModule = () => {
         setEditingModule(null);
         moduleForm.resetFields();
+        moduleForm.setFieldsValue({ order: maxOrder + 1 });
         setOpenModal(true);
     };
 
@@ -172,7 +173,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
                         name="order"
                         rules={[{ required: true, message: 'Please enter the order' }]}
                     >
-                        <Input type="number" placeholder="Enter order" defaultValue={maxOrder + 1} />
+                        <Input type="number" placeholder="Enter order" />
                     </Form.Item>
                 </Form>
             </Modal>

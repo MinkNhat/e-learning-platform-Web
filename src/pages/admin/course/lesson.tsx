@@ -21,6 +21,7 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
     const handleAddLesson = () => {
         setEditingLesson(null);
         lessonForm.resetFields();
+        lessonForm.setFieldsValue({ order: maxOrder + 1 });
         setOpenModal(true);
     };
 
@@ -169,8 +170,9 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
                         label="Order"
                         name="order"
                         rules={[{ required: true, message: 'Please enter the order' }]}
+                        initialValue={maxOrder + 1}
                     >
-                        <Input type="number" placeholder="Enter order" defaultValue={maxOrder + 1} />
+                        <Input type="number" placeholder="Enter order"/>
                     </Form.Item>
                 </Form>
             </Modal>
