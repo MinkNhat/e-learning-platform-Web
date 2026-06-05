@@ -49,7 +49,7 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
             if (editingLesson?._id) {
                 // Update
                 const res = await callUpdateLesson(
-                    { ...values, module: moduleId } as ILesson,
+                    { ...values, module: moduleId, metadata: { videoUrl: values.videoUrl } } as ILesson,
                     editingLesson._id
                 );
                 if (res?.data) {
@@ -59,7 +59,7 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
             } else {
                 // Create
                 const res = await callCreateLesson(
-                    { ...values, module: moduleId } as ILesson
+                    { ...values, module: moduleId, metadata: { videoUrl: values.videoUrl } } as ILesson
                 );
                 if (res?.data) {
                     message.success('Tạo bài học thành công');
