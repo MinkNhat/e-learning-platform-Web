@@ -185,7 +185,8 @@ export interface ILesson {
     module?: string | IModule;
     metadata?: {
         videoUrl?: string;
-        duration?: number;
+        duration?: string;
+        ytbId?: string;
     };
 
     createdBy?: string;
