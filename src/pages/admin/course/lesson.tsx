@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { ILesson } from "@/types/backend";
 import { callCreateLesson, callUpdateLesson, callDeleteLesson } from "@/config/api";
-import { Button, Empty, Form, Input, Modal, Popconfirm, Space, Tag, message, notification } from "antd";
+import { Button, Col, Empty, Form, Input, Modal, Popconfirm, Row, Select, Space, Switch, Tag, message, notification } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import CKEditorField from '@/components/share/CKEditorField';
 
 interface LessonManagerProps {
     moduleOrder: number;
@@ -16,6 +17,7 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
     const [editingLesson, setEditingLesson] = useState<ILesson | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [lessonForm] = Form.useForm();
+    const [lessonType, setLessonType] = useState<string>("video");
     const maxOrder = lessons && lessons.length > 0 ? Math.max(...lessons.map(l => l.order || 0)) : 0;
 
     const handleAddLesson = () => {
@@ -27,10 +29,15 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
 
     const handleEditLesson = (lesson: ILesson) => {
         setEditingLesson(lesson);
+        setLessonType(lesson.type);
         lessonForm.setFieldsValue({
             name: lesson.name,
             type: lesson.type,
             order: lesson.order,
+            isActive: lesson.isActive,
+            isFree: lesson.isFree,
+            videoUrl: lesson.metadata?.videoUrl,
+            content: lesson.content,
         });
         setOpenModal(true);
     };
@@ -155,17 +162,60 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
                     >
                         <Input placeholder="Enter lesson name" />
                     </Form.Item>
-                    <Form.Item
-                        label="Type"
-                        name="type"
-                        rules={[{ required: true, message: 'Please select a type' }]}
-                        initialValue="video"
-                    >
-                        <select style={{ width: '100%', padding: '8px' }}>
-                            <option value="video">Video</option>
-                            <option value="article">Article</option>
-                        </select>
+                    
+                    <Row gutter={24}>
+                        <Col span={16}>
+                            <Form.Item
+                                label="Type"
+                                name="type"
+                                rules={[{ required: true, message: 'Please select a type' }]}
+                                initialValue="video"
+                            >
+                                <Select onChange={(val) => setLessonType(val)}>
+                                    <Select.Option value="video">Video</Select.Option>
+                                    <Select.Option value="article">Article</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item
+                                label="Active"
+                                name="isActive"
+                                initialValue={true}
+                                valuePropName="checked"
+                            >
+                                <Switch />
+                            </Form.Item>
+                        </Col>
+                        <Col span={4}>
+                            <Form.Item
+                                label="Free"
+                                name="isFree"
+                                initialValue={false}
+                                valuePropName="checked"
+                            >
+                                <Switch />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    {lessonType === "video" && (
+                        <Form.Item
+                            label="Video URL"
+                            name="videoUrl"
+                            rules={[
+                                { required: true, message: 'Please enter video URL' },
+                                { type: 'url', message: 'Please enter a valid URL' }
+                            ]}
+                        >
+                            <Input placeholder="Enter video URL" />
+                        </Form.Item>
+                    )}
+
+                    <Form.Item label="Content" name="content">
+                        <CKEditorField placeholder="Enter content..." />
                     </Form.Item>
+
                     <Form.Item
                         label="Order"
                         name="order"
