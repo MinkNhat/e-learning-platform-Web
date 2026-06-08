@@ -21,6 +21,7 @@ const AdminCourseDetail = () => {
                 setIsLoading(true);
                 try {
                     const res = await callFetchCourseById(courseId);
+                    console.log('Course detail response:', res);
                     if (res?.data) {
                         setCourseDetail(res.data);
                     }
