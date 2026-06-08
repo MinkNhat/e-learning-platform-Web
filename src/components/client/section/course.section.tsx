@@ -62,8 +62,7 @@ const CourseSection = (props: IProps) => {
     }
 
     const handleViewDetailCourse = (item: ICourse) => {
-        const slug = convertSlug(item.title);
-        navigate(`/course/${slug}?id=${item._id}`)
+        navigate(`/course/${item.slug}`)
     }
 
     return (

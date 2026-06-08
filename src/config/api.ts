@@ -113,6 +113,10 @@ export const callFetchCourseById = (id: string) => {
     return axios.get<IBackendRes<ICourse>>(`/api/v1/courses/${id}`);
 }
 
+export const callFetchCourseBySlug = (slug: string) => {
+    return axios.get<IBackendRes<IModelPaginate<ICourse>>>(`/api/v1/courses?current=1&pageSize=1&slug=${encodeURIComponent(slug)}`);
+}
+
 /**
  * 
 Module Category
@@ -240,4 +244,3 @@ export const callFetchSubscriber = (query: string) => {
 export const callFetchSubscriberById = (id: string) => {
     return axios.get<IBackendRes<ISubscribers>>(`/api/v1/subscribers/${id}`);
 }
-

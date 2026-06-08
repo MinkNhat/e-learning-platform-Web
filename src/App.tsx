@@ -73,7 +73,7 @@ export default function App() {
       children: [
         { index: true, element: <HomePage /> },
         { path: "course", element: <ClientCoursePage /> },
-        { path: "course/:id", element: <ClientCourseDetailPage /> },
+        { path: "course/:slug", element: <ClientCourseDetailPage /> },
       ],
     },
 
