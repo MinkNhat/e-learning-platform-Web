@@ -1,5 +1,5 @@
 import { ICourse } from '@/types/backend';
-import { Card, Image, Typography } from 'antd';
+import { Card, Image, Rate, Typography } from 'antd';
 
 const { Text } = Typography;
 
@@ -49,6 +49,19 @@ const CourseCard = ({ course, onClick }: IProps) => {
                     {course.title}
                 </Text>
 
+                <div style={{ marginTop: 4 }}>
+                    <Text type="secondary">
+                        {course.authors.join(', ')}
+                    </Text>
+                </div>
+
+                <Rate
+                    disabled
+                    allowHalf
+                    value={course.rating as number}
+                    style={{ fontSize: 14, marginTop: 4 }}
+                />
+                
                 <div style={{ marginTop: 12 }}>
                     <Text strong style={{ fontSize: 18, color: 'var(--primary-color)'}}>
                         {course.price.toLocaleString('vi-VN')} đ
