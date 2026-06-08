@@ -23,6 +23,12 @@
     }
 }
 
+@media (min-width: 1344px) {
+    .container {
+        width: 1344px;
+    }
+}
+
 @media (min-width: 767px) {
 
     ::-webkit-scrollbar {
@@ -75,20 +81,25 @@
 .header-section {
     display: block;
     width: 100%;
-    height: 55px;
-    background-color: #222831;
+    height: 60px;
+    padding-top: 12px;
+    background-color: var(--white-color);
+    border-bottom: 1px solid #e0e0e0;
 
     .brand {
         display: flex;
         align-items: center;
-        justify-content: center;
+        cursor: pointer;
 
-        svg {
-            cursor: pointer;
-            color: #1677ff;
-            font-size: 30px;
-            margin-top: 7px;
-            animation: spin 20s linear infinite;
+        .logo {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+            }
         }
     }
 
@@ -96,19 +107,51 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 20px;
         width: 100%;
 
-        .extra {
+        .menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
 
+            .searchBox {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                width: 100%;
+                min-width: 240px;
+                padding: 4px 6px;
+                background: #fff;
+                border: 2px solid #e5e7eb;
+                border-radius: 999px;
+                transition: all 0.2s ease;
+                &:focus-within {
+                    border-color: var(--primary-color-light);
+                }
+            }
+
+            .searchInput {
+                flex: 1;
+
+                :global(.ant-select-selector) {
+                    border: none !important;
+                    box-shadow: none !important;
+                    background: transparent !important;
+                }
+            }
+        }
+
+        .extra {
             a,
             span {
                 cursor: pointer;
                 display: block;
-                color: #a7a7a7;
+                color: var(--text-primary);
                 text-decoration: none;
 
                 &:hover {
-                    color: #fff;
+                    color: var(--text-primary-dark);
                 }
             }
         }

@@ -4,12 +4,12 @@ import { Avatar, Drawer, Dropdown, MenuProps, Space, message } from 'antd';
 import { Menu, ConfigProvider } from 'antd';
 import styles from '@/styles/client.module.scss';
 import { isMobile } from 'react-device-detect';
-import { FaReact } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { callLogout } from '@/config/api';
 import { setLogoutAction } from '@/redux/slice/accountSlide';
+import SearchClient from './search.client';
 
 const Header = (props: any) => {
     const navigate = useNavigate();
@@ -30,7 +30,20 @@ const Header = (props: any) => {
         {
             label: <Link to={'/'}>Trang Chủ</Link>,
             key: '/',
+            
+        },
+        {
+            label: <Link to={'/explore'}>Khám phá</Link>,
+            key: '/explore',
             // icon: <TwitterOutlined />,
+        },
+        {
+            label: <Link to={'/my-courses'}>Khoá học của tôi</Link>,
+            key: '/my-courses',
+        },
+        {
+            label: <Link to={'/levels'}>Trình độ</Link>,
+            key: '/levels',
         }
     ];
 
@@ -49,17 +62,15 @@ const Header = (props: any) => {
 
     const itemsDropdown = [
         {
-            label: <Link
-                to={"/admin"}
-            >Trang Quản Trị</Link>,
+            label: <Link to={"/admin"}>Trang Quản Trị</Link>,
             key: 'admin',
             icon: <DashOutlined />
         },
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleLogout()}
-            >Đăng xuất</label>,
+            label: 
+                <label style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>
+                    Đăng xuất
+                </label>,
             key: 'logout',
             icon: <LogoutOutlined />
         },
@@ -73,27 +84,35 @@ const Header = (props: any) => {
                 <div className={styles["container"]}>
                     {!isMobile ?
                         <div style={{ display: "flex", gap: 30 }}>
-                            <div className={styles['brand']} >
-                                <FaReact onClick={() => navigate('/')} title='Hỏi Dân IT' />
+                            <div className={styles['brand']} onClick={() => navigate('/')}>
+                                <img 
+                                    src="/capy-logo.png" 
+                                    alt="Logo" 
+                                    className={styles['logo']}
+                                />
                             </div>
                             <div className={styles['top-menu']}>
-                                <ConfigProvider
-                                    theme={{
-                                        token: {
-                                            colorPrimary: '#fff',
-                                            colorBgContainer: '#222831',
-                                            colorText: '#a7a7a7',
-                                        },
-                                    }}
-                                >
+                                <div className={styles['menu']}>
+                                    <ConfigProvider
+                                        theme={{
+                                            token: {
+                                                colorPrimary: 'var(--white-color)',
+                                                colorBgContainer: 'var(--white-color)',
+                                                colorText: 'var(--text-primary)',
+                                            },
+                                        }}
+                                    >
 
-                                    <Menu
-                                        // onClick={onClick}
-                                        selectedKeys={[current]}
-                                        mode="horizontal"
-                                        items={items}
-                                    />
-                                </ConfigProvider>
+                                        <Menu
+                                            onClick={onClick}
+                                            selectedKeys={[current]}
+                                            mode="horizontal"
+                                            items={items}
+                                        />
+                                    </ConfigProvider>
+                                    <SearchClient />
+                                </div>
+                                
                                 <div className={styles['extra']}>
                                     {isAuthenticated === false ?
                                         <Link to={'/login'}>Đăng Nhập</Link>
@@ -107,12 +126,11 @@ const Header = (props: any) => {
                                     }
 
                                 </div>
-
                             </div>
                         </div>
                         :
                         <div className={styles['header-mobile']}>
-                            <span>Your APP</span>
+                            <span>E Learning</span>
                             <MenuFoldOutlined onClick={() => setOpenMobileMenu(true)} />
                         </div>
                     }
@@ -130,10 +148,6 @@ const Header = (props: any) => {
                     items={itemsMobiles}
                 />
             </Drawer>
-            {/* <ManageAccount
-                open={openMangeAccount}
-                onClose={setOpenManageAccount}
-            /> */}
         </>
     )
 };

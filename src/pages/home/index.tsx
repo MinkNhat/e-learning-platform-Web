@@ -7,7 +7,7 @@ const HomePage = () => {
     return (
         <div className={`${styles["container"]} ${styles["home-section"]}`}>
             <div className="search-content" style={{ marginTop: 20 }}>
-                <SearchClient />
+                {/* <SearchClient /> */}
             </div>
             <JobCard />
         </div>
