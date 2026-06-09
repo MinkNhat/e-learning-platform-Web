@@ -6,6 +6,7 @@ import { CalendarOutlined, CheckCircleOutlined, CheckOutlined, ClockCircleOutlin
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { callFetchCourseById } from "@/config/api";
+import ClientBreadcrumb from "@/components/client/breadcrumb.client";
 const { Title, Paragraph, Text } = Typography;
 dayjs.extend(relativeTime)
 
@@ -47,10 +48,19 @@ const ClientCourseDetailPage = (props: any) => {
 
             {course && (
                 <>
-                    <div style={{ background: '#1c1d1f', paddingTop: 48, position: 'relative' }}>
+                    <div style={{ background: '#1c1d1f', paddingTop: 24, position: 'relative' }}>
                         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
                             <Row>
                                 <Col xs={24} lg={16}>
+                                    <ClientBreadcrumb
+                                        variant="light"
+                                        style={{ marginBottom: 24 }}
+                                        items={[
+                                            { title: 'Trang chủ', path: '/' },
+                                            { title: 'Khóa học', path: '/course' },
+                                            { title: course.title },
+                                        ]}
+                                    />
                                     <Tag color="purple" style={{ marginBottom: 12 }}>{course.level}</Tag>
                                     <Title level={1} style={{ color: '#fff', marginBottom: 12 }}>
                                         {course.title}
