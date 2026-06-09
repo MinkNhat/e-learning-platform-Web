@@ -63,7 +63,7 @@ const CourseCard = ({ course, onClick }: IProps) => {
                 />
                 
                 <div style={{ marginTop: 12 }}>
-                    <Text strong style={{ fontSize: 18, color: 'var(--primary-color)'}}>
+                    <Text strong style={{ fontSize: 18, color: 'var(--primary-color-dark)'}}>
                         {course.price.toLocaleString('vi-VN')} đ
                     </Text>
                 </div>

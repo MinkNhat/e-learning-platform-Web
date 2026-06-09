@@ -100,6 +100,9 @@ export interface ICourse {
     deletedAt?: boolean | null;
     createdAt?: string;
     updatedAt?: string;
+
+    totalLessons?: number;
+    totalLength?: number;
 }
 
 export interface ICategory {
@@ -210,6 +213,9 @@ export interface IModule {
     deletedAt?: boolean | null;
     createdAt?: string;
     updatedAt?: string;
+
+    totalLessons?: number;
+    totalLength?: number;
 }
 
 export interface ISubscribers {
