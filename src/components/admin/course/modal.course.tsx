@@ -1,10 +1,9 @@
-import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProFormCheckbox, ProFormTextArea } from "@ant-design/pro-components";
+import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, message, notification, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { isMobile } from 'react-device-detect';
-import { useState } from "react";
-import { callCreateCourse, callUpdateCourse } from "@/config/api";
-import { ICourse } from "@/types/backend";
+import { callCreateCourse, callFetchCategory, callUpdateCourse } from "@/config/api";
+import { ICategory, ICourse } from "@/types/backend";
 import { COURSE_LEVEL_LIST } from "@/config/enum";
 
 interface IProps {
@@ -18,10 +17,9 @@ interface IProps {
 const ModalCourse = (props: IProps) => {
     const { openModal, setOpenModal, reloadTable, dataInit, setDataInit } = props;
     const [form] = Form.useForm();
-    debugger
 
     const submitCourse = async (valuesForm: any) => {
-        const { title, shortDescription, description, objectives, requirement, price, level, languages, authors, thumbnail } = valuesForm;
+        const { title, shortDescription, description, objectives, requirement, price, level, languages, authors, thumbnail, category } = valuesForm;
         
         if (dataInit?._id) {
             //update
@@ -35,6 +33,7 @@ const ModalCourse = (props: IProps) => {
                 level,
                 languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
                 authors: authors ? authors.split(';').map((item: string) => item.trim()) : [],
+                category,
                 thumbnail: thumbnail?.originFileObj || dataInit.thumbnail,
             }
 
@@ -61,6 +60,7 @@ const ModalCourse = (props: IProps) => {
                 level,
                 languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
                 authors: authors ? authors.split(';').map((item: string) => item.trim()) : [],
+                category,
                 thumbnail: thumbnail?.originFileObj,
             }
             
@@ -84,12 +84,25 @@ const ModalCourse = (props: IProps) => {
         setOpenModal(false);
     }
 
+    const categoryInit = dataInit?.category as ICategory | string | undefined;
     const initialValues = dataInit?._id ? {
         ...dataInit,
         objectives: dataInit.objectives?.join('; '),
         languages: dataInit.languages?.join('; '),
         authors: dataInit.authors?.join('; '),
+        category: typeof categoryInit === 'string' ? categoryInit : categoryInit?._id,
     } : {};
+
+    async function fetchCategoryList(name: string = "") {
+        const res = await callFetchCategory(`current=1&pageSize=100&name=/${name}/i`);
+        if (res && res.data) {
+            return res.data.result.map(item => ({
+                label: item.name as string,
+                value: item._id as string,
+            }));
+        }
+        return [];
+    }
 
     return (
         <>
@@ -139,6 +152,17 @@ const ModalCourse = (props: IProps) => {
                             }, {} as Record<string, string>)}
                             placeholder="Choose level"
                             rules={[{ required: true, message: 'Please enter the value' }]}
+                        />
+                    </Col>
+                    <Col lg={12} md={12} sm={24} xs={24}>
+                        <ProFormSelect
+                            name="category"
+                            label="Category"
+                            showSearch
+                            allowClear
+                            placeholder="Choose category"
+                            rules={[{ required: true, message: 'Choose category' }]}
+                            request={async ({ keyWords }) => fetchCategoryList(keyWords)}
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
