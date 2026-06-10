@@ -11,6 +11,10 @@ interface IProps {
 const CourseCard = ({ course, onClick }: IProps) => {
     const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
+    const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
+        return authors?.map(author => `${author.name}`).join(", ") ?? "";
+    }
+
     return (
         <div
             onClick={onClick}
@@ -51,7 +55,7 @@ const CourseCard = ({ course, onClick }: IProps) => {
 
                 <div style={{ marginTop: 4 }}>
                     <Text type="secondary">
-                        {course.authors.join(', ')}
+                        {formatAuthorsToMentions(course.authors)}
                     </Text>
                 </div>
 

@@ -17,6 +17,10 @@ const ClientCourseDetailPage = (props: any) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
+    const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
+        return authors?.map(author => `${author.name}`).join(", ") ?? "";
+    }
+
     useEffect(() => {
         const init = async () => {
             if (slug) {
@@ -73,7 +77,7 @@ const ClientCourseDetailPage = (props: any) => {
                                         <UserOutlined style={{ marginRight: 4 }}/>
                                         Giảng viên:{' '}
                                         <span style={{ color: 'var(--primary-color)', fontWeight: 600 }}>
-                                            {course.authors?.join(', ')}
+                                            {formatAuthorsToMentions(course.authors)}
                                         </span>
                                     </div>
 
