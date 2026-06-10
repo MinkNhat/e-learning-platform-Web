@@ -87,10 +87,18 @@ export const callUpdateCourse = (course: ICourse, id: string) => {
     const formData = new FormData();
     Object.entries(course).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-            value.forEach((item) => { formData.append(`${key}[]`, item) });
+            if (value.length === 0) {
+                formData.append(`${key}[]`, ''); 
+            } else {
+                value.forEach((item) => { 
+                    formData.append(`${key}[]`, item); 
+                });
+            }
         } 
         else {
-            formData.append(key, value);
+            if (value !== undefined && value !== null) {
+                formData.append(key, value);
+            }
         }
     });
 
