@@ -247,11 +247,12 @@ const ModalCourse = (props: IProps) => {
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProFormText
+                        <ProFormTextArea
                             label="Short Description"
                             name="shortDescription"
                             rules={[{ required: true, message: 'Please enter the value' }]}
                             placeholder="Enter short description"
+                            fieldProps={{rows: 4}}
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
@@ -260,6 +261,7 @@ const ModalCourse = (props: IProps) => {
                             name="description"
                             rules={[{ required: true, message: 'Please enter the value' }]}
                             placeholder="Enter detailed description"
+                            fieldProps={{rows: 4}}
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
@@ -267,13 +269,15 @@ const ModalCourse = (props: IProps) => {
                             label="Requirement"
                             name="requirement"
                             placeholder="Enter requirement"
+                            fieldProps={{rows: 4}}
                         />
                     </Col>
-                    <Col lg={24} md={24} sm={24} xs={24}>
-                        <ProFormText
+                    <Col lg={12} md={12} sm={24} xs={24}>
+                        <ProFormTextArea
                             label="Objectives"
                             name="objectives"
                             placeholder="e.g.; Objective 1; Objective 2"
+                            fieldProps={{rows: 4}}
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>

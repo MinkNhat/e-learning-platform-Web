@@ -266,7 +266,7 @@ const ClientCourseDetailPage = (props: any) => {
                                             style={{ borderRadius: 4, overflow: 'hidden', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', border: '1px solid #e0e0e0'}} >
                                             <Image
                                                 preview={false}
-                                                src={`${BASE_URL}/images/thumbnails/${course.thumbnail}`}
+                                                src={`${BASE_URL}/upload/thumbnails/${course.thumbnail}`}
                                                 width="100%"
                                                 style={{ display: 'block' }}
                                             />

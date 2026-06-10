@@ -60,7 +60,7 @@ const AdminCourseDetail = () => {
                             <Col lg={6} md={6} sm={6} xs={6}>
                                 <Image
                                     width={200}
-                                    src={`${BASE_URL}/images/thumbnails/${courseDetail?.thumbnail}`}
+                                    src={`${BASE_URL}/upload/thumbnails/${courseDetail?.thumbnail}`}
                                     style={{borderRadius: '4px'}}
                                 />
                             </Col>

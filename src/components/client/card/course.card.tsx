@@ -29,7 +29,7 @@ const CourseCard = ({ course, onClick }: IProps) => {
         >
             <Image
                 preview={false}
-                src={`${BASE_URL}/images/thumbnails/${course?.thumbnail}`}
+                src={`${BASE_URL}/upload/thumbnails/${course?.thumbnail}`}
                 width="100%"
                 height={180}
                 style={{
