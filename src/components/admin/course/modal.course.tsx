@@ -1,10 +1,12 @@
+import { useEffect, useMemo, useState } from "react";
 import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
-import { Col, Form, Row, message, notification, Upload } from "antd";
+import { Avatar, Col, Form, Mentions, Row, Space, message, notification, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { isMobile } from 'react-device-detect';
-import { callCreateCourse, callFetchCategory, callUpdateCourse } from "@/config/api";
-import { ICategory, ICourse } from "@/types/backend";
+import { callCreateCourse, callFetchCategory, callFetchUser, callUpdateCourse } from "@/config/api";
+import { ICategory, ICourse, IUser } from "@/types/backend";
 import { COURSE_LEVEL_LIST } from "@/config/enum";
+import { useAppSelector } from "@/redux/hooks";
 
 interface IProps {
     openModal: boolean;
@@ -17,9 +19,28 @@ interface IProps {
 const ModalCourse = (props: IProps) => {
     const { openModal, setOpenModal, reloadTable, dataInit, setDataInit } = props;
     const [form] = Form.useForm();
+    const currentUser = useAppSelector(state => state.account.user);
+    const [authorOptions, setAuthorOptions] = useState<{ label: React.ReactNode; value: string }[]>([]);
+    const [authorMap, setAuthorMap] = useState<Record<string, { _id: string; name: string; avatar?: string }>>({});
+
+    const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
+        return authors?.map(author => `@${author.name}`).join("; ") ?? "";
+    }
+
+    const parseAuthorsFromMentions = (authors: string = "") => {
+        const authorNames = authors
+            .split(";")
+            .map(item => item.trim().replace(/^@/, ""))
+            .filter(Boolean);
+
+        return authorNames
+            .map(name => authorMap[name]?._id)
+            .filter(Boolean);
+    }
 
     const submitCourse = async (valuesForm: any) => {
         const { title, shortDescription, description, objectives, requirement, price, level, languages, authors, thumbnail, category } = valuesForm;
+        const authorIds = parseAuthorsFromMentions(authors);
         
         if (dataInit?._id) {
             //update
@@ -32,10 +53,10 @@ const ModalCourse = (props: IProps) => {
                 price,
                 level,
                 languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
-                authors: authors ? authors.split(';').map((item: string) => item.trim()) : [],
+                authors: authorIds,
                 category,
                 thumbnail: thumbnail?.originFileObj || dataInit.thumbnail,
-            }
+            } as any;
 
             const res = await callUpdateCourse(course, dataInit._id);
             if (res.data) {
@@ -59,10 +80,10 @@ const ModalCourse = (props: IProps) => {
                 price,
                 level,
                 languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
-                authors: authors ? authors.split(';').map((item: string) => item.trim()) : [],
+                authors: authorIds,
                 category,
                 thumbnail: thumbnail?.originFileObj,
-            }
+            } as any;
             
             const res = await callCreateCourse(course);
             if (res.data) {
@@ -80,18 +101,44 @@ const ModalCourse = (props: IProps) => {
 
     const handleReset = async () => {
         form.resetFields();
+        setAuthorMap({});
+        setAuthorOptions([]);
         setDataInit(null);
         setOpenModal(false);
     }
 
     const categoryInit = dataInit?.category as ICategory | string | undefined;
+    const defaultAuthor = currentUser?._id ? {
+        _id: currentUser._id,
+        name: currentUser.name,
+    } : null;
+
     const initialValues = dataInit?._id ? {
         ...dataInit,
         objectives: dataInit.objectives?.join('; '),
         languages: dataInit.languages?.join('; '),
-        authors: dataInit.authors?.join('; '),
+        authors: formatAuthorsToMentions(dataInit.authors),
         category: typeof categoryInit === 'string' ? categoryInit : categoryInit?._id,
-    } : {};
+    } : {
+        authors: defaultAuthor ? formatAuthorsToMentions([defaultAuthor]) : "",
+    };
+
+    const mentionOptions = useMemo(() => authorOptions, [authorOptions]);
+
+    useEffect(() => {
+        if (!openModal) return;
+
+        const authors = dataInit?._id ? dataInit.authors : defaultAuthor ? [defaultAuthor] : [];
+        const nextAuthorMap = authors.reduce((acc, author) => {
+            acc[author.name] = author;
+            return acc;
+        }, {} as Record<string, { _id: string; name: string; avatar?: string }>);
+
+        setAuthorMap(nextAuthorMap);
+        form.setFieldsValue({
+            authors: dataInit?._id ? formatAuthorsToMentions(dataInit.authors) : formatAuthorsToMentions(defaultAuthor ? [defaultAuthor] : []),
+        });
+    }, [openModal, dataInit?._id, currentUser?._id]);
 
     async function fetchCategoryList(name: string = "") {
         const res = await callFetchCategory(`current=1&pageSize=100&name=/${name}/i`);
@@ -102,6 +149,40 @@ const ModalCourse = (props: IProps) => {
             }));
         }
         return [];
+    }
+
+    async function fetchUserList(keyword: string = "") {
+        const res = await callFetchUser(`current=1&pageSize=20&name=/${keyword}/i`);
+        if (res && res.data) {
+            const users = res.data.result;
+            setAuthorMap(prev => {
+                const next = { ...prev };
+                users.forEach(user => {
+                    if (user._id) {
+                        next[user.name] = {
+                            _id: user._id,
+                            name: user.name,
+                            avatar: (user as IUser & { avatar?: string }).avatar,
+                        };
+                    }
+                });
+                return next;
+            });
+            setAuthorOptions(users
+                .filter(user => user._id)
+                .map(user => ({
+                    value: user.name,
+                    label: (
+                        <Space>
+                            <Avatar size="small" src={(user as IUser & { avatar?: string }).avatar}>
+                                {user.name?.substring(0, 2)?.toUpperCase()}
+                            </Avatar>
+                            <span>{user.name}</span>
+                        </Space>
+                    ),
+                }))
+            );
+        }
     }
 
     return (
@@ -203,11 +284,20 @@ const ModalCourse = (props: IProps) => {
                         />
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProFormText
+                        <Form.Item
                             label="CO-Authors"
                             name="authors"
-                            placeholder="e.g.; Author 1; Author 2 (included creator)"
-                        />
+                            rules={[{ required: true, message: 'Please choose at least one author' }]}
+                        >
+                            <Mentions
+                                options={mentionOptions}
+                                placeholder="@author; @co-author"
+                                split=";"
+                                notFoundContent="No users found"
+                                onSearch={fetchUserList}
+                                onFocus={() => fetchUserList()}
+                            />
+                        </Form.Item>
                     </Col>
                     <Col lg={12} md={12} sm={24} xs={24}>
                         <Form.Item

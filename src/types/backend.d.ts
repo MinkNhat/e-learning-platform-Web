@@ -91,9 +91,14 @@ export interface ICourse {
     enrollmentCount?: number;
     isProcessLimit?: boolean;
     languages: string[];
-    authors: string[];
+    authors: {
+        _id: string; 
+        name: string;
+        avatar?: string;
+    }[];
     isPublished?: boolean;
     modules?: IModule[];
+    category: string | ICategory;
 
     createdBy?: string;
     isDeleted?: boolean;
