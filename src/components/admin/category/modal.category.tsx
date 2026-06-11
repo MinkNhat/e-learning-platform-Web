@@ -38,13 +38,14 @@ const ModalCategory = (props: IProps) => {
     }, [dataInit]);
 
     const submitCategory = async (valuesForm: any) => {
-        const { name, description, slug, isActive, parent } = valuesForm;
+        const { name, description, slug, isActive, parent, icon } = valuesForm;
         const parentValue = Array.isArray(parent) ? parent[0] : parent;
         const category = {
             name,
             description,
             slug,
             isActive,
+            icon,
             parent: parentValue?.value ?? parentValue?._id,
         } as ICategory;
 
@@ -138,15 +139,24 @@ const ModalCategory = (props: IProps) => {
                             }}
                         />
                     </Col>
-                    <Col lg={12} md={12} sm={24} xs={24}>
+                    
+                    <Col lg={8} md={8} sm={24} xs={24}>
                         <ProFormText
                             label="Slug"
                             name="slug"
                             placeholder="Nhập slug"
                         />
                     </Col>
+
+                    <Col lg={8} md={8} sm={24} xs={24}>
+                        <ProFormText
+                            label={<a href="https://ant.design/components/icon/" target="_blank" rel="noopener noreferrer">Antd Icons</a>}
+                            name="icon"
+                            placeholder="<StepForwardOutlined />"
+                        />
+                    </Col>
                     
-                    <Col lg={12} md={12} sm={24} xs={24}>
+                    <Col lg={8} md={8} sm={24} xs={24}>
                         <Form.Item
                             name="parent"
                             label="Category cha"
@@ -181,7 +191,7 @@ const ModalCategory = (props: IProps) => {
                             name="description"
                             placeholder="Nhập mô tả"
                             fieldProps={{
-                                autoSize: { minRows: 2 }
+                                rows: 3,
                             }}
                         />
                     </Col>

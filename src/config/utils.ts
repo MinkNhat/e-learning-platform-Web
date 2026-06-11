@@ -1,4 +1,6 @@
 import { grey, green, blue, red, orange } from '@ant-design/colors';
+import { ComponentType, CSSProperties } from 'react';
+import * as AntIcons from "@ant-design/icons";
 
 export const SKILLS_LIST =
     [
@@ -83,4 +85,12 @@ export function colorMethod(method: "POST" | "PUT" | "GET" | "DELETE" | string) 
         default:
             return grey[10];
     }
+}
+
+export function getAntdIconComponent(icon?: string) {
+    const iconName = icon?.trim().replace(/^<\s*/, '').replace(/\s*\/?>$/, '');
+    if (!iconName) return null;
+
+    const icons = AntIcons as unknown as Record<string, ComponentType<{ style?: CSSProperties }>>;
+    return icons[iconName] ?? null;
 }

@@ -4,7 +4,7 @@ import { ICategory } from "@/types/backend";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
-import { useState, useRef } from 'react';
+import { useState, useRef, createElement } from 'react';
 import dayjs from 'dayjs';
 import { callDeleteCategory } from "@/config/api";
 import queryString from 'query-string';
@@ -12,6 +12,7 @@ import { fetchCategory } from "@/redux/slice/categorySlide";
 import Access from "@/components/share/access";
 import { ALL_PERMISSIONS } from "@/config/permissions";
 import ModalCategory from "@/components/admin/category/modal.category";
+import { getAntdIconComponent } from "@/config/utils";
 
 const CategoryPage = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -61,6 +62,18 @@ const CategoryPage = () => {
             title: 'Tên category',
             dataIndex: 'name',
             sorter: true,
+        },
+        {
+            title: 'Icon',
+            dataIndex: 'icon',
+            align: "center",
+            width: 80,
+            render: (_dom, entity) => {
+                const IconComponent = getAntdIconComponent(entity.icon);
+
+                return IconComponent ? createElement(IconComponent, { style: { fontSize: 20 } }) : '-';
+            },
+            hideInSearch: true,
         },
         {
             title: 'Slug',
