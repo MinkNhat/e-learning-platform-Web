@@ -218,3 +218,20 @@
     gap: 30px;
     align-items: stretch;
 }
+
+.footer-language-select {
+    :global(.ant-select-selector) {
+        color: #ffffff !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    :global(.ant-select-selection-item) {
+        color: #ffffff !important;
+        font-weight: 500;
+    }
+
+    :global(.ant-select-arrow) {
+        color: rgba(255, 255, 255, 0.72) !important;
+    }
+}
