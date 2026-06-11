@@ -118,6 +118,7 @@ export interface ICategory {
     level: number;
     isActive: boolean;
     parent?: ICategory | string;
+    icon?: string;
 
     createdBy?: string;
     isDeleted?: boolean;

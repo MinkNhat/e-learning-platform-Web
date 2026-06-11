@@ -1,64 +1,49 @@
-import { callFetchCourse } from '@/config/api';
-import { convertSlug } from '@/config/utils';
 import { ICourse } from '@/types/backend';
-import { DollarOutlined, TeamOutlined } from '@ant-design/icons';
-import { Card, Col, Empty, Pagination, Row, Spin, Rate } from 'antd';
-import { useState, useEffect } from 'react';
-import { isMobile } from 'react-device-detect';
+import { FilterOutlined, SortAscendingOutlined } from '@ant-design/icons';
+import { Button, Col, ConfigProvider, Empty, Pagination, Row, Select, Space, Spin, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import CourseCard from '../card/course.card';
-dayjs.extend(relativeTime)
 
 interface IProps {
+    courses?: ICourse[] | null;
+    isLoading?: boolean;
     showPagination?: boolean;
+    title?: string;
+    description?: string;
+    viewAllText?: string;
+    current?: number;
+    pageSize?: number;
+    total?: number;
+    filter?: string;
+    sortQuery?: string;
+    onChangePage?: (pagination: { current: number, pageSize: number }) => void;
+    onChangeFilter?: (filter: string) => void;
+    onChangeSort?: (sortQuery: string) => void;
 }
 
 const CourseSection = (props: IProps) => {
-    const { showPagination = false } = props;
+    const {
+        courses = [],
+        isLoading = false,
+        showPagination = false,
+        title,
+        description,
+        viewAllText = "Xem thêm",
+        current = 1,
+        pageSize = showPagination ? 8 : 6,
+        total = courses?.length ?? 0,
+        filter = "",
+        sortQuery = "sort=-updatedAt",
+        onChangePage,
+        onChangeFilter,
+        onChangeSort,
+    } = props;
 
-    const [displayCourse, setDisplayCourse] = useState<ICourse[] | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const [current, setCurrent] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
-    const [total, setTotal] = useState(0);
-    const [filter, setFilter] = useState("");
-    const [sortQuery, setSortQuery] = useState("sort=-updatedAt");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchCourse();
-    }, [current, pageSize, filter, sortQuery]);
-
-    const fetchCourse = async () => {
-        setIsLoading(true)
-        let query = `current=${current}&pageSize=${pageSize}`;
-        if (filter) {
-            query += `&${filter}`;
-        }
-        if (sortQuery) {
-            query += `&${sortQuery}`;
-        }
-
-        const res = await callFetchCourse(query);
-        if (res && res.data) {
-            setDisplayCourse(res.data.result);
-            setTotal(res.data.meta.total)
-        }
-        setIsLoading(false)
-    }
-
     const handleOnchangePage = (pagination: { current: number, pageSize: number }) => {
-        if (pagination && pagination.current !== current) {
-            setCurrent(pagination.current)
-        }
-        if (pagination && pagination.pageSize !== pageSize) {
-            setPageSize(pagination.pageSize)
-            setCurrent(1);
-        }
+        onChangePage?.(pagination);
     }
 
     const handleViewDetailCourse = (item: ICourse) => {
@@ -66,23 +51,88 @@ const CourseSection = (props: IProps) => {
     }
 
     return (
-       <Spin spinning={isLoading} tip="Loading...">
+       <section style={{ width: '100%' }}>
+            <div
+                className={styles["section-heading"]}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                    gap: 20,
+                    marginBottom: 12,
+                }}
+            >
+                <div style={{ maxWidth: 680 }}>
+                    <Typography.Text style={{ color: 'var(--primary-color-dark)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0, fontSize: 16 }}>
+                        {title}
+                    </Typography.Text>
+                    <Typography.Paragraph style={{ margin: 0, color: '#667085', fontSize: 15, maxWidth: 620 }}>
+                        {description}
+                    </Typography.Paragraph>
+                </div>
+
+                {!showPagination &&
+                    <Link to="/course" style={{textDecoration: 'none'}}>
+                        <ConfigProvider
+                            theme={{
+                                token: {
+                                colorPrimary: '#00c26f',
+                                },
+                            }}
+                            >
+                            <Button type="default" shape="round" style={{display: 'flex', alignItems: 'center', gap: 4}}>
+                                {viewAllText}
+                            </Button>
+                        </ConfigProvider>
+                    </Link>
+                }
+            </div>
+
+            {showPagination &&
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: 22 }}>
+                    <Space wrap>
+                        <Select
+                            value={filter || 'all'}
+                            style={{ minWidth: 180 }}
+                            suffixIcon={<FilterOutlined />}
+                            options={[
+                                { value: 'all', label: 'Tất cả danh mục' },
+                            ]}
+                            onChange={(value) => {
+                                onChangeFilter?.(value === 'all' ? '' : value);
+                            }}
+                        />
+                        <Select
+                            value={sortQuery}
+                            style={{ minWidth: 190 }}
+                            suffixIcon={<SortAscendingOutlined />}
+                            options={[
+                                { value: 'sort=-updatedAt', label: 'Mới cập nhật' },
+                                { value: 'sort=price', label: 'Giá tăng dần' },
+                                { value: 'sort=-price', label: 'Giá giảm dần' },
+                                { value: 'sort=-rating', label: 'Đánh giá cao' },
+                            ]}
+                            onChange={(value) => {
+                                onChangeSort?.(value);
+                            }}
+                        />
+                    </Space>
+                    <Typography.Text type="secondary" style={{ alignSelf: 'center' }}>
+                        {total} khóa học
+                    </Typography.Text>
+                </div>
+            }
+
+            <Spin spinning={isLoading} tip="Loading...">
             <Row gutter={[20, 20]}>
                 <Col span={24}>
-                    <div className={isMobile ? styles["dflex-mobile"] : styles["dflex-pc"]}>
-                        <span className={styles["title"]}>Khóa Học Mới Nhất</span>
-                        {!showPagination &&
-                            <Link to="course">Xem tất cả</Link>
-                        }
+                    <div className={styles["course-grid"]}>
+                        {courses?.map(item => <CourseCard key={item._id} course={item} onClick={() => handleViewDetailCourse(item)} />)}
                     </div>
                 </Col>
-
-                <div style={{gap: 20, display: 'flex', flexWrap: 'wrap'}}>
-                    {displayCourse?.map(item => <CourseCard key={item._id} course={item} onClick={() => handleViewDetailCourse(item)} />)}
-                </div>
                 
 
-                {(!displayCourse || displayCourse && displayCourse.length === 0)
+                {(!courses || courses && courses.length === 0)
                     && !isLoading &&
                     <div className={styles["empty"]}>
                         <Empty description="Không có dữ liệu" />
@@ -103,6 +153,7 @@ const CourseSection = (props: IProps) => {
                 </Row>
             </>}
         </Spin>
+       </section>
     )
 }
 

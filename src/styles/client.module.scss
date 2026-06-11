@@ -78,6 +78,23 @@
     }
 }
 
+@media (max-width: 767px) {
+    .home-hero {
+        padding: 30px 20px !important;
+        border-radius: 22px !important;
+    }
+
+    .home-hero h1 {
+        font-size: 34px !important;
+    }
+
+    .section-heading {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+}
+
+
 .header-section {
     display: block;
     width: 100%;
@@ -192,4 +209,12 @@
         color: #353535;
         margin-top: 20px;
     }
+}
+
+// Course
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    align-items: stretch;
 }
