@@ -15,7 +15,7 @@ const ClientCourseDetailPage = (props: any) => {
     const { slug } = useParams<{ slug: string }>();
     const [course, setCourse] = useState<ICourse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+    const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
         return authors?.map(author => `${author.name}`).join(", ") ?? "";

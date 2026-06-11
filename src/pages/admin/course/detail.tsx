@@ -13,7 +13,7 @@ const AdminCourseDetail = () => {
     const { id: courseId } = useParams<{ id: string }>();
     const [courseDetail, setCourseDetail] = useState<ICourse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+    const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     useEffect(() => {
         const init = async () => {

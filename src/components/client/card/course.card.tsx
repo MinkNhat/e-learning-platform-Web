@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const CourseCard = ({ course, onClick }: IProps) => {
-    const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+    const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
         return authors?.map(author => `${author.name}`).join(", ") ?? "";
