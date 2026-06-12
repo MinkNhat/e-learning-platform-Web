@@ -94,6 +94,46 @@
     }
 }
 
+.career-ai-banner {
+    box-shadow: 0 26px 70px rgba(32, 34, 48, 0.14);
+}
+
+@media (max-width: 1199px) {
+    .career-ai-banner {
+        padding: 56px 42px !important;
+    }
+
+    .career-ai-banner-content {
+        grid-template-columns: 1fr !important;
+        gap: 36px !important;
+    }
+
+    .career-ai-banner-title {
+        max-width: 760px !important;
+    }
+
+    .career-ai-banner-visual {
+        max-width: 760px;
+    }
+}
+
+@media (max-width: 767px) {
+    .career-ai-banner {
+        padding: 34px 22px !important;
+        border-radius: 22px !important;
+    }
+
+    .career-ai-banner-title {
+        font-size: 31px !important;
+    }
+
+    .career-ai-benefits {
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+        margin-top: 30px !important;
+    }
+}
+
 
 .header-section {
     display: block;
@@ -214,8 +254,8 @@
 // Course
 .course-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
     align-items: stretch;
 }
 

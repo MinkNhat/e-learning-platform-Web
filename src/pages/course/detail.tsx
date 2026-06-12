@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { ICourse } from "@/types/backend";
-import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image, Button, Spin, Empty, notification, Tag, Statistic } from "antd";
+import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image, Button, Spin, Empty, notification, Tag, Statistic, Skeleton } from "antd";
 import { CalendarOutlined, CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, DesktopOutlined, FileTextOutlined, MobileOutlined, PlayCircleOutlined, SafetyCertificateOutlined, TeamOutlined, TrophyOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -45,7 +45,7 @@ const ClientCourseDetailPage = (props: any) => {
     }, [slug]);
 
     return (
-        <Spin spinning={isLoading}>
+        <Skeleton active loading={isLoading} paragraph={{ rows: 4 }} style={{margin: '60px'}}>
             {!isLoading && !course && (
                 <Empty description="Không tìm thấy khóa học" />
             )}
@@ -334,7 +334,7 @@ const ClientCourseDetailPage = (props: any) => {
                     </div>
                 </>
             )}
-        </Spin>
+        </Skeleton>
     );
 }
 export default ClientCourseDetailPage;

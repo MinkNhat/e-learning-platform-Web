@@ -1,6 +1,6 @@
 import { ICourse } from '@/types/backend';
 import { FilterOutlined, SortAscendingOutlined } from '@ant-design/icons';
-import { Button, Col, ConfigProvider, Empty, Pagination, Row, Select, Space, Spin, Typography } from 'antd';
+import { Button, ConfigProvider, Empty, Pagination, Row, Select, Space, Spin, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
 import CourseCard from '../card/course.card';
@@ -124,21 +124,16 @@ const CourseSection = (props: IProps) => {
             }
 
             <Spin spinning={isLoading} tip="Loading...">
-            <Row gutter={[20, 20]}>
-                <Col span={24}>
-                    <div className={styles["course-grid"]}>
-                        {courses?.map(item => <CourseCard key={item._id} course={item} onClick={() => handleViewDetailCourse(item)} />)}
-                    </div>
-                </Col>
-                
+            <div className={styles["course-grid"]}>
+                {courses?.map(item => <CourseCard key={item._id} course={item} onClick={() => handleViewDetailCourse(item)} />)}
+            </div>
 
-                {(!courses || courses && courses.length === 0)
-                    && !isLoading &&
-                    <div className={styles["empty"]}>
-                        <Empty description="Không có dữ liệu" />
-                    </div>
-                }
-            </Row>
+            {(!courses || courses && courses.length === 0)
+                && !isLoading &&
+                <div className={styles["empty"]}>
+                    <Empty description="Không có dữ liệu" />
+                </div>
+            }
 
             {showPagination && <>
                 <div style={{ marginTop: 30 }}></div>

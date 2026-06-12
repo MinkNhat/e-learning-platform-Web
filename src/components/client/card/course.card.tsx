@@ -1,6 +1,6 @@
 import { ICourse } from '@/types/backend';
 import { ClockCircleOutlined, TeamOutlined } from '@ant-design/icons';
-import { Image, Rate, Space, Tag, Typography } from 'antd';
+import { Image, Rate, Tag, Typography } from 'antd';
 
 const { Text } = Typography;
 
@@ -26,6 +26,7 @@ const CourseCard = ({ course, onClick }: IProps) => {
                 overflow: 'hidden',
                 width: '100%',
                 minWidth: 0,
+                boxSizing: 'border-box',
                 border: '1px solid #e7e9f0',
                 background: '#fff',
                 boxShadow: '0 14px 34px rgba(20, 31, 55, 0.08)',
