@@ -1,14 +1,17 @@
 import CourseSection from '@/components/client/section/course.section';
-import { callFetchCourse } from '@/config/api';
-import { ICourse } from '@/types/backend';
+import { callFetchCourse, callFetchRootCategory } from '@/config/api';
+import { getAntdIconComponent } from '@/config/utils';
+import { ICategory, ICourse, IModelPaginate } from '@/types/backend';
 import { BulbOutlined, PlayCircleOutlined, SketchOutlined, TrophyOutlined } from '@ant-design/icons';
-import { Button, Col, ConfigProvider, Progress, Row, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { Button, Col, ConfigProvider, Progress, Row, Skeleton, Typography } from 'antd';
+import { createElement, useEffect, useState } from 'react';
 import styles from 'styles/client.module.scss';
 
 const HomePage = () => {
     const [highlightCourses, setHighlightCourses] = useState<ICourse[] | null>(null);
     const [isLoadingHighlightCourses, setIsLoadingHighlightCourses] = useState<boolean>(false);
+    const [rootCategories, setRootCategories] = useState<ICategory[]>([]);
+    const [isLoadingRootCategories, setIsLoadingRootCategories] = useState<boolean>(false);
 
     const recentCourses = [
         { title: 'React thực chiến', meta: 'Module 4: State management', progress: 64 },
@@ -24,6 +27,7 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchHighlightCourses();
+        fetchRootCategories();
     }, []);
 
     const fetchHighlightCourses = async () => {
@@ -35,9 +39,26 @@ const HomePage = () => {
         setIsLoadingHighlightCourses(false);
     }
 
+    const fetchRootCategories = async () => {
+        setIsLoadingRootCategories(true);
+        const res = await callFetchRootCategory('current=1&pageSize=20&sort=createdAt');
+        const data = res?.data as unknown as ICategory[] | ICategory | IModelPaginate<ICategory> | undefined;
+
+        if (Array.isArray(data)) {
+            setRootCategories(data);
+        } else if (data && 'result' in data && Array.isArray(data.result)) {
+            setRootCategories(data.result);
+        } else if (data && '_id' in data) {
+            setRootCategories([data]);
+        }
+
+        setIsLoadingRootCategories(false);
+    }
+
     return (
         <div className={`${styles["container"]} ${styles["home-section"]}`} style={{ paddingTop: 28, paddingBottom: 56 }}>
             <div style={{ display: 'grid', gap: 42 }}>
+                {/* Top Banner Section */}
                 <section
                     className={styles["career-ai-banner"]}
                     style={{
@@ -113,12 +134,14 @@ const HomePage = () => {
                     </div>
                 </section>
 
+                {/* Highlight Courses Section */}
                 <CourseSection
                     title='Khoá học nổi bật'
                     courses={highlightCourses}
                     isLoading={isLoadingHighlightCourses}
                 />
 
+                {/* Recent Courses Section */}
                 <section>
                     <div className={styles["section-heading"]} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 20, marginBottom: 20 }}>
                         <div>
@@ -155,6 +178,69 @@ const HomePage = () => {
                             </Col>
                         ))}
                     </Row>
+                </section>
+
+                {/* For-You Courses Section */}
+                <CourseSection
+                    title='Khoá học dành cho bạn'
+                    courses={highlightCourses}
+                    isLoading={isLoadingHighlightCourses}
+                />
+
+                {/* Categories Section */}
+                <section>
+                    <div className={styles["section-heading"]} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 20, marginBottom: 18 }}>
+                        <div>
+                            <Typography.Text style={{ color: 'var(--primary-color-dark)', fontWeight: 700, textTransform: 'uppercase', fontSize: 16 }}>
+                                Khám phá danh mục
+                            </Typography.Text>
+                        </div>
+                    </div>
+
+                    <div className={styles["category-chip-cloud"]} style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+                        {isLoadingRootCategories &&
+                            Array.from({ length: 8 }).map((_, index) => (
+                                <Skeleton.Button
+                                    key={index}
+                                    active
+                                    size="large"
+                                    shape="round"
+                                    style={{ width: index % 3 === 0 ? 220 : 180, height: 54 }}
+                                />
+                            ))
+                        }
+
+                        {!isLoadingRootCategories && rootCategories.map((category, index) => (
+                            (() => {
+                                const IconComponent = getAntdIconComponent(category.icon);
+
+                                return (
+                                    <div
+                                        key={category._id ?? category.slug}
+                                        className={styles["category-chip"]}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: 10,
+                                            minHeight: 54,
+                                            padding: '0 24px',
+                                            borderRadius: 999,
+                                            background: '#eef5ff',
+                                            color: '#111827',
+                                            border: '1px solid rgba(209, 223, 244, 0.72)',
+                                            fontSize: 16,
+                                            cursor: 'pointer',
+                                            
+                                        }}
+                                    >
+                                        {IconComponent && createElement(IconComponent, { style: { fontSize: 20, flex: '0 0 auto' } })}
+                                        <Typography.Text>{category.name}</Typography.Text>
+                                    </div>
+                                )
+                            })()
+                        ))}
+                        
+                    </div>
                 </section>
             </div>
         </div>

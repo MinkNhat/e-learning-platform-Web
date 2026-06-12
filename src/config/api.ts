@@ -141,6 +141,10 @@ export const callFetchCategory = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<ICategory>>>(`/api/v1/categories?${query}`);
 }
 
+export const callFetchRootCategory = (query: string) => {
+    return axios.get<IBackendRes<ICategory>>(`/api/v1/categories/root?${query}`);
+}
+
 /**
  * 
 Module Module
