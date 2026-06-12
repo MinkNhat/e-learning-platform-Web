@@ -14,7 +14,7 @@ interface IProps {
     reloadTable: () => void;
 }
 
-export interface ICompanySelect {
+export interface IRoleSelect {
     label: string;
     value: string;
     key?: string;
@@ -22,20 +22,12 @@ export interface ICompanySelect {
 
 const ModalUser = (props: IProps) => {
     const { openModal, setOpenModal, reloadTable, dataInit, setDataInit } = props;
-    const [companies, setCompanies] = useState<ICompanySelect[]>([]);
-    const [roles, setRoles] = useState<ICompanySelect[]>([]);
+    const [roles, setRoles] = useState<IRoleSelect[]>([]);
 
     const [form] = Form.useForm();
 
     useEffect(() => {
         if (dataInit?._id) {
-            if (dataInit.company) {
-                setCompanies([{
-                    label: dataInit.company.name,
-                    value: dataInit.company._id,
-                    key: dataInit.company._id,
-                }])
-            }
             if (dataInit.role) {
                 setRoles([
                     {
@@ -109,27 +101,11 @@ const ModalUser = (props: IProps) => {
     const handleReset = async () => {
         form.resetFields();
         setDataInit(null);
-        setCompanies([]);
         setRoles([]);
         setOpenModal(false);
     }
 
-    // Usage of DebounceSelect
-    // async function fetchCompanyList(name: string): Promise<ICompanySelect[]> {
-    //     const res = await callFetchCompany(`current=1&pageSize=100&name=/${name}/i`);
-    //     if (res && res.data) {
-    //         const list = res.data.result;
-    //         const temp = list.map(item => {
-    //             return {
-    //                 label: item.name as string,
-    //                 value: item._id as string
-    //             }
-    //         })
-    //         return temp;
-    //     } else return [];
-    // }
-
-    async function fetchRoleList(name: string): Promise<ICompanySelect[]> {
+    async function fetchRoleList(name: string): Promise<IRoleSelect[]> {
         const res = await callFetchRole(`current=1&pageSize=100&name=/${name}/i`);
         if (res && res.data) {
             const list = res.data.result;
@@ -230,7 +206,7 @@ const ModalUser = (props: IProps) => {
                                 fetchOptions={fetchRoleList}
                                 onChange={(newValue: any) => {
                                     if (newValue?.length === 0 || newValue?.length === 1) {
-                                        setRoles(newValue as ICompanySelect[]);
+                                        setRoles(newValue as IRoleSelect[]);
                                     }
                                 }}
                                 style={{ width: '100%' }}
@@ -238,29 +214,6 @@ const ModalUser = (props: IProps) => {
                         </ProForm.Item>
 
                     </Col>
-                    {/* <Col lg={12} md={12} sm={24} xs={24}>
-                        <ProForm.Item
-                            name="company"
-                            label="Thuộc Công Ty"
-                            rules={[{ required: true, message: 'Vui lòng chọn company!' }]}
-                        >
-                            <DebounceSelect
-                                allowClear
-                                showSearch
-                                defaultValue={companies}
-                                value={companies}
-                                placeholder="Chọn công ty"
-                                fetchOptions={fetchCompanyList}
-                                onChange={(newValue: any) => {
-                                    if (newValue?.length === 0 || newValue?.length === 1) {
-                                        setCompanies(newValue as ICompanySelect[]);
-                                    }
-                                }}
-                                style={{ width: '100%' }}
-                            />
-                        </ProForm.Item>
-
-                    </Col> */}
                     <Col lg={12} md={12} sm={24} xs={24}>
                         <ProFormText
                             label="Địa chỉ"
