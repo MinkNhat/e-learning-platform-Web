@@ -26,7 +26,6 @@ const Footer = () => {
             style={{
                 background: "#171923",
                 color: "#f7fafc",
-                marginTop: 56,
                 padding: "32px 0 28px",
                 borderTop: "1px solid rgba(255, 255, 255, 0.08)"
             }}

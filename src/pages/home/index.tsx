@@ -165,7 +165,7 @@ const HomePage = () => {
                     <Row gutter={[16, 16]}>
                         {recentCourses.map((item) => (
                             <Col xs={24} md={12} key={item.title}>
-                                <div style={{ display: 'flex', gap: 16, alignItems: 'center', border: '1px solid #e7e9f0', borderRadius: 18, padding: 16, background: '#fff' }}>
+                                <div style={{ cursor: 'pointer', display: 'flex', gap: 16, alignItems: 'center', border: '1px solid #e7e9f0', borderRadius: 18, padding: 16, background: '#fff' }}>
                                     <div style={{ width: 72, height: 72, flex: '0 0 72px', borderRadius: 16, display: 'grid', placeItems: 'center', background: '#101828', color: '#fff', fontSize: 24 }}>
                                         <PlayCircleOutlined />
                                     </div>
