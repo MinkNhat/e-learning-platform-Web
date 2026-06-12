@@ -41,7 +41,7 @@ const ModalUser = (props: IProps) => {
     }, [dataInit]);
 
     const submitUser = async (valuesForm: any) => {
-        const { name, email, password, address, age, gender, role, company } = valuesForm;
+        const { name, email, password, address, age, gender, role } = valuesForm;
         if (dataInit?._id) {
             //update
             const user = {
@@ -52,10 +52,6 @@ const ModalUser = (props: IProps) => {
                 gender,
                 address,
                 role: role?.value ?? role._id,
-                company: {
-                    _id: company?.value ?? company._id,
-                    name: company?.label ?? company.name
-                }
             }
 
             const res = await callUpdateUser(user, dataInit._id);
@@ -79,10 +75,6 @@ const ModalUser = (props: IProps) => {
                 gender,
                 address,
                 role: role.value,
-                company: {
-                    _id: company.value,
-                    name: company.label
-                }
             }
             const res = await callCreateUser(user);
             if (res.data) {
