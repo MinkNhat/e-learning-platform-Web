@@ -5,7 +5,7 @@ import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image
 import { CalendarOutlined, CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, DesktopOutlined, FileTextOutlined, MobileOutlined, PlayCircleOutlined, SafetyCertificateOutlined, TeamOutlined, TrophyOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { callFetchCourseById } from "@/config/api";
+import { callCreatePayment, callFetchCourseById } from "@/config/api";
 import ClientBreadcrumb from "@/components/client/breadcrumb.client";
 const { Title, Paragraph, Text } = Typography;
 dayjs.extend(relativeTime)
@@ -15,6 +15,7 @@ const ClientCourseDetailPage = (props: any) => {
     const { slug } = useParams<{ slug: string }>();
     const [course, setCourse] = useState<ICourse | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
     const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
@@ -43,6 +44,32 @@ const ClientCourseDetailPage = (props: any) => {
         }
         init();
     }, [slug]);
+
+    const handleBuyCourse = async() => {
+        setIsPaymentLoading(true);
+        try {
+            const res = await callCreatePayment({
+                courseId: course?._id || '',
+                provider: 'vnpay'
+            });
+            if (res.data) {
+                const paymentWindow = window.open(res.data.paymentUrl, "_blank", "noopener,noreferrer");
+                if (!paymentWindow) {
+                    notification.warning({
+                        message: 'Không thể mở trang thanh toán',
+                        description: 'Trình duyệt đang chặn popup. Vui lòng cho phép popup và thử lại.'
+                    });
+                }
+            }
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi',
+                description: 'Có lỗi xảy ra khi tạo đơn hàng'
+            });
+        } finally {
+            setIsPaymentLoading(false);
+        }
+    }
 
     return (
         <Skeleton active loading={isLoading} paragraph={{ rows: 4 }} style={{margin: '60px'}}>
@@ -292,6 +319,8 @@ const ClientCourseDetailPage = (props: any) => {
                                                         fontWeight: 600,
                                                         marginBottom: 10,
                                                     }}
+                                                    onClick={handleBuyCourse}
+                                                    loading={isPaymentLoading}
                                                 >
                                                     Đăng ký ngay
                                                 </Button>

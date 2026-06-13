@@ -109,7 +109,6 @@ export interface ICategory {
     updatedAt?: string;
 }
 
-
 export interface IPermission {
     _id?: string;
     name?: string;
@@ -190,4 +189,14 @@ export interface ISubscribers {
     deletedAt?: boolean | null;
     createdAt?: string;
     updatedAt?: string;
+}
+
+export interface ICreatePayment {
+    courseId: string;
+    provider: string;
+}
+
+export interface IResponsePayment {
+    paymentUrl: string;
+    orderId: string;
 }

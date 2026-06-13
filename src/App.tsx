@@ -27,6 +27,7 @@ import CoursePage from './pages/admin/course';
 import AdminCourseDetailPage from './pages/admin/course/detail';
 import ClientCoursePage from './pages/course';
 import ClientCourseDetailPage from './pages/course/detail';
+import PaymentResultPage from './pages/payment/result';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -74,6 +75,7 @@ export default function App() {
         { index: true, element: <HomePage /> },
         { path: "course", element: <ClientCoursePage /> },
         { path: "course/:slug", element: <ClientCourseDetailPage /> },
+        { path: "payment-result", element: <PaymentResultPage /> },
       ],
     },
 
