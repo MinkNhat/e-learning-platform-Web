@@ -10,3 +10,11 @@
   --text-primary-dark: #20242d;
   --text-primary-light: #5f6c87;
 }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa;
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+}

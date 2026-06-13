@@ -116,7 +116,7 @@ const HomePage = () => {
                                         >
                                             {item.icon}
                                         </span>
-                                        <Typography.Text style={{ color: '#fff', fontSize: 16, lineHeight: 1.45, fontWeight: 500 }}>
+                                        <Typography.Text style={{ color: '#fff', fontSize: 14, lineHeight: 1.45, fontWeight: 500 }}>
                                             {item.title}
                                         </Typography.Text>
                                     </div>

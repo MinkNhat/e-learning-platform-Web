@@ -191,6 +191,20 @@ export interface ISubscribers {
     updatedAt?: string;
 }
 
+export interface IEnrollment {
+    _id?: string;
+    course: string | ICourse;
+    progress: number;
+    enrolDate: string;
+    completedDate?: string;
+
+    createdBy?: string;
+    isDeleted?: boolean;
+    deletedAt?: boolean | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
 export interface ICreatePayment {
     courseId: string;
     provider: string;

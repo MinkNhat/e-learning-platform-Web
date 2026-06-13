@@ -59,45 +59,6 @@
 
 }
 
-@-moz-keyframes spin {
-    100% {
-        -moz-transform: rotate(360deg);
-    }
-}
-
-@-webkit-keyframes spin {
-    100% {
-        -webkit-transform: rotate(360deg);
-    }
-}
-
-@keyframes spin {
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-
-@media (max-width: 767px) {
-    .home-hero {
-        padding: 30px 20px !important;
-        border-radius: 22px !important;
-    }
-
-    .home-hero h1 {
-        font-size: 34px !important;
-    }
-
-    .section-heading {
-        flex-direction: column;
-        align-items: flex-start !important;
-    }
-}
-
-.career-ai-banner {
-    box-shadow: 0 26px 70px rgba(32, 34, 48, 0.14);
-}
-
 @media (max-width: 1199px) {
     .career-ai-banner {
         padding: 56px 42px !important;
@@ -118,6 +79,11 @@
 }
 
 @media (max-width: 767px) {
+    .section-heading {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
     .career-ai-banner {
         padding: 34px 22px !important;
         border-radius: 22px !important;
@@ -144,6 +110,12 @@
     }
 }
 
+@media (max-width: 575px) {
+    .course-grid,
+    .my-course-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
 .header-section {
     display: block;
@@ -241,31 +213,14 @@
         width: 100%;
         padding: 50px;
     }
-
-    .dflex-mobile {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .dflex-pc {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .title {
-        font-size: 24px;
-        color: #353535;
-        margin-top: 20px;
-    }
 }
 
 // Course
-.course-grid {
+.course-grid,
+.my-course-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
+    gap: 16px;
     align-items: stretch;
 }
 
@@ -284,4 +239,8 @@
     :global(.ant-select-arrow) {
         color: rgba(255, 255, 255, 0.72) !important;
     }
+}
+
+.career-ai-banner {
+    box-shadow: 0 26px 70px rgba(32, 34, 48, 0.14);
 }

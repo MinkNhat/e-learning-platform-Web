@@ -28,6 +28,7 @@ import AdminCourseDetailPage from './pages/admin/course/detail';
 import ClientCoursePage from './pages/course';
 import ClientCourseDetailPage from './pages/course/detail';
 import PaymentResultPage from './pages/payment/result';
+import MyCoursesPage from './pages/my-courses';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -75,6 +76,13 @@ export default function App() {
         { index: true, element: <HomePage /> },
         { path: "course", element: <ClientCoursePage /> },
         { path: "course/:slug", element: <ClientCourseDetailPage /> },
+        {
+          path: "my-courses",
+          element:
+            <ProtectedRoute>
+              <MyCoursesPage />
+            </ProtectedRoute>
+        },
         { path: "payment-result", element: <PaymentResultPage /> },
       ],
     },

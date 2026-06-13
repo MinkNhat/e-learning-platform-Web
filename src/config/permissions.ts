@@ -43,6 +43,9 @@ export const ALL_PERMISSIONS = {
     },
     PAYMENTS: {
         CREATE: { method: "POST", apiPath: '/api/v1/payments/create', module: "PAYMENTS" },
+    },
+    ME: {
+        GET_MY_COURSES: { method: "GET", apiPath: '/api/v1/me/courses', module: "ME" },
     }
 }
 
@@ -58,4 +61,5 @@ export const ALL_MODULES = {
     MODULES: 'MODULES',
     LESSONS: 'LESSONS',
     PAYMENTS: 'PAYMENTS',
+    ME: 'ME',
 }

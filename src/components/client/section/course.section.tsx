@@ -1,6 +1,6 @@
 import { ICourse } from '@/types/backend';
 import { FilterOutlined, SortAscendingOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Empty, Pagination, Row, Select, Space, Spin, Typography } from 'antd';
+import { Button, ConfigProvider, Empty, Pagination, Row, Select, Skeleton, Space, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
 import CourseCard from '../card/course.card';
@@ -31,7 +31,7 @@ const CourseSection = (props: IProps) => {
         description,
         viewAllText = "Xem thêm",
         current = 1,
-        pageSize = showPagination ? 8 : 6,
+        pageSize = showPagination ? 8 : 4,
         total = courses?.length ?? 0,
         filter = "",
         sortQuery = "sort=-updatedAt",
@@ -49,6 +49,33 @@ const CourseSection = (props: IProps) => {
     const handleViewDetailCourse = (item: ICourse) => {
         navigate(`/course/${item.slug}`)
     }
+
+    const renderCourseSkeletons = () => (
+        Array.from({ length: pageSize }).map((_, index) => (
+            <div
+                key={`course-skeleton-${index}`}
+                style={{
+                    borderRadius: 18,
+                    overflow: 'hidden',
+                    width: '100%',
+                    minWidth: 0,
+                    boxSizing: 'border-box',
+                    border: '1px solid #e7e9f0',
+                    background: '#fff',
+                    boxShadow: '0 14px 34px rgba(20, 31, 55, 0.06)',
+                    padding: 10,
+                }}
+            >
+                <div style={{ padding: '12px 8px' }}>
+                    <Skeleton
+                        active
+                        title={{ width: '78%' }}
+                        paragraph={{ rows: 6, width: ['100%', '100%', '72%', '92%', '64%', '48%'] }}
+                    />
+                </div>
+            </div>
+        ))
+    )
 
     return (
        <section style={{ width: '100%' }}>
@@ -123,9 +150,8 @@ const CourseSection = (props: IProps) => {
                 </div>
             }
 
-            <Spin spinning={isLoading} tip="Loading...">
             <div className={styles["course-grid"]}>
-                {courses?.map(item => <CourseCard key={item._id} course={item} onClick={() => handleViewDetailCourse(item)} />)}
+                {isLoading ? renderCourseSkeletons() : courses?.map(item => <CourseCard key={item._id} course={item} onClick={() => handleViewDetailCourse(item)} />)}
             </div>
 
             {(!courses || courses && courses.length === 0)
@@ -143,11 +169,11 @@ const CourseSection = (props: IProps) => {
                         total={total}
                         pageSize={pageSize}
                         responsive
+                        disabled={isLoading}
                         onChange={(p: number, s: number) => handleOnchangePage({ current: p, pageSize: s })}
                     />
                 </Row>
             </>}
-        </Spin>
        </section>
     )
 }

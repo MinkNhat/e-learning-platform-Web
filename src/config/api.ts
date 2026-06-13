@@ -1,4 +1,4 @@
-import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment } from '@/types/backend';
+import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -231,6 +231,14 @@ Module Payment
  */
 export const callCreatePayment = (payment: ICreatePayment) => {
     return axios.post<IBackendRes<IResponsePayment>>('/api/v1/payments/create', { ...payment })
+}
+
+/**
+ * 
+Module Me
+ */
+export const callFetchMyCourses = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IEnrollment>>>(`/api/v1/me/courses?${query}`)
 }
 
 /**

@@ -101,7 +101,7 @@ const CourseCard = ({ course, onClick }: IProps) => {
                 </div>
 
                 <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, color: '#667085' }}>
-                    <span>
+                    <span style={{fontSize: 14}}>
                         <span style={{marginRight: 16}}><TeamOutlined /> {course.enrollmentCount ?? 0}</span>
                         {course.totalLessons && <span><ClockCircleOutlined /> {course.totalLessons} bài học</span>}
                     </span>
