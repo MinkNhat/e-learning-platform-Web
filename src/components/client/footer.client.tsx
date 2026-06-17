@@ -38,7 +38,7 @@ const Footer = () => {
             >
                 <Row gutter={[32, 36]}>
                     {footerColumns.map((column) => (
-                        <Col xs={24} sm={12} lg={5} key={column.title}>
+                        <Col xs={24} sm={12} lg={6} key={column.title}>
                             <Title
                                 level={4}
                                 style={{
@@ -70,59 +70,52 @@ const Footer = () => {
                         </Col>
                     ))}
 
-                    <Col xs={24} sm={12} lg={9}>
-                        <div
+                    <Col xs={24} sm={12} lg={6}>
+                        <Title
+                            level={4}
                             style={{
-                                maxWidth: 320,
-                                marginLeft: "auto"
+                                color: "#ffffff",
+                                fontSize: 18,
+                                lineHeight: 1.25,
+                                margin: "0 0 12px",
+                                letterSpacing: 0
                             }}
                         >
-                            <Title
-                                level={4}
+                            Học mọi lúc, mọi nơi
+                        </Title>
+                        <Text
+                            style={{
+                                display: "block",
+                                color: "rgba(255, 255, 255, 0.66)",
+                                fontSize: 14,
+                                lineHeight: 1.6,
+                                marginBottom: 18
+                            }}
+                        >
+                            Tải ứng dụng để lưu bài học, theo dõi tiến độ và tiếp tục khóa học ngay trên điện thoại của bạn.
+                        </Text>
+                        <Space direction="vertical" size={10}>
+                            <img
+                                src="/dowload-app-store.png"
+                                alt="Tải trên App Store"
                                 style={{
-                                    color: "#ffffff",
-                                    fontSize: 18,
-                                    lineHeight: 1.25,
-                                    margin: "0 0 12px",
-                                    letterSpacing: 0
-                                }}
-                            >
-                                Học mọi lúc, mọi nơi
-                            </Title>
-                            <Text
-                                style={{
+                                    width: 156,
+                                    height: "auto",
                                     display: "block",
-                                    color: "rgba(255, 255, 255, 0.66)",
-                                    fontSize: 14,
-                                    lineHeight: 1.6,
-                                    marginBottom: 18
+                                    borderRadius: 8
                                 }}
-                            >
-                                Tải ứng dụng để lưu bài học, theo dõi tiến độ và tiếp tục khóa học ngay trên điện thoại.
-                            </Text>
-                            <Space direction="vertical" size={10}>
-                                <img
-                                    src="/dowload-app-store.png"
-                                    alt="Tải trên App Store"
-                                    style={{
-                                        width: 156,
-                                        height: "auto",
-                                        display: "block",
-                                        borderRadius: 8
-                                    }}
-                                />
-                                <img
-                                    src="/dowload-ch-play.png"
-                                    alt="Tải trên Google Play"
-                                    style={{
-                                        width: 156,
-                                        height: "auto",
-                                        display: "block",
-                                        borderRadius: 8
-                                    }}
-                                />
-                            </Space>
-                        </div>
+                            />
+                            <img
+                                src="/dowload-ch-play.png"
+                                alt="Tải trên Google Play"
+                                style={{
+                                    width: 156,
+                                    height: "auto",
+                                    display: "block",
+                                    borderRadius: 8
+                                }}
+                            />
+                        </Space>
                     </Col>
                 </Row>
 
