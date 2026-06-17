@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { ConfigProvider } from 'antd';
 import NotFound from 'components/share/not.found';
 import Loading from 'components/share/loading';
 import LoginPage from 'pages/auth/login';
@@ -29,6 +30,7 @@ import ClientCoursePage from './pages/course';
 import ClientCourseDetailPage from './pages/course/detail';
 import PaymentResultPage from './pages/payment/result';
 import MyCoursesPage from './pages/my-courses';
+import ClientLessonDetailPage from './pages/my-courses/lesson';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -81,6 +83,13 @@ export default function App() {
           element:
             <ProtectedRoute>
               <MyCoursesPage />
+            </ProtectedRoute>
+        },
+        {
+          path: "my-courses/lessons/:lessonId",
+          element:
+            <ProtectedRoute>
+              <ClientLessonDetailPage />
             </ProtectedRoute>
         },
         { path: "payment-result", element: <PaymentResultPage /> },
@@ -157,8 +166,14 @@ export default function App() {
   ]);
 
   return (
-    <>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: 'Roboto, sans-serif',
+        },
+      }}
+    >
       <RouterProvider router={router} />
-    </>
+    </ConfigProvider>
   )
 }

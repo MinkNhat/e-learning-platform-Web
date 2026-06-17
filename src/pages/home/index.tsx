@@ -170,7 +170,7 @@ const HomePage = () => {
                                         <PlayCircleOutlined />
                                     </div>
                                     <div style={{ flex: 1, minWidth: 0 }}>
-                                        <Typography.Title level={4} ellipsis style={{ margin: 0, color: '#182033' }}>{item.title}</Typography.Title>
+                                        <Typography.Title level={5} ellipsis style={{ margin: 0, color: '#182033' }}>{item.title}</Typography.Title>
                                         <Typography.Text type="secondary">{item.meta}</Typography.Text>
                                         <Progress percent={item.progress} size="small" showInfo={false} style={{ marginTop: 10 }} />
                                     </div>

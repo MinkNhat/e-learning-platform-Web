@@ -1,4 +1,6 @@
 :root {
+  --app-font-family: 'Roboto', sans-serif;
+
   --primary-color: #00c26f;
   --primary-color-dark: #00AC62;
   --primary-color-light: #63d18e;
@@ -11,10 +13,47 @@
   --text-primary-light: #5f6c87;
 }
 
+html,
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--app-font-family);
+}
+
+body {
   background-color: #f8f9fa;
   color: var(--text-primary);
   margin: 0;
   padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  font-family: inherit;
+}
+
+button,
+input,
+textarea,
+select,
+.ant-app,
+.ant-btn,
+.ant-input,
+.ant-input-number,
+.ant-select,
+.ant-select-selector,
+.ant-picker,
+.ant-modal,
+.ant-drawer,
+.ant-menu,
+.ant-table,
+.ant-card,
+.ant-form,
+.ant-typography,
+.ant-notification,
+.ant-message,
+.ant-pagination,
+.ant-dropdown-menu,
+.ant-breadcrumb,
+.ant-tag {
+  font-family: var(--app-font-family) !important;
 }
