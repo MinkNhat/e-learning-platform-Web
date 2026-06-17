@@ -1,15 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DashOutlined, LogoutOutlined, MenuFoldOutlined } from '@ant-design/icons';
-import { Avatar, Drawer, Dropdown, MenuProps, Space, message } from 'antd';
-import { Menu, ConfigProvider } from 'antd';
+import { Avatar, Divider, Drawer, Dropdown, Grid, MenuProps, Space, message } from 'antd';
+import { Menu } from 'antd';
 import styles from '@/styles/client.module.scss';
-import { isMobile } from 'react-device-detect';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { callLogout } from '@/config/api';
 import { setLogoutAction } from '@/redux/slice/accountSlide';
 import SearchClient from './search.client';
+
+type HeaderNavItem = {
+    label: string;
+    path: string;
+};
 
 const Header = (props: any) => {
     const navigate = useNavigate();
@@ -18,37 +22,74 @@ const Header = (props: any) => {
     const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
     const user = useAppSelector(state => state.account.user);
     const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false);
+    const screens = Grid.useBreakpoint();
+    const isMobileLayout = !screens.md;
 
     const [current, setCurrent] = useState('home');
+    const navLinkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+    const [activeIndicator, setActiveIndicator] = useState({ left: 0, width: 0 });
     const location = useLocation();
 
     useEffect(() => {
         setCurrent(location.pathname);
     }, [location])
 
-    const items: MenuProps['items'] = [
+    const publicNavItems: HeaderNavItem[] = [
         {
-            label: <Link to={'/'}>Trang Chủ</Link>,
-            key: '/',
+            label: 'Trang Chủ',
+            path: '/',
             
         },
         {
-            label: <Link to={'/explore'}>Khám phá</Link>,
-            key: '/explore',
-            // icon: <TwitterOutlined />,
+            label: 'Khám phá',
+            path: '/explore',
         },
         {
-            label: <Link to={'/my-courses'}>Khoá học của tôi</Link>,
-            key: '/my-courses',
-        },
-        {
-            label: <Link to={'/levels'}>Trình độ</Link>,
-            key: '/levels',
+            label: 'Trình độ',
+            path: '/levels',
         }
     ];
 
+    const privateNavItems: HeaderNavItem[] = [
+        {
+            label: 'Khoá học của tôi',
+            path: '/my-courses',
+        },
+    ];
+
+    const navItems: HeaderNavItem[] = isAuthenticated
+        ? [...publicNavItems, ...privateNavItems]
+        : publicNavItems;
+
+    const drawerNavItems: MenuProps['items'] = navItems.map(item => ({
+        label: <Link to={item.path}>{item.label}</Link>,
+        key: item.path,
+    }));
+
+    useEffect(() => {
+        const updateActiveIndicator = () => {
+            const activeLink = navLinkRefs.current[current];
+
+            if (!activeLink) {
+                setActiveIndicator({ left: 0, width: 0 });
+                return;
+            }
+
+            setActiveIndicator({
+                left: activeLink.offsetLeft + 2,
+                width: Math.max(activeLink.offsetWidth - 4, 0),
+            });
+        };
+
+        updateActiveIndicator();
+        window.addEventListener('resize', updateActiveIndicator);
+
+        return () => window.removeEventListener('resize', updateActiveIndicator);
+    }, [current, isAuthenticated, isMobileLayout]);
+
     const onClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key);
+        setOpenMobileMenu(false);
     };
 
     const handleLogout = async () => {
@@ -60,7 +101,7 @@ const Header = (props: any) => {
         }
     }
 
-    const itemsDropdown = [
+    const itemsDropdown: MenuProps['items'] = [
         {
             label: <Link to={"/admin"}>Trang Quản Trị</Link>,
             key: 'admin',
@@ -76,14 +117,23 @@ const Header = (props: any) => {
         },
     ];
 
-    const itemsMobiles = [...items, ...itemsDropdown];
+    const loginItem: MenuProps['items'] = [
+        {
+            label: <Link to={'/login'}>Đăng Nhập</Link>,
+            key: '/login',
+        }
+    ];
+
+    const mobileAccountItems: MenuProps['items'] = isAuthenticated
+        ? itemsDropdown
+        : loginItem;
 
     return (
         <>
             <div className={styles["header-section"]}>
                 <div className={styles["container"]}>
-                    {!isMobile ?
-                        <div style={{ display: "flex", gap: 30 }}>
+                    {!isMobileLayout ?
+                        <div className={styles['header-desktop']}>
                             <div className={styles['brand']} onClick={() => navigate('/')}>
                                 <img 
                                     src="/capy-logo.png" 
@@ -93,24 +143,30 @@ const Header = (props: any) => {
                             </div>
                             <div className={styles['top-menu']}>
                                 <div className={styles['menu']}>
-                                    <ConfigProvider
-                                        theme={{
-                                            token: {
-                                                colorPrimary: 'var(--white-color)',
-                                                colorBgContainer: 'var(--white-color)',
-                                                colorText: 'var(--text-primary)',
-                                            },
-                                        }}
-                                    >
-
-                                        <Menu
-                                            onClick={onClick}
-                                            selectedKeys={[current]}
-                                            mode="horizontal"
-                                            items={items}
+                                    <nav className={styles['nav-menu']}>
+                                        {navItems.map(item => (
+                                            <Link
+                                                key={item.path}
+                                                to={item.path}
+                                                ref={(element) => {
+                                                    navLinkRefs.current[item.path] = element;
+                                                }}
+                                                className={`${styles['nav-link']} ${current === item.path ? styles['active'] : ''}`}
+                                            >
+                                                {item.label}
+                                            </Link>
+                                        ))}
+                                        <span
+                                            className={styles['active-indicator']}
+                                            style={{
+                                                left: activeIndicator.left,
+                                                width: activeIndicator.width,
+                                            }}
                                         />
-                                    </ConfigProvider>
-                                    <SearchClient />
+                                    </nav>
+                                    <div className={styles['search-wrapper']}>
+                                        <SearchClient />
+                                    </div>
                                 </div>
                                 
                                 <div className={styles['extra']}>
@@ -130,7 +186,13 @@ const Header = (props: any) => {
                         </div>
                         :
                         <div className={styles['header-mobile']}>
-                            <span>E Learning</span>
+                            <div className={styles['brand']} onClick={() => navigate('/')}>
+                                <img 
+                                    src="/capy-logo.png" 
+                                    alt="Logo" 
+                                    className={styles['logo']}
+                                />
+                            </div>
                             <MenuFoldOutlined onClick={() => setOpenMobileMenu(true)} />
                         </div>
                     }
@@ -145,7 +207,14 @@ const Header = (props: any) => {
                     onClick={onClick}
                     selectedKeys={[current]}
                     mode="vertical"
-                    items={itemsMobiles}
+                    items={drawerNavItems}
+                />
+                <Divider className={styles['mobile-menu-divider']} />
+                <Menu
+                    onClick={onClick}
+                    selectedKeys={[current]}
+                    mode="vertical"
+                    items={mobileAccountItems}
                 />
             </Drawer>
         </>

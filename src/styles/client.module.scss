@@ -121,9 +121,18 @@
     display: block;
     width: 100%;
     height: 60px;
-    padding-top: 12px;
     background-color: var(--white-color);
     border-bottom: 1px solid #e0e0e0;
+
+    .container {
+        height: 100%;
+    }
+
+    .header-desktop {
+        display: flex;
+        gap: 30px;
+        height: 100%;
+    }
 
     .brand {
         display: flex;
@@ -148,18 +157,60 @@
         align-items: center;
         gap: 20px;
         width: 100%;
+        min-width: 0;
 
         .menu {
             display: flex;
             align-items: center;
             gap: 20px;
+            flex: 1;
+            min-width: 0;
+
+            .nav-menu {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                flex: 0 0 auto;
+                white-space: nowrap;
+            }
+
+            .nav-link {
+                display: flex;
+                align-items: center;
+                height: 46px;
+                padding: 0 16px;
+                color: var(--text-primary);
+                text-decoration: none;
+                border-radius: 6px;
+                transition: color 0.2s ease;
+
+                &:hover,
+                &.active {
+                    color: var(--primary-color-dark);
+                }
+            }
+
+            .active-indicator {
+                position: absolute;
+                bottom: 0;
+                height: 2px;
+                background-color: var(--primary-color-dark);
+                border-radius: 999px;
+                pointer-events: none;
+                transition: left 0.26s ease, width 0.26s ease;
+            }
+
+            .search-wrapper {
+                flex: 0 1 280px;
+                min-width: 0;
+            }
 
             .searchBox {
                 display: flex;
                 align-items: center;
                 gap: 8px;
                 width: 100%;
-                min-width: 240px;
                 padding: 4px 6px;
                 background: #fff;
                 border: 2px solid #e5e7eb;
@@ -182,6 +233,8 @@
         }
 
         .extra {
+            flex-shrink: 0;
+
             a,
             span {
                 cursor: pointer;
@@ -200,8 +253,49 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 55px;
-        color: white;
+        height: 100%;
+        color: var(--text-primary);
+        font-size: 22px;
+
+        .logo {
+            height: 46px;
+        }
+    }
+}
+
+.mobile-menu-divider {
+    margin: 4px 0;
+}
+
+@media (max-width: 1199px) {
+    .header-section {
+        .top-menu {
+            gap: 14px;
+
+            .menu {
+                gap: 12px;
+
+                .nav-link {
+                    padding: 0 10px;
+                }
+
+                .search-wrapper {
+                    flex-basis: 220px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 991px) {
+    .header-section {
+        .top-menu {
+            .menu {
+                .search-wrapper {
+                    display: none;
+                }
+            }
+        }
     }
 }
 
@@ -211,7 +305,7 @@
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 50px;
+        padding: 50px 0;
     }
 }
 
