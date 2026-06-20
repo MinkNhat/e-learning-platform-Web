@@ -200,6 +200,7 @@ const Header = (props: any) => {
             </div>
             <Drawer title="Chức năng"
                 placement="right"
+                width="70%"
                 onClose={() => setOpenMobileMenu(false)}
                 open={openMobileMenu}
             >

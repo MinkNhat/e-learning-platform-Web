@@ -3,7 +3,7 @@ import { callFetchCourse, callFetchRootCategory } from '@/config/api';
 import { getAntdIconComponent } from '@/config/utils';
 import { ICategory, ICourse, IModelPaginate } from '@/types/backend';
 import { BulbOutlined, PlayCircleOutlined, SketchOutlined, TrophyOutlined } from '@ant-design/icons';
-import { Button, Col, ConfigProvider, Progress, Row, Skeleton, Typography } from 'antd';
+import { Button, Col, Progress, Row, Skeleton, Typography } from 'antd';
 import { createElement, useEffect, useState } from 'react';
 import styles from 'styles/client.module.scss';
 
@@ -152,15 +152,7 @@ const HomePage = () => {
                                 Lịch sử khóa học của bạn sẽ được lưu lại, giúp bạn dễ dàng tiếp tục học tập và theo dõi tiến trình của mình.
                             </Typography.Paragraph>
                         </div>
-                        <ConfigProvider
-                            theme={{
-                                token: {
-                                colorPrimary: '#00c26f',
-                                },
-                            }}
-                        >
-                            <Button shape="round" type="default">Xem lịch sử</Button>
-                        </ConfigProvider>
+                        <Button shape="round" type="default">Xem lịch sử</Button>
                     </div>
                     <Row gutter={[16, 16]}>
                         {recentCourses.map((item) => (

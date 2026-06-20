@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { ICourse } from "@/types/backend";
-import { callFetchCourseById } from "@/config/api";
+import { callFetchCourseForManage } from "@/config/api";
 import { Card, Col, Descriptions, Image, Row, Spin, Tag, notification } from "antd";
 import dayjs from 'dayjs';
 import ModuleManager from './module';
@@ -20,7 +20,7 @@ const AdminCourseDetail = () => {
             if (courseId) {
                 setIsLoading(true);
                 try {
-                    const res = await callFetchCourseById(courseId);
+                    const res = await callFetchCourseForManage(courseId);
                     console.log('Course detail response:', res);
                     if (res?.data) {
                         setCourseDetail(res.data);
@@ -41,7 +41,7 @@ const AdminCourseDetail = () => {
     const refetchCourse = async () => {
         if (courseId) {
             try {
-                const res = await callFetchCourseById(courseId);
+                const res = await callFetchCourseForManage(courseId);
                 if (res?.data) {
                     setCourseDetail(res.data);
                 }

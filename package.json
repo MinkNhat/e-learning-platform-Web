@@ -16,7 +16,7 @@
     "@ant-design/pro-layout": "7.17.19",
     "@ckeditor/ckeditor5-react": "^11.1.2",
     "@reduxjs/toolkit": "1.9.3",
-    "antd": "5.13.1",
+    "antd": "5.21.0",
     "async-mutex": "0.4.0",
     "axios": "1.6.5",
     "ckeditor5": "^48.2.0",

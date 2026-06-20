@@ -1,6 +1,6 @@
 import { ICourse } from '@/types/backend';
 import { FilterOutlined, SortAscendingOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Empty, Pagination, Row, Select, Skeleton, Space, Typography } from 'antd';
+import { Button, Empty, Pagination, Row, Select, Skeleton, Space, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
 import CourseCard from '../card/course.card';
@@ -100,17 +100,9 @@ const CourseSection = (props: IProps) => {
 
                 {!showPagination &&
                     <Link to="/course" style={{textDecoration: 'none'}}>
-                        <ConfigProvider
-                            theme={{
-                                token: {
-                                colorPrimary: '#00c26f',
-                                },
-                            }}
-                            >
-                            <Button type="default" shape="round" style={{display: 'flex', alignItems: 'center', gap: 4}}>
-                                {viewAllText}
-                            </Button>
-                        </ConfigProvider>
+                        <Button type="default" shape="round" style={{display: 'flex', alignItems: 'center', gap: 4}}>
+                            {viewAllText}
+                        </Button>
                     </Link>
                 }
             </div>

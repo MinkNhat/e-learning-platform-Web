@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ConfigProvider } from 'antd';
+import vi_VN from 'antd/locale/vi_VN';
 import NotFound from 'components/share/not.found';
 import Loading from 'components/share/loading';
 import LoginPage from 'pages/auth/login';
@@ -86,7 +87,7 @@ export default function App() {
             </ProtectedRoute>
         },
         {
-          path: "my-courses/lessons/:lessonId",
+          path: "my-course/:courseSlug/:lessonId",
           element:
             <ProtectedRoute>
               <ClientLessonDetailPage />
@@ -167,8 +168,10 @@ export default function App() {
 
   return (
     <ConfigProvider
+      locale={vi_VN}
       theme={{
         token: {
+          colorPrimary: '#00c26f',
           fontFamily: 'Roboto, sans-serif',
         },
       }}

@@ -1,7 +1,7 @@
+import { callFetchMyRecentLesson } from "@/config/api";
 import { ICourse, IEnrollment } from "@/types/backend";
-import { CalendarOutlined, PlayCircleOutlined } from "@ant-design/icons";
-import { Button, Image, Progress, Typography } from "antd";
-import dayjs from "dayjs";
+import { Image, notification, Progress, Typography } from "antd";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
@@ -13,11 +13,39 @@ interface IProps {
 const MyCourseCard = ({ enrollment }: IProps) => {
     const navigate = useNavigate();
     const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
+    const [isNavigating, setIsNavigating] = useState(false);
     const course = typeof enrollment.course === 'string' ? null : enrollment.course;
     const progress = Math.min(Math.max(enrollment.progress || 0, 0), 100);
+    const courseSlug = (enrollment.course as ICourse)?.slug || '';
 
     const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
         return authors?.map(author => `${author.name}`).join(", ") ?? "";
+    }
+
+    const handleContinueCourse = async () => {
+        if (!courseSlug || isNavigating) return;
+
+        setIsNavigating(true);
+        try {
+            const res = await callFetchMyRecentLesson(courseSlug);
+            const lessonId = res.data?._id;
+            if (lessonId) {
+                navigate(`/my-course/${courseSlug}/${lessonId}`);
+                return;
+            }
+
+            notification.warning({
+                message: 'Chưa có bài học',
+                description: 'Khóa học này chưa có bài học để tiếp tục'
+            });
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi',
+                description: 'Không thể mở bài học gần đây của khóa học'
+            });
+        } finally {
+            setIsNavigating(false);
+        }
     }
 
     return (
@@ -32,6 +60,8 @@ const MyCourseCard = ({ enrollment }: IProps) => {
                 background: '#fff',
                 boxShadow: '0 14px 34px rgba(20, 31, 55, 0.08)',
                 padding: 10,
+                cursor: isNavigating ? 'wait' : 'pointer',
+                opacity: isNavigating ? 0.72 : 1,
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
             }}
             onMouseEnter={(event) => {
@@ -44,6 +74,7 @@ const MyCourseCard = ({ enrollment }: IProps) => {
                 event.currentTarget.style.boxShadow = '0 14px 34px rgba(20, 31, 55, 0.08)';
                 event.currentTarget.style.borderColor = '#e7e9f0';
             }}
+            onClick={handleContinueCourse}
         >
             <Image
                 preview={false}
