@@ -1,4 +1,4 @@
-import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment } from '@/types/backend';
+import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment, IMyLessonDetail } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -121,6 +121,10 @@ export const callFetchCourseById = (id: string) => {
     return axios.get<IBackendRes<ICourse>>(`/api/v1/courses/${id}`);
 }
 
+export const callFetchCourseForManage = (id: string) => {
+    return axios.get<IBackendRes<ICourse>>(`/api/v1/courses/${id}/manage`);
+}
+
 /**
  * 
 Module Category
@@ -239,6 +243,18 @@ Module Me
  */
 export const callFetchMyCourses = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<IEnrollment>>>(`/api/v1/me/courses?${query}`)
+}
+
+export const callFetchMyRecentLesson = (courseSlug: string) => {
+    return axios.get<IBackendRes<ILesson>>(`/api/v1/me/courses/${courseSlug}/continue`)
+}
+
+export const callFetchMyLessonById = (courseSlug: string, lessonId: string) => {
+    return axios.get<IBackendRes<IMyLessonDetail>>(`/api/v1/me/lessons/${lessonId}?course=${courseSlug}`);
+}
+
+export const callCompleteMyLesson = (courseSlug: string, lessonId: string) => {
+    return axios.patch<IBackendRes<IMyLessonDetail['progress']>>(`/api/v1/me/lessons/${lessonId}/complete?course=${courseSlug}`);
 }
 
 /**

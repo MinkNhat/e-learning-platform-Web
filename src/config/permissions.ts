@@ -19,6 +19,7 @@ export const ALL_PERMISSIONS = {
     },
     COURSES: {
         GET_PAGINATE: { method: "GET", apiPath: '/api/v1/courses', module: "COURSES" },
+        GET_MANAGE: { method: "GET", apiPath: '/api/v1/courses/:id/manage', module: "COURSES" },
         CREATE: { method: "POST", apiPath: '/api/v1/courses', module: "COURSES" },
         UPDATE: { method: "PATCH", apiPath: '/api/v1/courses/:id', module: "COURSES" },
         DELETE: { method: "DELETE", apiPath: '/api/v1/courses/:id', module: "COURSES" },
@@ -30,13 +31,11 @@ export const ALL_PERMISSIONS = {
         DELETE: { method: "DELETE", apiPath: '/api/v1/categories/:id', module: "CATEGORIES" },
     },
     MODULES: {
-        GET_PAGINATE: { method: "GET", apiPath: '/api/v1/modules', module: "MODULES" },
         CREATE: { method: "POST", apiPath: '/api/v1/modules', module: "MODULES" },
         UPDATE: { method: "PATCH", apiPath: '/api/v1/modules/:id', module: "MODULES" },
         DELETE: { method: "DELETE", apiPath: '/api/v1/modules/:id', module: "MODULES" },
     },
     LESSONS: {
-        GET_PAGINATE: { method: "GET", apiPath: '/api/v1/lessons', module: "LESSONS" },
         CREATE: { method: "POST", apiPath: '/api/v1/lessons', module: "LESSONS" },
         UPDATE: { method: "PATCH", apiPath: '/api/v1/lessons/:id', module: "LESSONS" },
         DELETE: { method: "DELETE", apiPath: '/api/v1/lessons/:id', module: "LESSONS" },
@@ -46,6 +45,9 @@ export const ALL_PERMISSIONS = {
     },
     ME: {
         GET_MY_COURSES: { method: "GET", apiPath: '/api/v1/me/courses', module: "ME" },
+        GET_MY_RECENT_LESSON: { method: "GET", apiPath: '/api/v1/me/courses/:courseSlug/continue', module: "ME" },
+        GET_MY_LESSON: { method: "GET", apiPath: '/api/v1/me/lessons/:lessonId', module: "ME" },
+        COMPLETE_MY_LESSON: { method: "PATCH", apiPath: '/api/v1/me/lessons/:lessonId/complete', module: "ME" },
     }
 }
 

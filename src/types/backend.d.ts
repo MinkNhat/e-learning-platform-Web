@@ -148,10 +148,14 @@ export interface ILesson {
     type: 'video' | 'article';
     module?: string | IModule;
     metadata?: {
+        duration?: number;
+        durationString?: string;
         videoUrl?: string;
-        duration?: string;
         ytbId?: string;
     };
+    progressStatus?: 'not_started' | 'in_progress' | 'completed';
+    completedAt?: string;
+    lastAccessedAt?: string;
 
     createdBy?: string;
     isDeleted?: boolean;
@@ -166,7 +170,7 @@ export interface IModule {
     description?: string;
     order: number;
     isActive?: boolean;
-    course: string | ICourse;
+    course?: string | ICourse;
     lessons?: ILesson[];
 
     createdBy?: string;
@@ -177,6 +181,19 @@ export interface IModule {
 
     totalLessons?: number;
     totalLength?: number;
+}
+
+export interface IMyLessonDetail {
+    lesson: ILesson;
+    currentModule: IModule;
+    course: Pick<ICourse, '_id' | 'title' | 'slug' | 'thumbnail' | 'totalLessons' | 'totalLength'>;
+    modules: IModule[];
+    progress: {
+        coursePercent: number;
+        completedLessonsCount: number;
+        totalLessons: number;
+        currentLessonStatus: 'not_started' | 'in_progress' | 'completed';
+    };
 }
 
 export interface ISubscribers {
@@ -195,6 +212,10 @@ export interface IEnrollment {
     _id?: string;
     course: string | ICourse;
     progress: number;
+    completedLessonsCount?: number;
+    totalLessonsSnapshot?: number;
+    lastLesson?: string | ILesson;
+    lastAccessedAt?: string;
     enrolDate: string;
     completedDate?: string;
 

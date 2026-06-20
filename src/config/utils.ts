@@ -94,3 +94,9 @@ export function getAntdIconComponent(icon?: string) {
     const icons = AntIcons as unknown as Record<string, ComponentType<{ style?: CSSProperties }>>;
     return icons[iconName] ?? null;
 }
+
+export function getYoutubeId(url?: string) {
+    if (!url) return '';
+    const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^?&/]+)/);
+    return match?.[1] || url;
+}
