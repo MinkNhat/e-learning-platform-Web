@@ -3,6 +3,7 @@ import { FilterOutlined, SortAscendingOutlined } from '@ant-design/icons';
 import { Button, Empty, Pagination, Row, Select, Skeleton, Space, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
+import courseStyles from 'styles/course.module.scss';
 import CourseCard from '../card/course.card';
 
 interface IProps {
@@ -80,7 +81,7 @@ const CourseSection = (props: IProps) => {
     return (
        <section style={{ width: '100%' }}>
             <div
-                className={styles["section-heading"]}
+                className={`${styles["section-heading"]} ${courseStyles["course-section-heading"]}`}
                 style={{
                     display: 'flex',
                     justifyContent: 'space-between',
