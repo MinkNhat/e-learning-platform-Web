@@ -1,18 +1,31 @@
 import { useState, useEffect, useRef } from 'react';
-import { DashOutlined, LogoutOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { DashOutlined, LogoutOutlined, MenuFoldOutlined, RightOutlined } from '@ant-design/icons';
 import { Avatar, Divider, Drawer, Dropdown, Grid, MenuProps, Space, message } from 'antd';
 import { Menu } from 'antd';
 import styles from '@/styles/client.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { callLogout } from '@/config/api';
+import { callFetchChildCategory, callFetchRootCategory, callLogout } from '@/config/api';
 import { setLogoutAction } from '@/redux/slice/accountSlide';
 import SearchClient from './search.client';
+import { ICategory, IModelPaginate } from '@/types/backend';
 
 type HeaderNavItem = {
     label: string;
     path: string;
+};
+
+const normalizeCategories = (data: unknown): ICategory[] => {
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === 'object' && 'data' in data) {
+        return normalizeCategories((data as { data?: unknown }).data);
+    }
+    if (data && typeof data === 'object' && 'result' in data && Array.isArray((data as IModelPaginate<ICategory>).result)) {
+        return (data as IModelPaginate<ICategory>).result;
+    }
+    if (data && typeof data === 'object' && '_id' in data) return [data as ICategory];
+    return [];
 };
 
 const Header = (props: any) => {
@@ -27,12 +40,43 @@ const Header = (props: any) => {
 
     const [current, setCurrent] = useState('home');
     const navLinkRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+    const navMenuRef = useRef<HTMLElement | null>(null);
     const [activeIndicator, setActiveIndicator] = useState({ left: 0, width: 0 });
     const location = useLocation();
+    const [isExploreMenuOpen, setIsExploreMenuOpen] = useState(false);
+    const [rootCategories, setRootCategories] = useState<ICategory[]>([]);
+    const [hoveredRootSlug, setHoveredRootSlug] = useState('');
+    const [childrenByRoot, setChildrenByRoot] = useState<Record<string, ICategory[]>>({});
 
     useEffect(() => {
-        setCurrent(location.pathname);
+        setCurrent(location.pathname.startsWith('/explore') ? '/explore' : location.pathname);
     }, [location])
+
+    useEffect(() => {
+        const fetchRootCategories = async () => {
+            const res = await callFetchRootCategory('current=1&pageSize=30&sort=createdAt');
+            const categories = normalizeCategories(res?.data);
+
+            setRootCategories(categories);
+            setHoveredRootSlug((currentSlug) => currentSlug || categories[0]?.slug || '');
+        };
+
+        fetchRootCategories();
+    }, []);
+
+    useEffect(() => {
+        if (!hoveredRootSlug || childrenByRoot[hoveredRootSlug]) return;
+
+        const fetchChildren = async () => {
+            const res = await callFetchChildCategory(hoveredRootSlug);
+            setChildrenByRoot((currentMap) => ({
+                ...currentMap,
+                [hoveredRootSlug]: normalizeCategories(res?.data),
+            }));
+        };
+
+        fetchChildren();
+    }, [childrenByRoot, hoveredRootSlug]);
 
     const publicNavItems: HeaderNavItem[] = [
         {
@@ -69,14 +113,18 @@ const Header = (props: any) => {
     useEffect(() => {
         const updateActiveIndicator = () => {
             const activeLink = navLinkRefs.current[current];
+            const navMenu = navMenuRef.current;
 
-            if (!activeLink) {
+            if (!activeLink || !navMenu) {
                 setActiveIndicator({ left: 0, width: 0 });
                 return;
             }
 
+            const activeLinkRect = activeLink.getBoundingClientRect();
+            const navMenuRect = navMenu.getBoundingClientRect();
+
             setActiveIndicator({
-                left: activeLink.offsetLeft + 2,
+                left: activeLinkRect.left - navMenuRect.left + 2,
                 width: Math.max(activeLink.offsetWidth - 4, 0),
             });
         };
@@ -143,19 +191,86 @@ const Header = (props: any) => {
                             </div>
                             <div className={styles['top-menu']}>
                                 <div className={styles['menu']}>
-                                    <nav className={styles['nav-menu']}>
-                                        {navItems.map(item => (
-                                            <Link
-                                                key={item.path}
-                                                to={item.path}
-                                                ref={(element) => {
-                                                    navLinkRefs.current[item.path] = element;
-                                                }}
-                                                className={`${styles['nav-link']} ${current === item.path ? styles['active'] : ''}`}
-                                            >
-                                                {item.label}
-                                            </Link>
-                                        ))}
+                                    <nav className={styles['nav-menu']} ref={navMenuRef}>
+                                        {navItems.map(item => {
+                                            if (item.path === '/explore') {
+                                                const activeRoot = rootCategories.find(category => category.slug === hoveredRootSlug);
+                                                const childCategories = hoveredRootSlug ? childrenByRoot[hoveredRootSlug] ?? [] : [];
+
+                                                return (
+                                                    <div
+                                                        key={item.path}
+                                                        className={styles['explore-nav-wrap']}
+                                                        onMouseEnter={() => setIsExploreMenuOpen(true)}
+                                                        onMouseLeave={() => setIsExploreMenuOpen(false)}
+                                                    >
+                                                        <Link
+                                                            to={item.path}
+                                                            ref={(element) => {
+                                                                navLinkRefs.current[item.path] = element;
+                                                            }}
+                                                            className={`${styles['nav-link']} ${current === item.path ? styles['active'] : ''}`}
+                                                        >
+                                                            {item.label}
+                                                        </Link>
+
+                                                        {isExploreMenuOpen && !isMobileLayout &&
+                                                            <div className={styles['explore-mega-menu']}>
+                                                                <div className={styles['explore-root-menu']}>
+                                                                    {rootCategories.map(category => (
+                                                                        <Link
+                                                                            key={category._id ?? category.slug}
+                                                                            to={`/explore/${category.slug}`}
+                                                                            className={`${styles['explore-menu-item']} ${hoveredRootSlug === category.slug ? styles['active'] : ''}`}
+                                                                            onMouseEnter={() => setHoveredRootSlug(category.slug)}
+                                                                            onClick={() => setIsExploreMenuOpen(false)}
+                                                                        >
+                                                                            <span>{category.name}</span>
+                                                                            <RightOutlined />
+                                                                        </Link>
+                                                                    ))}
+                                                                </div>
+                                                                <div className={styles['explore-child-menu']}>
+                                                                    {childCategories.length > 0 ?
+                                                                        childCategories.map(category => (
+                                                                            <Link
+                                                                                key={category._id ?? category.slug}
+                                                                                to={`/explore/${category.slug}`}
+                                                                                className={styles['explore-menu-item']}
+                                                                                onClick={() => setIsExploreMenuOpen(false)}
+                                                                            >
+                                                                                <span>{category.name}</span>
+                                                                            </Link>
+                                                                        ))
+                                                                        :
+                                                                        <Link
+                                                                            to={activeRoot ? `/explore/${activeRoot.slug}` : '/explore'}
+                                                                            className={styles['explore-menu-empty']}
+                                                                            onClick={() => setIsExploreMenuOpen(false)}
+                                                                        >
+                                                                            Xem tất cả trong danh mục này
+                                                                        </Link>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                );
+                                            }
+
+                                            return (
+                                                <Link
+                                                    key={item.path}
+                                                    to={item.path}
+                                                    ref={(element) => {
+                                                        navLinkRefs.current[item.path] = element;
+                                                    }}
+                                                    className={`${styles['nav-link']} ${current === item.path ? styles['active'] : ''}`}
+                                                >
+                                                    {item.label}
+                                                </Link>
+                                            );
+                                        })}
                                         <span
                                             className={styles['active-indicator']}
                                             style={{

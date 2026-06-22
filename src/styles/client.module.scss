@@ -193,6 +193,85 @@
                 transition: left 0.26s ease, width 0.26s ease;
             }
 
+            .explore-nav-wrap {
+                position: relative;
+                height: 52px;
+                display: flex;
+                align-items: center;
+            }
+
+            .explore-mega-menu {
+                position: absolute;
+                top: 52px;
+                left: 0;
+                z-index: 20;
+                display: grid;
+                grid-template-columns: 288px 304px;
+                min-height: 408px;
+                overflow: hidden;
+                border: 1px solid #d7dde8;
+                border-radius: 10px;
+                background: #ffffff;
+                box-shadow: 0 22px 54px rgba(20, 31, 55, 0.14);
+            }
+
+            .explore-root-menu,
+            .explore-child-menu {
+                padding: 8px 0;
+            }
+
+            .explore-root-menu {
+                border-right: 1px solid #edf0f5;
+            }
+
+            .explore-child-heading {
+                padding: 12px 18px 8px;
+                color: #202436;
+                font-size: 13px;
+                font-weight: 800;
+            }
+
+            .explore-menu-item {
+                min-height: 32px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 16px;
+                padding: 9px 14px;
+                color: #25293a;
+                text-decoration: none;
+                font-size: 14px;
+                line-height: 1.35;
+                transition: background 0.18s ease, color 0.18s ease;
+
+                svg {
+                    flex: 0 0 auto;
+                    color: #5f667c;
+                    font-size: 11px;
+                }
+
+                &:hover,
+                &.active {
+                    background: #f3fbf7;
+                    color: var(--primary-color-dark);
+
+                    svg {
+                        color: var(--primary-color-dark);
+                    }
+                }
+            }
+
+            .explore-menu-empty {
+                display: block;
+                padding: 12px 18px;
+                color: #5f667c;
+                text-decoration: none;
+
+                &:hover {
+                    color: var(--primary-color-dark);
+                }
+            }
+
             .search-wrapper {
                 flex: 0 1 280px;
                 min-width: 0;
