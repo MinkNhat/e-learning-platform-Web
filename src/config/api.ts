@@ -265,6 +265,10 @@ export const callCompleteMyLesson = (courseSlug: string, lessonId: string) => {
     return axios.patch<IBackendRes<IMyLessonDetail['progress']>>(`/api/v1/me/lessons/${lessonId}/complete?course=${courseSlug}`);
 }
 
+export const callCheckEnrollment = (courseId: string, userId: string) => {
+    return axios.get<IBackendRes<{ isEnrolled: boolean }>>(`/api/v1/enrollments/check?courseId=${courseId}&userId=${userId}`);
+}
+
 /**
  * 
 Module Subscribers

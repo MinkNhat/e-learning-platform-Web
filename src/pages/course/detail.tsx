@@ -1,12 +1,13 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { ICourse } from "@/types/backend";
 import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image, Button, Spin, Empty, notification, Tag, Statistic, Skeleton } from "antd";
 import { CalendarOutlined, CheckCircleOutlined, CheckOutlined, ClockCircleOutlined, DesktopOutlined, FileTextOutlined, MobileOutlined, PlayCircleOutlined, SafetyCertificateOutlined, TeamOutlined, TrophyOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { callCreatePayment, callFetchCourseById } from "@/config/api";
+import { callCheckEnrollment, callCreatePayment, callFetchCourseById, callFetchMyRecentLesson } from "@/config/api";
 import ClientBreadcrumb from "@/components/client/breadcrumb.client";
+import { useAppSelector } from "@/redux/hooks";
 const { Title, Paragraph, Text } = Typography;
 dayjs.extend(relativeTime)
 
@@ -14,36 +15,59 @@ dayjs.extend(relativeTime)
 const ClientCourseDetailPage = (props: any) => {
     const { slug } = useParams<{ slug: string }>();
     const [course, setCourse] = useState<ICourse | null>(null);
+    const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
     const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
+    const user = useAppSelector(state => state.account.user);
+    const navigate = useNavigate();
+    const [isNavigating, setIsNavigating] = useState(false);
 
     const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
         return authors?.map(author => `${author.name}`).join(", ") ?? "";
     }
 
     useEffect(() => {
-        const init = async () => {
-            if (slug) {
-                setIsLoading(true);
-                try {
-                    const res = await callFetchCourseById(slug);
-                    if (res.data) {
-                        setCourse(res.data);
-                    }
-                } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: 'Không thể tải thông tin khóa học'
-                    });
-                    setCourse(null);
-                } finally {
-                    setIsLoading(false);
+        fetchDetailCourse();
+        checkUserEnrollment();
+    }, [slug]);
+
+    const fetchDetailCourse = async () => {
+        if (slug) {
+            setIsLoading(true);
+            try {
+                const res = await callFetchCourseById(slug);
+                if (res.data) {
+                    setCourse(res.data);
                 }
+            } catch (error) {
+                notification.error({
+                    message: 'Lỗi',
+                    description: 'Không thể tải thông tin khóa học'
+                });
+                setCourse(null);
+            } finally {
+                setIsLoading(false);
             }
         }
-        init();
-    }, [slug]);
+    }
+
+    const checkUserEnrollment = async () => {
+        if (slug) {
+            try {
+                const res = await callCheckEnrollment(slug, user?._id);
+                if (res.data) {
+                    setIsEnrolled(res.data.isEnrolled);
+                }
+            } catch (error) {
+                notification.error({
+                    message: 'Lỗi',
+                    description: 'Không thể kiểm tra trạng thái đăng ký'
+                });
+            }
+        }
+        return false;
+    }
 
     const handleBuyCourse = async() => {
         setIsPaymentLoading(true);
@@ -68,6 +92,32 @@ const ClientCourseDetailPage = (props: any) => {
             });
         } finally {
             setIsPaymentLoading(false);
+        }
+    }
+
+    const handleContinueCourse = async () => {
+        if (!slug || isNavigating) return;
+        setIsNavigating(true);
+
+        try {
+            const res = await callFetchMyRecentLesson(slug);
+            const lessonId = res.data?._id;
+            if (lessonId) {
+                navigate(`/my-course/${slug}/${lessonId}`);
+                return;
+            }
+
+            notification.warning({
+                message: 'Chưa có bài học',
+                description: 'Khóa học này chưa có bài học để tiếp tục'
+            });
+        } catch (error) {
+            notification.error({
+                message: 'Lỗi',
+                description: 'Không thể mở bài học gần đây của khóa học'
+            });
+        } finally {
+            setIsNavigating(false);
         }
     }
 
@@ -119,12 +169,12 @@ const ClientCourseDetailPage = (props: any) => {
 
                         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px 0',position: 'relative', zIndex: 1}}>
                             <div
-	                                style={{
-	                                    backgroundColor: 'white',
-		                                maxWidth: 680,
-	                                    margin: '0 24px',
-	                                    border: '1px solid #ccc',
-	                                    borderRadius: 12,
+                                style={{
+                                    backgroundColor: 'white',
+                                    maxWidth: 680,
+                                    margin: '0 24px',
+                                    border: '1px solid #ccc',
+                                    borderRadius: 12,
                                     position: 'relative',
                                     overflow: 'hidden',
                                     zIndex: 1,
@@ -137,11 +187,11 @@ const ClientCourseDetailPage = (props: any) => {
                                                 minHeight: 80,
                                                 background: '#5624d0',
                                                 color: '#fff',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: 12,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: 12,
                                                 fontSize: 16,
                                                 fontWeight: 600,
                                             }}
@@ -310,24 +360,42 @@ const ClientCourseDetailPage = (props: any) => {
                                                     )}
                                                 </Space>
 
-                                                <Button
-                                                    type="primary"
-                                                    size="large"
-                                                    block
-                                                    style={{
-                                                        background: 'var(--primary-color)',
-                                                        fontWeight: 600,
-                                                        marginBottom: 10,
-                                                    }}
-                                                    onClick={handleBuyCourse}
-                                                    loading={isPaymentLoading}
-                                                >
-                                                    Đăng ký ngay
-                                                </Button>
+                                                {isEnrolled ? (
+                                                    <>
+                                                        <Button
+                                                            type="primary"
+                                                            size="large"
+                                                            block
+                                                            style={{
+                                                                background: 'var(--primary-color)',
+                                                                fontWeight: 600,
+                                                                marginBottom: 10,
+                                                            }}
+                                                            onClick={handleBuyCourse}
+                                                            loading={isPaymentLoading}
+                                                        >
+                                                            Đăng ký ngay
+                                                        </Button>
 
-                                                <Button size="large" block style={{ fontWeight: 600 }}>
-                                                    Thêm vào giỏ hàng
-                                                </Button>
+                                                        <Button size="large" block style={{ fontWeight: 600 }}>
+                                                            Thêm vào giỏ hàng
+                                                        </Button>
+                                                    </>
+                                                ) : (
+                                                    <Button
+                                                        type="primary"
+                                                        size="large"
+                                                        block
+                                                        style={{
+                                                            background: 'var(--primary-color)',
+                                                            fontWeight: 600,
+                                                            marginBottom: 10,
+                                                        }}
+                                                        onClick={handleContinueCourse}
+                                                    >
+                                                        Tiếp tục học
+                                                    </Button>
+                                                )}
 
                                                 <Text strong style={{ fontSize: 13, display: 'block', marginBottom: 10, marginTop: 20 }}>
                                                     Khóa học bao gồm:
