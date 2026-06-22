@@ -32,6 +32,7 @@ import ClientCourseDetailPage from './pages/course/detail';
 import PaymentResultPage from './pages/payment/result';
 import MyCoursesPage from './pages/my-courses';
 import ClientLessonDetailPage from './pages/my-courses/lesson';
+import ExplorePage from './pages/explore';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -77,6 +78,8 @@ export default function App() {
       errorElement: <NotFound />,
       children: [
         { index: true, element: <HomePage /> },
+        { path: "explore", element: <ExplorePage /> },
+        { path: "explore/:slug", element: <ExplorePage /> },
         { path: "course", element: <ClientCoursePage /> },
         { path: "course/:slug", element: <ClientCourseDetailPage /> },
         {

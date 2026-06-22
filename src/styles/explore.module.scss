@@ -1,0 +1,568 @@
+.explore-page {
+    padding-top: 28px;
+    padding-bottom: 64px;
+}
+
+.popular-filter-row,
+.role-filter-row,
+.path-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.popular-filter-row {
+    margin-bottom: 16px;
+}
+
+.filter-pill {
+    min-height: 34px;
+    padding: 0 15px;
+    border: 1px solid #cfd8e6;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #25293a;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-pill:hover,
+.filter-pill.active {
+    border-color: #0b5aa3;
+    background: #0b4d93;
+    color: #ffffff;
+}
+
+.role-explorer,
+.path-explorer {
+    display: grid;
+    gap: 26px;
+    padding: 30px 32px;
+    border-radius: 22px;
+    background: rgba(115, 198, 155, 0.1);
+}
+
+.role-explorer {
+    grid-template-columns: 300px minmax(0, 1fr);
+}
+
+.path-explorer {
+    grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+.role-intro,
+.path-intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.role-intro {
+    align-items: flex-start;
+}
+
+.path-intro {
+    gap: 18px;
+}
+
+.role-intro :global(h3.ant-typography),
+.path-intro :global(h3.ant-typography) {
+    margin: 0;
+    color: #202436;
+    font-size: 26px;
+}
+
+.role-intro :global(.ant-typography),
+.path-intro :global(.ant-typography) {
+    margin: 0 0 20px;
+    color: #25293a;
+    line-height: 1.65;
+}
+
+.role-filter-row,
+.path-filter-row {
+    margin-bottom: 12px;
+}
+
+.role-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.role-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #cfd8e6;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.role-card:hover {
+    border-color: rgba(0, 172, 98, 0.45);
+    box-shadow: 0 16px 34px rgba(26, 49, 39, 0.1);
+    transform: translateY(-3px);
+}
+
+.role-card :global(.ant-card-body) {
+    position: relative;
+    min-height: 178px;
+    padding: 18px 20px;
+}
+
+.role-card :global(.ant-card-body)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.94) 46%, rgba(255, 255, 255, 0.42) 72%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+.role-card :global(.ant-card-body) > div {
+    position: relative;
+    z-index: 2;
+    max-width: 68%;
+}
+
+.role-card :global(h4.ant-typography) {
+    margin: 0 0 8px;
+    color: #151825;
+    font-size: 20px;
+    line-height: 1.25;
+}
+
+.role-card :global(.ant-typography) {
+    margin: 0;
+    color: #536078;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.role-card :global(p.ant-typography) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.role-image {
+    position: absolute;
+    z-index: 0;
+    right: -12px;
+    bottom: 0;
+    width: auto;
+    height: 100%;
+    max-width: 48%;
+    object-fit: contain;
+    object-position: right bottom;
+    pointer-events: none;
+    user-select: none;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+.role-card:hover .role-image {
+    transform: translateX(4px) scale(1.04);
+}
+
+.path-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.path-overview-card {
+    overflow: hidden;
+    border: 1px solid #e1e5ec;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: none;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.path-overview-card:hover {
+    border-color: rgba(0, 172, 98, 0.45);
+    box-shadow: 0 16px 34px rgba(26, 49, 39, 0.1);
+    transform: translateY(-3px);
+}
+
+.path-overview-card :global(.ant-card-body) {
+    padding: 0;
+}
+
+.path-card-layout {
+    min-height: 140px;
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 18px;
+    align-items: center;
+    padding: 18px;
+}
+
+.path-overview-card :global(h4.ant-typography) {
+    margin: 0 0 8px;
+    color: #202124;
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+.path-overview-card :global(.ant-typography) {
+    margin: 0;
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.path-skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.path-skill-progress {
+    flex: 0 0 auto;
+    line-height: 1;
+    transition: transform 0.2s ease;
+    width: 42px !important;
+    height: 42px !important;
+}
+
+.path-overview-card:hover .path-skill-progress {
+    transform: translateY(-2px);
+}
+
+.path-skill-progress :global(.ant-progress-text) {
+    color: #8d939d;
+    font-size: 17px;
+}
+
+.path-image-wrap {
+    width: 112px;
+    height: 112px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #f04d23;
+    border-radius: 50%;
+    background: #ffffff;
+    transition: transform 0.2s ease;
+}
+
+.path-image-wrap img {
+    width: 76%;
+    height: 76%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.path-overview-card:hover .path-image-wrap {
+    transform: scale(1.03);
+}
+
+.path-overview-card:hover .path-image-wrap img {
+    transform: scale(1.04);
+}
+
+.category-section {
+    margin-top: 38px;
+}
+
+.category-section > .section-title {
+    display: block;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    color: var(--primary-color-dark);
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.course-tabs :global(.ant-tabs-nav) {
+    margin-bottom: 18px;
+}
+
+.course-tabs :global(.ant-tabs-nav)::before {
+    border-bottom: 0;
+}
+
+.course-tabs :global(.ant-tabs-tab) {
+    padding: 10px 0;
+    color: #5f667c;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.course-tabs :global(.ant-tabs-tab-btn) {
+    transition: opacity 0.2s ease;
+}
+
+.course-tabs :global(.ant-tabs-tab:hover .ant-tabs-tab-btn) {
+    color: #5f667c;
+    opacity: 0.65;
+}
+
+.course-tabs :global(.ant-tabs-tab-active .ant-tabs-tab-btn) {
+    color: #202436 !important;
+}
+
+.course-tabs :global(.ant-tabs-ink-bar) {
+    background: #494949;
+}
+
+.course-skeleton-card {
+    height: 100%;
+    border: 1px solid #e7e9f0;
+    border-radius: 18px;
+}
+
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.topic-card {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 13px 16px;
+    border: 1px solid #ccd4e2;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #25293a;
+    text-decoration: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.topic-card:hover {
+    border-color: rgba(0, 172, 98, 0.4);
+    box-shadow: 0 12px 26px rgba(26, 49, 39, 0.07);
+    transform: translateY(-2px);
+}
+
+.topic-card span {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    // color: #007f4b;
+    // background: #e9f8f0;
+}
+
+.topic-card strong {
+    min-width: 0;
+    line-height: 1.35;
+}
+
+.topic-skeleton {
+    height: 64px !important;
+}
+
+.instructor-card {
+    height: 100%;
+    border: 1px solid #d8deea;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(31, 45, 61, 0.05);
+}
+
+.instructor-card :global(.ant-card-body) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.instructor-top {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.instructor-top :global(h4.ant-typography) {
+    margin: 0 0 4px;
+    color: #202436;
+    font-size: 16px;
+}
+
+.instructor-top :global(.ant-typography) {
+    color: #5f667c;
+    line-height: 1.45;
+}
+
+.instructor-meta {
+    margin-top: auto;
+}
+
+.empty-block {
+    min-height: 180px;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+    border: 1px dashed #ccd4e2;
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+.empty-block > svg {
+    margin-bottom: 10px;
+    color: #00ac62;
+    font-size: 32px;
+}
+
+@media (max-width: 991px) {
+    .role-explorer,
+    .path-explorer {
+        grid-template-columns: 1fr;
+    }
+
+    .role-card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .path-intro {
+        order: -1;
+    }
+
+    .category-hero {
+        flex-direction: column;
+    }
+
+    .category-hero-meta {
+        min-width: 0;
+    }
+
+    .path-card-layout {
+        min-height: 174px;
+        grid-template-columns: 108px minmax(0, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .path-image-wrap {
+        width: 108px;
+        height: 108px;
+    }
+
+    .topic-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .explore-page {
+        padding-top: 20px;
+        padding-bottom: 46px;
+    }
+
+    .role-explorer,
+    .path-explorer {
+        padding: 22px;
+    }
+
+    .role-card :global(.ant-card-body) {
+        min-height: 166px;
+        padding: 16px;
+    }
+
+    .role-card :global(.ant-card-body) > div {
+        max-width: 72%;
+    }
+
+    .role-card :global(h4.ant-typography) {
+        font-size: 18px;
+    }
+
+    .role-card :global(.ant-typography) {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .role-card :global(p.ant-typography) {
+        -webkit-line-clamp: 3;
+    }
+
+    .role-image {
+        right: -18px;
+        height: 100%;
+        max-width: 52%;
+        opacity: 0.9;
+    }
+
+    .path-card-layout {
+        min-height: auto;
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 14px;
+        padding: 14px;
+    }
+
+    .path-overview-card :global(h4.ant-typography) {
+        font-size: 18px;
+    }
+
+    .path-overview-card :global(.ant-typography) {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .path-skill-list {
+        gap: 6px;
+        margin-top: 12px;
+    }
+
+    .path-skill-progress {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .path-skill-progress :global(.ant-progress-text) {
+        font-size: 15px;
+    }
+
+    .path-image-wrap {
+        width: 88px;
+        height: 88px;
+    }
+
+    .category-hero {
+        padding: 22px;
+        border-radius: 18px;
+    }
+
+    .category-hero-content {
+        flex-direction: column;
+    }
+
+    .category-hero-content :global(h1.ant-typography) {
+        font-size: 30px !important;
+    }
+
+    .category-hero-meta {
+        grid-template-columns: 1fr;
+    }
+
+    .topic-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .path-overview-card,
+    .path-image-wrap,
+    .path-image-wrap img,
+    .path-skill-progress {
+        transition: none;
+    }
+
+    .path-overview-card:hover,
+    .path-overview-card:hover .path-image-wrap,
+    .path-overview-card:hover .path-image-wrap img,
+    .path-overview-card:hover .path-skill-progress {
+        transform: none;
+    }
+}
