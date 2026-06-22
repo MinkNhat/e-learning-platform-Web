@@ -9,23 +9,11 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { callFetchChildCategory, callFetchRootCategory, callLogout } from '@/config/api';
 import { setLogoutAction } from '@/redux/slice/accountSlide';
 import SearchClient from './search.client';
-import { ICategory, IModelPaginate } from '@/types/backend';
+import { ICategory } from '@/types/backend';
 
 type HeaderNavItem = {
     label: string;
     path: string;
-};
-
-const normalizeCategories = (data: unknown): ICategory[] => {
-    if (Array.isArray(data)) return data;
-    if (data && typeof data === 'object' && 'data' in data) {
-        return normalizeCategories((data as { data?: unknown }).data);
-    }
-    if (data && typeof data === 'object' && 'result' in data && Array.isArray((data as IModelPaginate<ICategory>).result)) {
-        return (data as IModelPaginate<ICategory>).result;
-    }
-    if (data && typeof data === 'object' && '_id' in data) return [data as ICategory];
-    return [];
 };
 
 const Header = (props: any) => {
@@ -55,7 +43,7 @@ const Header = (props: any) => {
     useEffect(() => {
         const fetchRootCategories = async () => {
             const res = await callFetchRootCategory('current=1&pageSize=30&sort=createdAt');
-            const categories = normalizeCategories(res?.data);
+            const categories = res?.data ?? [];
 
             setRootCategories(categories);
             setHoveredRootSlug((currentSlug) => currentSlug || categories[0]?.slug || '');
@@ -71,7 +59,7 @@ const Header = (props: any) => {
             const res = await callFetchChildCategory(hoveredRootSlug);
             setChildrenByRoot((currentMap) => ({
                 ...currentMap,
-                [hoveredRootSlug]: normalizeCategories(res?.data),
+                [hoveredRootSlug]: res?.data ?? [],
             }));
         };
 

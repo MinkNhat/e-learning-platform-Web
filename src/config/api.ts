@@ -145,8 +145,16 @@ export const callFetchCategory = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<ICategory>>>(`/api/v1/categories?${query}`);
 }
 
+export const callFetchCategoryById = (id: string) => {
+    return axios.get<IBackendRes<ICategory>>(`/api/v1/categories/${id}`);
+}
+
 export const callFetchRootCategory = (query: string) => {
-    return axios.get<IBackendRes<ICategory>>(`/api/v1/categories/root?${query}`);
+    return axios.get<IBackendRes<ICategory[]>>(`/api/v1/categories/root?${query}`);
+}
+
+export const callFetchChildCategory = (categoryIdOrSlug: string) => {
+    return axios.get<IBackendRes<ICategory[]>>(`/api/v1/categories/${categoryIdOrSlug}/children`);
 }
 
 /**

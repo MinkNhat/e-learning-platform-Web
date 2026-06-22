@@ -3,9 +3,19 @@ import { getAntdIconComponent } from '@/config/utils';
 import { ICategory, IModelPaginate } from '@/types/backend';
 import { Skeleton, Typography } from 'antd';
 import { createElement, useEffect, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { Link } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
 
-const CategorySection = () => {
+type CategorySectionProps = {
+    title?: string;
+    titleStyle?: CSSProperties;
+}
+
+const CategorySection = ({
+    title,
+    titleStyle = {}
+}: CategorySectionProps) => {
     const [rootCategories, setRootCategories] = useState<ICategory[]>([]);
     const [isLoadingRootCategories, setIsLoadingRootCategories] = useState<boolean>(false);
 
@@ -33,8 +43,8 @@ const CategorySection = () => {
         <section>
             <div className={styles["section-heading"]} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 20, marginBottom: 18 }}>
                 <div>
-                    <Typography.Text style={{ color: 'var(--primary-color-dark)', fontWeight: 700, textTransform: 'uppercase', fontSize: 16 }}>
-                        Khám phá danh mục
+                    <Typography.Text style={{ color: 'var(--primary-color-dark)', fontWeight: 700, textTransform: 'uppercase', fontSize: 16, ...titleStyle }}>
+                        {title || 'Khám phá danh mục'}
                     </Typography.Text>
                 </div>
             </div>
@@ -57,13 +67,14 @@ const CategorySection = () => {
                     const IconComponent = getAntdIconComponent(category.icon);
 
                     return (
-                        <div
+                        <Link
                             key={category._id ?? category.slug}
+                            to={`/explore/${category.slug}`}
                             className={styles["category-chip"]}
                         >
                             {IconComponent && createElement(IconComponent, { style: { fontSize: 20, flex: '0 0 auto' } })}
                             <Typography.Text>{category.name}</Typography.Text>
-                        </div>
+                        </Link>
                     )
                 })}
             </div>
