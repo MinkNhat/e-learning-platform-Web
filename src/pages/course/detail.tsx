@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { ICourse } from "@/types/backend";
 import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image, Button, Spin, Empty, notification, Tag, Statistic, Skeleton } from "antd";
-import { AwardIcon, CalendarIcon, CertificateIcon, CheckCircleIcon, ComputerIconStroke, FileIcon, MobileIcon, PlayIcon, UserAddIcon, UserIconStroke } from "@/components/share/hugeicons";
+import { Award01Icon, Calendar01Icon, Certificate01Icon, CheckmarkCircle02Icon, ComputerIcon, File01Icon, MobileNavigator01Icon, PlayCircleIcon, UserAdd01Icon, UserIcon } from "@/config/hugeicons";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { callCheckEnrollment, callCreatePayment, callFetchCourseById, callFetchMyRecentLesson } from "@/config/api";
@@ -151,7 +151,7 @@ const ClientCourseDetailPage = (props: any) => {
                                     </Paragraph>
 
                                     <div style={{ color: '#9ca3af', fontSize: 14, marginBottom: 6 }}>
-                                        <UserIconStroke style={{ marginRight: 4 }}/>
+                                        <UserIcon style={{ marginRight: 4 }}/>
                                         Giảng viên:{' '}
                                         <span style={{ color: 'var(--primary-color)', fontWeight: 600 }}>
                                             {formatAuthorsToMentions(course.authors)}
@@ -159,7 +159,7 @@ const ClientCourseDetailPage = (props: any) => {
                                     </div>
 
                                     <div style={{ color: '#9ca3af', fontSize: 14 }}>
-                                        <CalendarIcon style={{ marginRight: 4 }} />
+                                        <Calendar01Icon style={{ marginRight: 4 }} />
                                         Cập nhật lần cuối:{' '}
                                         {dayjs(course.updatedAt).format('MM/YYYY')}
                                     </div>
@@ -196,7 +196,7 @@ const ClientCourseDetailPage = (props: any) => {
                                                 fontWeight: 600,
                                             }}
                                         >
-                                            <CertificateIcon style={{ fontSize: 20 }} />
+                                            <Certificate01Icon style={{ fontSize: 20 }} />
                                             Cao cấp
                                         </div>
                                     </Col>
@@ -233,7 +233,7 @@ const ClientCourseDetailPage = (props: any) => {
 
                                     <Col flex="0 0 120px">
                                         <Statistic
-                                            title={<div style={{ color: '#9ca3af', fontSize: 14, textAlign: 'center' }}><UserAddIcon /></div>}
+                                            title={<div style={{ color: '#9ca3af', fontSize: 14, textAlign: 'center' }}><UserAdd01Icon /></div>}
                                             value={course.enrollmentCount || 0}
                                             valueStyle={{ color: 'var(--text-primary)', fontSize: 22, fontWeight: 700, textAlign: 'center' }}
                                         />
@@ -260,7 +260,7 @@ const ClientCourseDetailPage = (props: any) => {
                                             {course.objectives?.map((item, index) => (
                                                 <Col xs={24} md={12} key={index}>
                                                     <Space align="start">
-                                                        <CheckCircleIcon
+                                                        <CheckmarkCircle02Icon
                                                             style={{ color: 'var(--primary-color)', marginTop: 3 }}
                                                         />
                                                         <span style={{ fontSize: 13 }}>{item}</span>
@@ -319,7 +319,7 @@ const ClientCourseDetailPage = (props: any) => {
                                                             renderItem={(lesson) => (
                                                                 <List.Item style={{ padding: '8px 0' }}>
                                                                     <Space>
-                                                                        <PlayIcon
+                                                                        <PlayCircleIcon
                                                                             style={{ color: 'var(--primary-color)', fontSize: 13 }}
                                                                         />
                                                                         <Text style={{ fontSize: 13 }}>
@@ -402,7 +402,7 @@ const ClientCourseDetailPage = (props: any) => {
                                                 </Text>
                                                 <Space direction="vertical" size={6} style={{ width: '100%' }}>
                                                     <Space>
-                                                        <ComputerIconStroke style={{ fontSize: 13, color: '#374151' }} />
+                                                        <ComputerIcon style={{ fontSize: 13, color: '#374151' }} />
                                                         <Text style={{ fontSize: 12 }}>
                                                             {course.totalLength
                                                                 ? `${course.totalLength} giờ video theo yêu cầu`
@@ -410,15 +410,15 @@ const ClientCourseDetailPage = (props: any) => {
                                                         </Text>
                                                     </Space>
                                                     <Space>
-                                                        <FileIcon style={{ fontSize: 13, color: '#374151' }} />
+                                                        <File01Icon style={{ fontSize: 13, color: '#374151' }} />
                                                         <Text style={{ fontSize: 12 }}>Tài nguyên có thể tải về</Text>
                                                     </Space>
                                                     <Space>
-                                                        <MobileIcon style={{ fontSize: 13, color: '#374151' }} />
+                                                        <MobileNavigator01Icon style={{ fontSize: 13, color: '#374151' }} />
                                                         <Text style={{ fontSize: 12 }}>Truy cập trên mobile & desktop</Text>
                                                     </Space>
                                                     <Space>
-                                                        <AwardIcon style={{ fontSize: 13, color: '#374151' }} />
+                                                        <Award01Icon style={{ fontSize: 13, color: '#374151' }} />
                                                         <Text style={{ fontSize: 12 }}>Chứng chỉ hoàn thành</Text>
                                                     </Space>
                                                 </Space>

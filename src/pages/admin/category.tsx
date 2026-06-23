@@ -1,7 +1,7 @@
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ICategory } from "@/types/backend";
-import { AddIcon, DeleteIcon, EditIcon } from "@/components/share/hugeicons";
+import { Add01Icon, Delete02Icon, PencilEdit02Icon } from "@/config/hugeicons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
 import { useState, useRef, createElement } from 'react';
@@ -143,7 +143,7 @@ const CategoryPage = () => {
                         permission={ALL_PERMISSIONS.CATEGORIES.UPDATE}
                         hideChildren
                     >
-                        <EditIcon
+                        <PencilEdit02Icon
                             style={{
                                 fontSize: 20,
                                 color: '#ffa500',
@@ -168,7 +168,7 @@ const CategoryPage = () => {
                             cancelText="Hủy"
                         >
                             <span style={{ cursor: "pointer", margin: "0 10px" }}>
-                                <DeleteIcon
+                                <Delete02Icon
                                     style={{
                                         fontSize: 20,
                                         color: '#ff4d4f',
@@ -244,7 +244,7 @@ const CategoryPage = () => {
                     toolBarRender={(): any => {
                         return (
                             <Button
-                                icon={<AddIcon />}
+                                icon={<Add01Icon />}
                                 type="primary"
                                 onClick={() => setOpenModal(true)}
                             >

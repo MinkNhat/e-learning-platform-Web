@@ -1,6 +1,6 @@
 import { callFetchMyCourses, callFetchMyRecentLesson } from '@/config/api';
 import { IEnrollment, ILesson } from '@/types/backend';
-import { FireIconStroke } from '@/components/share/hugeicons';
+import { FireIcon } from '@/config/hugeicons';
 import { Button, Col, Image, Progress, Row, Skeleton, Typography, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -201,7 +201,7 @@ const RecentCourseSection = () => {
                                         </Typography.Text>
                                     </div>
                                     <span className={styles["recent-course-action"]}>
-                                        {isNavigating ? 'Đang mở' : motivationMessage} <FireIconStroke style={{color: '#e76666'}} />
+                                        {isNavigating ? 'Đang mở' : motivationMessage} <FireIcon style={{color: '#e76666'}} />
                                     </span>
                                 </div>
                             </article>

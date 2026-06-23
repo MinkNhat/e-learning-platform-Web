@@ -1,7 +1,7 @@
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ICourse } from "@/types/backend";
-import { AddIcon, DeleteIcon, EditIcon, EyeIconStroke } from "@/components/share/hugeicons";
+import { Add01Icon, Delete02Icon, PencilEdit02Icon, EyeIcon } from "@/config/hugeicons";
 import { ActionType, ProColumns, ProFormSelect } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
 import { useState, useRef } from 'react';
@@ -135,7 +135,7 @@ const CoursePage = () => {
             width: 80,
             render: (_value, entity, _index, _action) => (
                 <Space>
-                    <EditIcon
+                    <PencilEdit02Icon
                         style={{
                             fontSize: 20,
                             color: '#ffa500',
@@ -146,7 +146,7 @@ const CoursePage = () => {
                             setDataInit(entity);
                         }}
                     />
-                    <EyeIconStroke
+                    <EyeIcon
                         style={{
                             fontSize: 20,
                             color: '#1890ff',
@@ -167,7 +167,7 @@ const CoursePage = () => {
                             cancelText="Hủy"
                         >
                             <span style={{ cursor: "pointer", margin: "0 10px" }}>
-                                <DeleteIcon
+                                <Delete02Icon
                                     style={{
                                         fontSize: 20,
                                         color: '#ff4d4f',
@@ -245,7 +245,7 @@ const CoursePage = () => {
                     toolBarRender={(_action, _rows): any => {
                         return (
                             <Button
-                                icon={<AddIcon />}
+                                icon={<Add01Icon />}
                                 type="primary"
                                 onClick={() => setOpenModal(true)}
                             >

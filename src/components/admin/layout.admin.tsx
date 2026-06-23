@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
-    ApiIconStroke,
-    AppstoreIcon,
-    BookIcon,
-    CodeIconStroke,
-    MenuIcon,
-    MoreIcon,
-    TagsIconStroke,
-    UserIconStroke,
-} from '@/components/share/hugeicons';
+    ApiIcon,
+    AppStoreIcon,
+    BookOpenIcon,
+    CodeIcon,
+    Menu01Icon,
+    MoreHorizontalIcon,
+    TagsIcon,
+    UserIcon,
+} from '@/config/hugeicons';
 import { Layout, Menu, Dropdown, Space, message, Avatar, Button } from 'antd';
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -65,32 +65,32 @@ const LayoutAdmin = () => {
                 {
                     label: <Link to='/admin'>Dashboard</Link>,
                     key: '/admin',
-                    icon: <AppstoreIcon />
+                    icon: <AppStoreIcon />
                 },
                 ...(viewUser ? [{
                     label: <Link to='/admin/user'>User</Link>,
                     key: '/admin/user',
-                    icon: <UserIconStroke />
+                    icon: <UserIcon />
                 }] : []),
                 ...(viewCourse ? [{
                     label: <Link to='/admin/course'>Course</Link>,
                     key: '/admin/course',
-                    icon: <BookIcon />
+                    icon: <BookOpenIcon />
                 }] : []),
                 ...(viewCategory ? [{
                     label: <Link to='/admin/category'>Category</Link>,
                     key: '/admin/category',
-                    icon: <TagsIconStroke />
+                    icon: <TagsIcon />
                 }] : []),
                 ...(viewPermission ? [{
                     label: <Link to='/admin/permission'>Permission</Link>,
                     key: '/admin/permission',
-                    icon: <ApiIconStroke />
+                    icon: <ApiIcon />
                 }] : []),
                 ...(viewRole ? [{
                     label: <Link to='/admin/role'>Role</Link>,
                     key: '/admin/role',
-                    icon: <MoreIcon />
+                    icon: <MoreHorizontalIcon />
                 }] : []),
             ];
 
@@ -117,7 +117,7 @@ const LayoutAdmin = () => {
     //             onClick={() => handleLogout()}
     //         >Đăng xuất</label>,
     //         key: 'logout',
-    //         icon: <LogoutIcon />
+    //         icon: <Logout01Icon />
     //     })
     // }
 
@@ -148,7 +148,7 @@ const LayoutAdmin = () => {
                         collapsed={collapsed}
                         onCollapse={(value) => setCollapsed(value)}>
                         <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
-                            <CodeIconStroke />  ADMIN
+                            <CodeIcon />  ADMIN
                         </div>
                         <Menu
                             selectedKeys={[activeMenu]}
@@ -171,7 +171,7 @@ const LayoutAdmin = () => {
                         <div className='admin-header' style={{ display: "flex", justifyContent: "space-between", marginRight: 20 }}>
                             <Button
                                 type="text"
-                                icon={React.createElement(MenuIcon)}
+                                icon={React.createElement(Menu01Icon)}
                                 onClick={() => setCollapsed(!collapsed)}
                                 style={{
                                     fontSize: '16px',

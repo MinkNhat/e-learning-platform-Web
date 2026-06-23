@@ -3,7 +3,7 @@ import CourseSection from '@/components/client/section/course.section';
 import RecentCourseSection from '@/components/client/section/recent-course.section';
 import { callFetchCourse } from '@/config/api';
 import { ICourse } from '@/types/backend';
-import { AwardIcon, BulbIconStroke, PlayIcon, SketchIconStroke } from '@/components/share/hugeicons';
+import { Award01Icon, BulbIcon, PlayCircleIcon, SketchIcon } from '@/config/hugeicons';
 import { Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import styles from 'styles/client.module.scss';
@@ -13,10 +13,10 @@ const HomePage = () => {
     const [isLoadingHighlightCourses, setIsLoadingHighlightCourses] = useState<boolean>(false);
 
     const aiCareerBenefits = [
-        { icon: <SketchIconStroke />, title: 'Tìm hiểu về AI và nhiều chủ đề khác', color: '#c9bcff' },
-        { icon: <AwardIcon />, title: 'Luyện thi chứng chỉ', color: '#b9ecd5' },
-        { icon: <PlayIcon />, title: 'Thực hành huấn luyện AI', color: '#ffe1a8' },
-        { icon: <BulbIconStroke />, title: 'Thăng tiến sự nghiệp của chính bạn', color: '#c9f2ee' },
+        { icon: <SketchIcon />, title: 'Tìm hiểu về AI và nhiều chủ đề khác', color: '#c9bcff' },
+        { icon: <Award01Icon />, title: 'Luyện thi chứng chỉ', color: '#b9ecd5' },
+        { icon: <PlayCircleIcon />, title: 'Thực hành huấn luyện AI', color: '#ffe1a8' },
+        { icon: <BulbIcon />, title: 'Thăng tiến sự nghiệp của chính bạn', color: '#c9f2ee' },
     ];
 
     useEffect(() => {

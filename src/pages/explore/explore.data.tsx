@@ -1,12 +1,12 @@
 import {
-    ApiIconStroke,
-    CodeIconStroke,
-    CompassIconStroke,
-    DatabaseIconStroke,
-    HtmlIcon,
-    NodeIcon,
-    RocketIconStroke,
-} from '@/components/share/hugeicons';
+    ApiIcon,
+    CodeIcon,
+    CompassIcon,
+    DatabaseIcon,
+    HtmlFiveIcon,
+    NodeAddIcon,
+    RocketIcon,
+} from '@/config/hugeicons';
 import type { Instructor, PathCard, RoleCard } from './types';
 
 const roleImage ='https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://images.ctfassets.net/00atxywtfxvd/5rYF1dB5rQdD8Ude60Vcgk/a64d122febc9a54ee56402dd3d012042/Data_Scientist-hero_2x.png';
@@ -34,11 +34,11 @@ export const pathCards: PathCard[] = [
         description: 'Hiểu cách thiết kế API, xử lý dữ liệu và vận hành server để làm chủ phần lõi của ứng dụng web.',
         image: pathImage,
         skills: [
-            { label: 'API', icon: <ApiIconStroke />, progress: 86 },
-            { label: 'NodeJS', icon: <NodeIcon />, progress: 68 },
-            { label: 'Database', icon: <DatabaseIconStroke />, progress: 54 },
-            { label: 'Kiến trúc', icon: <CompassIconStroke />, progress: 38 },
-            { label: 'Triển khai', icon: <RocketIconStroke />, progress: 24 },
+            { label: 'API', icon: <ApiIcon />, progress: 86 },
+            { label: 'NodeJS', icon: <NodeAddIcon />, progress: 68 },
+            { label: 'Database', icon: <DatabaseIcon />, progress: 54 },
+            { label: 'Kiến trúc', icon: <CompassIcon />, progress: 38 },
+            { label: 'Triển khai', icon: <RocketIcon />, progress: 24 },
         ],
     },
     {
@@ -47,11 +47,11 @@ export const pathCards: PathCard[] = [
         description: 'Kết hợp frontend, backend, database và triển khai để tự xây dựng một sản phẩm hoàn chỉnh.',
         image: pathImage,
         skills: [
-            { label: 'Frontend', icon: <HtmlIcon />, progress: 88 },
-            { label: 'Backend', icon: <ApiIconStroke />, progress: 72 },
-            { label: 'Database', icon: <DatabaseIconStroke />, progress: 56 },
-            { label: 'React', icon: <CodeIconStroke />, progress: 42 },
-            { label: 'Deploy', icon: <RocketIconStroke />, progress: 30 },
+            { label: 'Frontend', icon: <HtmlFiveIcon />, progress: 88 },
+            { label: 'Backend', icon: <ApiIcon />, progress: 72 },
+            { label: 'Database', icon: <DatabaseIcon />, progress: 56 },
+            { label: 'React', icon: <CodeIcon />, progress: 42 },
+            { label: 'Deploy', icon: <RocketIcon />, progress: 30 },
         ],
     },
 ];

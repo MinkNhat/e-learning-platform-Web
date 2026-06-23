@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ILesson } from "@/types/backend";
 import { callCreateLesson, callUpdateLesson, callDeleteLesson } from "@/config/api";
 import { Button, Col, Empty, Form, Input, Modal, Popconfirm, Row, Select, Space, Switch, Tag, message, notification } from "antd";
-import { AddIcon, DeleteIcon, EditIcon } from "@/components/share/hugeicons";
+import { Add01Icon, Delete02Icon, PencilEdit02Icon } from "@/config/hugeicons";
 import CKEditorField from '@/components/share/CKEditorField';
 
 interface LessonManagerProps {
@@ -112,7 +112,7 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
                                 <div>{moduleOrder}.{lesson.order || 0}. {lesson.name}</div>
                             </div>
                             <Space onClick={(e) => e.stopPropagation()}>
-                                <EditIcon
+                                <PencilEdit02Icon
                                     style={{ color: '#ffa500', cursor: 'pointer' }}
                                     onClick={() => handleEditLesson(lesson)}
                                 />
@@ -123,7 +123,7 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
                                     okText="Xác nhận"
                                     cancelText="Hủy"
                                 >
-                                    <DeleteIcon style={{ color: '#ff4d4f', cursor: 'pointer' }} />
+                                    <Delete02Icon style={{ color: '#ff4d4f', cursor: 'pointer' }} />
                                 </Popconfirm>
                             </Space>
                         </div>
@@ -136,7 +136,7 @@ const LessonManager = ({ moduleOrder, moduleId, lessons, onRefetch }: LessonMana
             <Button
                 type="dashed"
                 block
-                icon={<AddIcon />}
+                icon={<Add01Icon />}
                 onClick={handleAddLesson}
                 style={{ marginBottom: '16px' }}
             >

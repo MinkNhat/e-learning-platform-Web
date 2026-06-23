@@ -3,7 +3,7 @@ import { Col, Form, Row, message, notification } from "antd";
 import { isMobile } from 'react-device-detect';
 import { callCreateRole, callFetchPermission, callUpdateRole } from "@/config/api";
 import { IPermission } from "@/types/backend";
-import { CheckSquareIcon } from "@/components/share/hugeicons";
+import { CheckmarkSquare01Icon } from "@/config/hugeicons";
 import ModuleApi from "./module.api";
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
@@ -151,7 +151,7 @@ const ModalRole = (props: IProps) => {
                 submitter={{
                     render: (_: any, dom: any) => <FooterToolbar>{dom}</FooterToolbar>,
                     submitButtonProps: {
-                        icon: <CheckSquareIcon />
+                        icon: <CheckmarkSquare01Icon />
                     },
                     searchConfig: {
                         resetText: "Hủy",

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AutoComplete, Button, Form } from 'antd';
-import { SearchIcon } from '@/components/share/hugeicons';
+import { Search01Icon } from '@/config/hugeicons';
 import { ProForm } from '@ant-design/pro-components';
 import debounce from 'lodash/debounce';
 import styles from '@/styles/client.module.scss';
@@ -81,7 +81,7 @@ const SearchClient = () => {
                     shape="circle"
                     size="middle"
                     style={{backgroundColor: 'var(--primary-color-dark)'}}
-                    icon={<SearchIcon />}
+                    icon={<Search01Icon />}
                     onClick={() => form.submit()}
                 />
             </div>

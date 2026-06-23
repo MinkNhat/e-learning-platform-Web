@@ -1,5 +1,5 @@
 import { grey, green, blue, red, orange } from '@ant-design/colors';
-import * as Hugeicons from '@/components/share/hugeicons';
+import * as Hugeicons from '@/config/hugeicons';
 import { type CSSProperties, type JSXElementConstructor } from 'react';
 
 export const SKILLS_LIST =
@@ -91,11 +91,11 @@ export function getHugeIconComponent(icon?: string) {
     const iconName = icon?.trim();
     if (!iconName) return null;
 
-    return (Hugeicons[iconName as keyof typeof Hugeicons] as JSXElementConstructor<{
+    return Hugeicons[iconName as keyof typeof Hugeicons] as JSXElementConstructor<{
         size?: string | number;
         strokeWidth?: number;
         style?: CSSProperties;
-    }> | undefined) ?? null;
+    }> | null;
 }
 
 export function getYoutubeId(url?: string) {

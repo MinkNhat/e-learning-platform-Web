@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowRightIcon, LogoutIcon, MenuIcon, MoreIcon } from '@/components/share/hugeicons';
+import { ArrowRight01Icon, Logout01Icon, Menu01Icon, MoreHorizontalIcon } from '@/config/hugeicons';
 import { Avatar, Divider, Drawer, Dropdown, Grid, MenuProps, Space, message } from 'antd';
 import { Menu } from 'antd';
 import styles from '@/styles/client.module.scss';
@@ -141,7 +141,7 @@ const Header = (props: any) => {
         {
             label: <Link to={"/admin"}>Trang Quản Trị</Link>,
             key: 'admin',
-            icon: <MoreIcon />
+            icon: <MoreHorizontalIcon />
         },
         {
             label: 
@@ -149,7 +149,7 @@ const Header = (props: any) => {
                     Đăng xuất
                 </label>,
             key: 'logout',
-            icon: <LogoutIcon />
+            icon: <Logout01Icon />
         },
     ];
 
@@ -214,7 +214,7 @@ const Header = (props: any) => {
                                                                             onClick={() => setIsExploreMenuOpen(false)}
                                                                         >
                                                                             <span>{category.name}</span>
-                                                                            <ArrowRightIcon />
+                                                                            <ArrowRight01Icon />
                                                                         </Link>
                                                                     ))}
                                                                 </div>
@@ -296,7 +296,7 @@ const Header = (props: any) => {
                                     className={styles['logo']}
                                 />
                             </div>
-                            <MenuIcon onClick={() => setOpenMobileMenu(true)} />
+                            <Menu01Icon onClick={() => setOpenMobileMenu(true)} />
                         </div>
                     }
                 </div>

@@ -2,10 +2,10 @@ import { callFetchCategoryById, callFetchChildCategory } from '@/config/api';
 import { getHugeIconComponent } from '@/config/utils';
 import type { ICategory } from '@/types/backend';
 import {
-    BookIcon,
-    StarIconStroke,
-    UsersIcon,
-} from '@/components/share/hugeicons';
+    BookOpenIcon,
+    StarIcon,
+    UserMultipleIcon,
+} from '@/config/hugeicons';
 import { Avatar, Card, Col, Empty, Row, Skeleton, Space, Tabs, Tag, Typography } from 'antd';
 import { createElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -147,7 +147,7 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
                                     to={`/explore/${topic.slug}`}
                                     className={styles["topic-card"]}
                                 >
-                                    <span>{TopicIcon ? createElement(TopicIcon) : <BookIcon />}</span>
+                                    <span>{TopicIcon ? createElement(TopicIcon) : <BookOpenIcon />}</span>
                                     <strong>{topic.name}</strong>
                                 </Link>
                             );
@@ -171,7 +171,7 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
                                     <Avatar
                                         size={62}
                                         src={instructor.avatar ? `${BASE_URL}/upload/avatars/${instructor.avatar}` : undefined}
-                                        icon={!instructor.avatar ? <UsersIcon /> : undefined}
+                                        icon={!instructor.avatar ? <UserMultipleIcon /> : undefined}
                                     >
                                         {instructor.name.slice(0, 2).toUpperCase()}
                                     </Avatar>
@@ -182,7 +182,7 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
                                 </div>
                                 <Space size={[8, 8]} wrap className={styles["instructor-meta"]}>
                                     <Tag bordered={false} color="green">
-                                        {instructor.rating.toFixed(1)} <StarIconStroke />
+                                        {instructor.rating.toFixed(1)} <StarIcon />
                                     </Tag>
                                     <Tag bordered={false}>{instructor.learners}</Tag>
                                     <Tag bordered={false}>{instructor.courses}</Tag>

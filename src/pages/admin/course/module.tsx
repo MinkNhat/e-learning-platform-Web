@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { IModule, ILesson } from "@/types/backend";
 import { callCreateModule, callUpdateModule, callDeleteModule } from "@/config/api";
 import { Button, Collapse, Empty, Form, Input, Modal, Popconfirm, Space, Tag, message, notification } from "antd";
-import { AddIcon, DeleteIcon, EditIcon } from "@/components/share/hugeicons";
+import { Add01Icon, Delete02Icon, PencilEdit02Icon } from "@/config/hugeicons";
 import LessonManager from './lesson';
 import styles from '@/styles/admin.module.scss';
 
@@ -96,7 +96,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
                         <strong>{module.order || 0}. {module.name}</strong> 
                     </span>
                     <Space onClick={(e) => e.stopPropagation()}>
-                        <EditIcon
+                        <PencilEdit02Icon
                             style={{ color: '#ffa500', cursor: 'pointer' }}
                             onClick={() => handleEditModule(module)}
                         />
@@ -107,7 +107,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
                             okText="Xác nhận"
                             cancelText="Hủy"
                         >
-                            <DeleteIcon style={{ color: '#ff4d4f', cursor: 'pointer' }} />
+                            <Delete02Icon style={{ color: '#ff4d4f', cursor: 'pointer' }} />
                         </Popconfirm>
                     </Space>
                 </div>
@@ -128,7 +128,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                     type="primary"
-                    icon={<AddIcon />}
+                    icon={<Add01Icon />}
                     onClick={handleAddModule}
                     style={{ position: 'absolute', top: '12px' }}
                 >

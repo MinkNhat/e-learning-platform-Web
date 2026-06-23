@@ -2,12 +2,12 @@ import { callCompleteMyLesson, callFetchMyLessonById } from '@/config/api';
 import { getYoutubeId } from '@/config/utils';
 import { ILesson, IMyLessonDetail } from '@/types/backend';
 import {
-    CheckCircleIcon,
-    SadIcon,
-    ArrowLeftIcon,
-    MenuIcon,
-    ArrowRightIcon,
-} from '@/components/share/hugeicons';
+    CheckmarkCircle02Icon,
+    Sad01Icon,
+    ArrowLeft01Icon,
+    Menu01Icon,
+    ArrowRight01Icon,
+} from '@/config/hugeicons';
 import { Button, Collapse, Drawer, Empty, Progress, Skeleton, Space, Typography, notification } from 'antd';
 import { type UIEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -217,7 +217,7 @@ const ClientLessonDetailPage = () => {
             >
                 <span className={styles["lesson-nav-index"]}>{index + 1}</span>
                 <span className={styles["lesson-nav-title"]}>{item.name}</span>
-                {item.progressStatus === 'completed' && <CheckCircleIcon />}
+                {item.progressStatus === 'completed' && <CheckmarkCircle02Icon />}
             </button>
         )
     }
@@ -275,7 +275,7 @@ const ClientLessonDetailPage = () => {
                 ) : (
                     <div className={styles["lesson-video-empty"]}>
                         <Space direction="vertical" align="center">
-                            <SadIcon style={{ fontSize: 42, color: 'rgba(255,255,255,0.78)' }} />
+                            <Sad01Icon style={{ fontSize: 42, color: 'rgba(255,255,255,0.78)' }} />
                             <Text style={{ color: 'rgba(255,255,255,0.78)' }}>
                                 Bài học chưa sẵn sàng!
                             </Text>
@@ -369,7 +369,7 @@ const ClientLessonDetailPage = () => {
                                         onClick={() => handleNavigateLesson(previousLesson)}
                                         shape='round'
                                         size='large'
-                                        icon={<ArrowLeftIcon />}
+                                        icon={<ArrowLeft01Icon />}
                                     >
                                         Bài trước
                                     </Button>
@@ -381,12 +381,12 @@ const ClientLessonDetailPage = () => {
                                         shape='round'
                                         size='large'
                                     >
-                                        <span> Bài tiếp theo <ArrowRightIcon /></span>
+                                        <span> Bài tiếp theo <ArrowRight01Icon /></span>
                                     </Button>
                                 </div>                         
 
                                 <Button
-                                    icon={<MenuIcon />}
+                                    icon={<Menu01Icon />}
                                     onClick={handleToggleLessonNavigation}
                                     className={styles["lesson-bottom-toggle"]}
                                 >
