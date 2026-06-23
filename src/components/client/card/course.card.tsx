@@ -7,9 +7,10 @@ const { Text } = Typography;
 interface IProps {
     course: ICourse;
     onClick?: () => void;
+    hasSearchMatches?: boolean;
 }
 
-const CourseCard = ({ course, onClick }: IProps) => {
+const CourseCard = ({ course, onClick, hasSearchMatches = false }: IProps) => {
     const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
@@ -22,24 +23,27 @@ const CourseCard = ({ course, onClick }: IProps) => {
         <div
             onClick={onClick}
             style={{
-                borderRadius: 18,
+                borderRadius: hasSearchMatches ? '18px 18px 0 0' : 18,
                 overflow: 'hidden',
                 width: '100%',
                 minWidth: 0,
                 boxSizing: 'border-box',
                 border: '1px solid #e7e9f0',
+                borderBottom: hasSearchMatches ? 0 : undefined,
                 background: '#fff',
-                boxShadow: '0 14px 34px rgba(20, 31, 55, 0.08)',
+                boxShadow: hasSearchMatches ? 'none' : '0 14px 34px rgba(20, 31, 55, 0.08)',
                 padding: 10,
                 cursor: 'pointer',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
             }}
             onMouseEnter={(event) => {
+                if (hasSearchMatches) return;
                 event.currentTarget.style.transform = 'translateY(-4px)';
                 event.currentTarget.style.boxShadow = '0 20px 42px rgba(20, 31, 55, 0.12)';
                 event.currentTarget.style.borderColor = '#cfd7e8';
             }}
             onMouseLeave={(event) => {
+                if (hasSearchMatches) return;
                 event.currentTarget.style.transform = 'translateY(0)';
                 event.currentTarget.style.boxShadow = '0 14px 34px rgba(20, 31, 55, 0.08)';
                 event.currentTarget.style.borderColor = '#e7e9f0';

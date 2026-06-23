@@ -1,4 +1,4 @@
-import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment, IMyLessonDetail } from '@/types/backend';
+import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, ICourseSearchResult, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment, IMyLessonDetail } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -115,6 +115,11 @@ export const callDeleteCourse = (id: string) => {
 
 export const callFetchCourse = (query: string) => {
     return axios.get<IBackendRes<IModelPaginate<ICourse>>>(`/api/v1/courses?${query}`);
+}
+
+export const callSearchCourses = (keyword: string, page = 1, limit = 12) => {
+    const params = new URLSearchParams({ q: keyword, page: String(page), limit: String(limit) });
+    return axios.get<IBackendRes<IModelPaginate<ICourseSearchResult>>>(`/api/v1/courses/search?${params.toString()}`);
 }
 
 export const callFetchCourseById = (id: string) => {

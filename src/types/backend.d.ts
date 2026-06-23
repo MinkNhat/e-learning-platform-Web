@@ -92,6 +92,21 @@ export interface ICourse {
     totalLength?: number;
 }
 
+export type ICourseSearchMatch = {
+    type: 'course' | 'module' | 'lesson';
+    field: 'title' | 'name';
+    id: string;
+    title: string;
+    module?: {
+        id: string;
+        title: string;
+    };
+};
+
+export type ICourseSearchResult = ICourse & {
+    matches: ICourseSearchMatch[];
+};
+
 export interface ICategory {
     _id?: string;
     name: string;

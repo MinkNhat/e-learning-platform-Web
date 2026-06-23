@@ -1,13 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AutoComplete, Button, Form } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ProForm } from '@ant-design/pro-components';
 import debounce from 'lodash/debounce';
 import styles from '@/styles/client.module.scss';
+import { callSearchCourses } from '@/config/api';
+import { useNavigate } from 'react-router-dom';
 
 const SearchClient = () => {
     const [form] = Form.useForm();
     const [options, setOptions] = useState<any[]>([]);
+    const navigate = useNavigate();
 
     const searchCourse = async (keyword: string) => {
         if (!keyword?.trim()) {
@@ -16,30 +19,17 @@ const SearchClient = () => {
         }
 
         try {
-            /**
-             * TODO:
-             * Thay bằng API thật của bạn
-             */
-
-            // const res = await courseApi.search(keyword);
-
-            // Demo data
-            const courses = [
-                'React JS cơ bản',
-                'React Native',
-                'NestJS Backend',
-                'Spring Boot',
-                'MongoDB Mastery',
-            ].filter((item) =>
-                item.toLowerCase().includes(keyword.toLowerCase())
-            );
-
-            setOptions(
-                courses.map((item) => ({
-                    value: item,
-                    label: item,
-                }))
-            );
+            // Backend search also checks module and lesson titles. Fetch its maximum
+            // suggestion window, then deliberately retain only course-title matches.
+            const res = await callSearchCourses(keyword, 1, 100);
+            const suggestions = (res?.data?.result ?? [])
+                .filter((course) => course.matches.some((match) => match.type === 'course'))
+                .slice(0, 6)
+                .map((course) => ({
+                    value: course.title,
+                    label: course.title,
+                }));
+            setOptions(suggestions);
         } catch (error) {
             console.error(error);
         }
@@ -50,13 +40,11 @@ const SearchClient = () => {
         []
     );
 
-    const onFinish = async (values: any) => {
-        console.log(values);
+    useEffect(() => () => debouncedSearch.cancel(), [debouncedSearch]);
 
-        /**
-         * Ví dụ:
-         * router.push(`/courses?keyword=${values.keyword}`);
-         */
+    const onFinish = async (values: any) => {
+        const keyword = values.keyword?.trim();
+        if (keyword) navigate(`/search?q=${encodeURIComponent(keyword)}`);
     };
 
     return (
@@ -78,6 +66,13 @@ const SearchClient = () => {
                         options={options}
                         onSearch={debouncedSearch}
                         filterOption={false}
+                        onSelect={(value) => form.setFieldValue('keyword', value)}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                form.submit();
+                            }
+                        }}
                     />
                 </ProForm.Item>
 

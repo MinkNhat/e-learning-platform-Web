@@ -300,6 +300,12 @@
                     box-shadow: none !important;
                     background: transparent !important;
                 }
+
+                :global(.ant-select-selection-search-input),
+                :global(.ant-select-selection-placeholder),
+                :global(.ant-select-selection-item) {
+                    font-size: 15px !important;
+                }
             }
         }
 

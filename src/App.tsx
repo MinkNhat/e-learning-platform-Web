@@ -33,6 +33,7 @@ import PaymentResultPage from './pages/payment/result';
 import MyCoursesPage from './pages/my-courses';
 import ClientLessonDetailPage from './pages/my-courses/lesson';
 import ExplorePage from './pages/explore';
+import SearchPage from './pages/search';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -81,6 +82,7 @@ export default function App() {
         { path: "explore", element: <ExplorePage /> },
         { path: "explore/:slug", element: <ExplorePage /> },
         { path: "course", element: <ClientCoursePage /> },
+        { path: "search", element: <SearchPage /> },
         { path: "course/:slug", element: <ClientCourseDetailPage /> },
         {
           path: "my-courses",
