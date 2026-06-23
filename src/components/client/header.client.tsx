@@ -76,10 +76,10 @@ const Header = (props: any) => {
             label: 'Khám phá',
             path: '/explore',
         },
-        {
-            label: 'Trình độ',
-            path: '/levels',
-        }
+        // {
+        //     label: 'Trình độ',
+        //     path: '/levels',
+        // }
     ];
 
     const privateNavItems: HeaderNavItem[] = [
