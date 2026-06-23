@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Avatar, Col, Form, Mentions, Row, Space, message, notification, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadIcon } from "@/components/share/hugeicons";
 import { isMobile } from 'react-device-detect';
 import { callCreateCourse, callFetchCategory, callFetchUser, callUpdateCourse } from "@/config/api";
 import { ICategory, ICourse, IUser } from "@/types/backend";
@@ -318,7 +318,7 @@ const ModalCourse = (props: IProps) => {
                                 beforeUpload={() => false}
                             >
                                 <button type="button" style={{ border: '1px solid #d9d9d9', borderRadius: '2px', padding: '4px 15px', cursor: 'pointer' }}>
-                                    <UploadOutlined /> Upload Thumbnail
+                                    <UploadIcon /> Upload Thumbnail
                                 </button>
                             </Upload>
                         </Form.Item>

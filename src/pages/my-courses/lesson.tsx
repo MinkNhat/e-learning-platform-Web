@@ -2,12 +2,12 @@ import { callCompleteMyLesson, callFetchMyLessonById } from '@/config/api';
 import { getYoutubeId } from '@/config/utils';
 import { ILesson, IMyLessonDetail } from '@/types/backend';
 import {
-    CheckCircleOutlined,
-    FrownOutlined,
-    LeftOutlined,
-    MenuOutlined,
-    RightOutlined,
-} from '@ant-design/icons';
+    CheckCircleIcon,
+    SadIcon,
+    ArrowLeftIcon,
+    MenuIcon,
+    ArrowRightIcon,
+} from '@/components/share/hugeicons';
 import { Button, Collapse, Drawer, Empty, Progress, Skeleton, Space, Typography, notification } from 'antd';
 import { type UIEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -217,7 +217,7 @@ const ClientLessonDetailPage = () => {
             >
                 <span className={styles["lesson-nav-index"]}>{index + 1}</span>
                 <span className={styles["lesson-nav-title"]}>{item.name}</span>
-                {item.progressStatus === 'completed' && <CheckCircleOutlined />}
+                {item.progressStatus === 'completed' && <CheckCircleIcon />}
             </button>
         )
     }
@@ -275,7 +275,7 @@ const ClientLessonDetailPage = () => {
                 ) : (
                     <div className={styles["lesson-video-empty"]}>
                         <Space direction="vertical" align="center">
-                            <FrownOutlined style={{ fontSize: 42, color: 'rgba(255,255,255,0.78)' }} />
+                            <SadIcon style={{ fontSize: 42, color: 'rgba(255,255,255,0.78)' }} />
                             <Text style={{ color: 'rgba(255,255,255,0.78)' }}>
                                 Bài học chưa sẵn sàng!
                             </Text>
@@ -369,7 +369,7 @@ const ClientLessonDetailPage = () => {
                                         onClick={() => handleNavigateLesson(previousLesson)}
                                         shape='round'
                                         size='large'
-                                        icon={<LeftOutlined />}
+                                        icon={<ArrowLeftIcon />}
                                     >
                                         Bài trước
                                     </Button>
@@ -381,12 +381,12 @@ const ClientLessonDetailPage = () => {
                                         shape='round'
                                         size='large'
                                     >
-                                        <span> Bài tiếp theo <RightOutlined /></span>
+                                        <span> Bài tiếp theo <ArrowRightIcon /></span>
                                     </Button>
                                 </div>                         
 
                                 <Button
-                                    icon={<MenuOutlined />}
+                                    icon={<MenuIcon />}
                                     onClick={handleToggleLessonNavigation}
                                     className={styles["lesson-bottom-toggle"]}
                                 >

@@ -150,9 +150,9 @@ const ModalCategory = (props: IProps) => {
 
                     <Col lg={8} md={8} sm={24} xs={24}>
                         <ProFormText
-                            label={<a href="https://ant.design/components/icon/" target="_blank" rel="noopener noreferrer">Antd Icons</a>}
+                            label={<a href="https://hugeicons.com/icons" target="_blank" rel="noopener noreferrer">Hugeicons Stroke</a>}
                             name="icon"
-                            placeholder="<StepForwardOutlined />"
+                            placeholder="ThirdBracketCircleIcon"
                         />
                     </Col>
                     

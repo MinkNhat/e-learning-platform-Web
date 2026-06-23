@@ -1,7 +1,7 @@
 import CourseCard from '@/components/client/card/course.card';
 import { callSearchCourses } from '@/config/api';
 import { ICourseSearchResult } from '@/types/backend';
-import { BookOutlined, FilterOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { BookIcon, FilterIconStroke, PlayIcon } from '@/components/share/hugeicons';
 import { Empty, Pagination, Select, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -80,7 +80,7 @@ const SearchPage = () => {
 
             {!!keyword && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, padding: '14px 0 22px', borderTop: '1px solid #e7e9f0' }}>
                 <Space wrap size={[10, 10]}>
-                    <Select value={category} onChange={setCategory} style={{ minWidth: 158 }} suffixIcon={<FilterOutlined />} options={[{ value: 'all', label: 'Tất cả bộ lọc' }, ...categoryOptions]} />
+                    <Select value={category} onChange={setCategory} style={{ minWidth: 158 }} suffixIcon={<FilterIconStroke />} options={[{ value: 'all', label: 'Tất cả bộ lọc' }, ...categoryOptions]} />
                     <Select value={language} onChange={setLanguage} style={{ minWidth: 132 }} options={[{ value: 'all', label: 'Ngôn ngữ' }, ...languageOptions]} />
                     <Select value={level} onChange={setLevel} style={{ minWidth: 120 }} options={[{ value: 'all', label: 'Cấp độ' }, ...levelOptions]} />
                     <Select value={rating} onChange={setRating} style={{ minWidth: 132 }} options={[{ value: 'all', label: 'Xếp hạng' }, { value: '4', label: 'Từ 4 sao' }, { value: '3', label: 'Từ 3 sao' }]} />
@@ -127,8 +127,8 @@ const MatchPanel = ({ matches, keyword }: { matches: ICourseSearchResult['matche
         <div style={{ flex: 1, display: 'grid', alignContent: 'start', gap: 8, padding: 12, borderRadius: 12, background: '#f6f9f7' }}>
             {visibleMatches.map((match) => <div key={`${match.type}-${match.id}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, color: '#4f5f57', fontSize: 14 }}>
                 {match.type === 'lesson'
-                    ? <PlayCircleOutlined style={{ color: '#00a65a', marginTop: 2 }} />
-                    : <BookOutlined style={{ color: '#00a65a', marginTop: 2 }} />}
+                    ? <PlayIcon style={{ color: '#00a65a', marginTop: 2 }} />
+                    : <BookIcon style={{ color: '#00a65a', marginTop: 2 }} />}
                 <span>{match.title}</span>
             </div>)}
         </div>

@@ -1,0 +1,49 @@
+// @hugeicons/core-free-icons publishes ESM export metadata that TypeScript's
+// legacy Node resolver cannot discover in this Vite project. Runtime resolution
+// still uses the package's ESM entry; these declarations expose the used icons.
+declare module '@hugeicons/core-free-icons' {
+    export const Add01Icon: any;
+    export const ApiIcon: any;
+    export const AppStoreIcon: any;
+    export const ArrowLeft01Icon: any;
+    export const ArrowRight01Icon: any;
+    export const Award01Icon: any;
+    export const BookOpenIcon: any;
+    export const BulbIcon: any;
+    export const Calendar01Icon: any;
+    export const Certificate01Icon: any;
+    export const CheckmarkCircle02Icon: any;
+    export const CheckmarkSquare01Icon: any;
+    export const Clock01Icon: any;
+    export const CodeIcon: any;
+    export const CompassIcon: any;
+    export const ComputerIcon: any;
+    export const DatabaseIcon: any;
+    export const Delete02Icon: any;
+    export const EyeIcon: any;
+    export const File01Icon: any;
+    export const FilterIcon: any;
+    export const FireIcon: any;
+    export const GlobalIcon: any;
+    export const HtmlFiveIcon: any;
+    export const LaptopIcon: any;
+    export const Logout01Icon: any;
+    export const Menu01Icon: any;
+    export const MobileNavigator01Icon: any;
+    export const MoreHorizontalIcon: any;
+    export const NodeAddIcon: any;
+    export const PencilEdit02Icon: any;
+    export const PlayCircleIcon: any;
+    export const RocketIcon: any;
+    export const Sad01Icon: any;
+    export const Search01Icon: any;
+    export const SketchIcon: any;
+    export const Sorting01Icon: any;
+    export const StarIcon: any;
+    export const TagsIcon: any;
+    export const ThirdBracketCircleIcon: any;
+    export const Upload01Icon: any;
+    export const UserAdd01Icon: any;
+    export const UserIcon: any;
+    export const UserMultipleIcon: any;
+}

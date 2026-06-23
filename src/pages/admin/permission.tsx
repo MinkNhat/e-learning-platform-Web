@@ -1,7 +1,7 @@
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { IPermission } from "@/types/backend";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "@/components/share/hugeicons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, message, notification } from "antd";
 import { useState, useRef } from 'react';
@@ -123,7 +123,7 @@ const PermissionPage = () => {
                         permission={ALL_PERMISSIONS.PERMISSIONS.UPDATE}
                         hideChildren
                     >
-                        <EditOutlined
+                        <EditIcon
                             style={{
                                 fontSize: 20,
                                 color: '#ffa500',
@@ -148,7 +148,7 @@ const PermissionPage = () => {
                             cancelText="Hủy"
                         >
                             <span style={{ cursor: "pointer", margin: "0 10px" }}>
-                                <DeleteOutlined
+                                <DeleteIcon
                                     style={{
                                         fontSize: 20,
                                         color: '#ff4d4f',
@@ -233,7 +233,7 @@ const PermissionPage = () => {
                     toolBarRender={(_action, _rows): any => {
                         return (
                             <Button
-                                icon={<PlusOutlined />}
+                                icon={<AddIcon />}
                                 type="primary"
                                 onClick={() => setOpenModal(true)}
                             >

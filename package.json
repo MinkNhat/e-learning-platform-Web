@@ -11,10 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ant-design/icons": "4.8.0",
+    "@ant-design/colors": "^8.0.1",
     "@ant-design/pro-components": "2.6.46",
     "@ant-design/pro-layout": "7.17.19",
     "@ckeditor/ckeditor5-react": "^11.1.2",
+    "@hugeicons/core-free-icons": "^4.2.1",
+    "@hugeicons/react": "^1.1.7",
     "@reduxjs/toolkit": "1.9.3",
     "antd": "5.21.0",
     "async-mutex": "0.4.0",

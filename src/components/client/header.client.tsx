@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { DashOutlined, LogoutOutlined, MenuFoldOutlined, RightOutlined } from '@ant-design/icons';
+import { ArrowRightIcon, LogoutIcon, MenuIcon, MoreIcon } from '@/components/share/hugeicons';
 import { Avatar, Divider, Drawer, Dropdown, Grid, MenuProps, Space, message } from 'antd';
 import { Menu } from 'antd';
 import styles from '@/styles/client.module.scss';
@@ -141,7 +141,7 @@ const Header = (props: any) => {
         {
             label: <Link to={"/admin"}>Trang Quản Trị</Link>,
             key: 'admin',
-            icon: <DashOutlined />
+            icon: <MoreIcon />
         },
         {
             label: 
@@ -149,7 +149,7 @@ const Header = (props: any) => {
                     Đăng xuất
                 </label>,
             key: 'logout',
-            icon: <LogoutOutlined />
+            icon: <LogoutIcon />
         },
     ];
 
@@ -214,7 +214,7 @@ const Header = (props: any) => {
                                                                             onClick={() => setIsExploreMenuOpen(false)}
                                                                         >
                                                                             <span>{category.name}</span>
-                                                                            <RightOutlined />
+                                                                            <ArrowRightIcon />
                                                                         </Link>
                                                                     ))}
                                                                 </div>
@@ -296,7 +296,7 @@ const Header = (props: any) => {
                                     className={styles['logo']}
                                 />
                             </div>
-                            <MenuFoldOutlined onClick={() => setOpenMobileMenu(true)} />
+                            <MenuIcon onClick={() => setOpenMobileMenu(true)} />
                         </div>
                     }
                 </div>

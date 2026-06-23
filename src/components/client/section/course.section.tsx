@@ -1,5 +1,5 @@
 import { ICourse } from '@/types/backend';
-import { FilterOutlined, SortAscendingOutlined } from '@ant-design/icons';
+import { FilterIconStroke, SortIcon } from '@/components/share/hugeicons';
 import { Button, Empty, Pagination, Row, Select, Skeleton, Space, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from 'styles/client.module.scss';
@@ -114,7 +114,7 @@ const CourseSection = (props: IProps) => {
                         <Select
                             value={filter || 'all'}
                             style={{ minWidth: 180 }}
-                            suffixIcon={<FilterOutlined />}
+                            suffixIcon={<FilterIconStroke />}
                             options={[
                                 { value: 'all', label: 'Tất cả danh mục' },
                             ]}
@@ -125,7 +125,7 @@ const CourseSection = (props: IProps) => {
                         <Select
                             value={sortQuery}
                             style={{ minWidth: 190 }}
-                            suffixIcon={<SortAscendingOutlined />}
+                            suffixIcon={<SortIcon />}
                             options={[
                                 { value: 'sort=-updatedAt', label: 'Mới cập nhật' },
                                 { value: 'sort=price', label: 'Giá tăng dần' },

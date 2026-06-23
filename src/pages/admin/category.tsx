@@ -1,7 +1,7 @@
 import DataTable from "@/components/client/data-table";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ICategory } from "@/types/backend";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { AddIcon, DeleteIcon, EditIcon } from "@/components/share/hugeicons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
 import { useState, useRef, createElement } from 'react';
@@ -12,7 +12,7 @@ import { fetchCategory } from "@/redux/slice/categorySlide";
 import Access from "@/components/share/access";
 import { ALL_PERMISSIONS } from "@/config/permissions";
 import ModalCategory from "@/components/admin/category/modal.category";
-import { getAntdIconComponent } from "@/config/utils";
+import { getHugeIconComponent } from "@/config/utils";
 
 const CategoryPage = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -69,7 +69,7 @@ const CategoryPage = () => {
             align: "center",
             width: 80,
             render: (_dom, entity) => {
-                const IconComponent = getAntdIconComponent(entity.icon);
+                const IconComponent = getHugeIconComponent(entity.icon);
 
                 return IconComponent ? createElement(IconComponent, { style: { fontSize: 20 } }) : '-';
             },
@@ -143,7 +143,7 @@ const CategoryPage = () => {
                         permission={ALL_PERMISSIONS.CATEGORIES.UPDATE}
                         hideChildren
                     >
-                        <EditOutlined
+                        <EditIcon
                             style={{
                                 fontSize: 20,
                                 color: '#ffa500',
@@ -168,7 +168,7 @@ const CategoryPage = () => {
                             cancelText="Hủy"
                         >
                             <span style={{ cursor: "pointer", margin: "0 10px" }}>
-                                <DeleteOutlined
+                                <DeleteIcon
                                     style={{
                                         fontSize: 20,
                                         color: '#ff4d4f',
@@ -244,7 +244,7 @@ const CategoryPage = () => {
                     toolBarRender={(): any => {
                         return (
                             <Button
-                                icon={<PlusOutlined />}
+                                icon={<AddIcon />}
                                 type="primary"
                                 onClick={() => setOpenModal(true)}
                             >

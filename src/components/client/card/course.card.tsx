@@ -1,5 +1,5 @@
 import { ICourse } from '@/types/backend';
-import { ClockCircleOutlined, TeamOutlined } from '@ant-design/icons';
+import { ClockIcon, UsersIcon } from '@/components/share/hugeicons';
 import { Image, Rate, Tag, Typography } from 'antd';
 
 const { Text } = Typography;
@@ -106,8 +106,8 @@ const CourseCard = ({ course, onClick, hasSearchMatches = false }: IProps) => {
 
                 <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, color: '#667085' }}>
                     <span style={{fontSize: 14}}>
-                        <span style={{marginRight: 16}}><TeamOutlined /> {course.enrollmentCount ?? 0}</span>
-                        {course.totalLessons && <span><ClockCircleOutlined /> {course.totalLessons} bài học</span>}
+                        <span style={{marginRight: 16}}><UsersIcon /> {course.enrollmentCount ?? 0}</span>
+                        {course.totalLessons && <span><ClockIcon /> {course.totalLessons} bài học</span>}
                     </span>
                     <Rate
                         disabled

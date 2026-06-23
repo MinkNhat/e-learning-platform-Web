@@ -1,5 +1,5 @@
 import { callFetchRootCategory } from '@/config/api';
-import { getAntdIconComponent } from '@/config/utils';
+import { getHugeIconComponent } from '@/config/utils';
 import { ICategory, IModelPaginate } from '@/types/backend';
 import { Skeleton, Typography } from 'antd';
 import { createElement, useEffect, useState } from 'react';
@@ -64,7 +64,7 @@ const CategorySection = ({
                 }
 
                 {!isLoadingRootCategories && rootCategories.map((category) => {
-                    const IconComponent = getAntdIconComponent(category.icon);
+                    const IconComponent = getHugeIconComponent(category.icon);
 
                     return (
                         <Link

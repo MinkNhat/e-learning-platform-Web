@@ -1,11 +1,11 @@
 import { callFetchCategoryById, callFetchChildCategory } from '@/config/api';
-import { getAntdIconComponent } from '@/config/utils';
+import { getHugeIconComponent } from '@/config/utils';
 import type { ICategory } from '@/types/backend';
 import {
-    ReadOutlined,
-    StarFilled,
-    TeamOutlined,
-} from '@ant-design/icons';
+    BookIcon,
+    StarIconStroke,
+    UsersIcon,
+} from '@/components/share/hugeicons';
 import { Avatar, Card, Col, Empty, Row, Skeleton, Space, Tabs, Tag, Typography } from 'antd';
 import { createElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -140,14 +140,14 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
                 ) : relatedTopics.length > 0 ? (
                     <div className={styles["topic-grid"]}>
                         {relatedTopics.map((topic) => {
-                            const TopicIcon = getAntdIconComponent(topic.icon);
+                            const TopicIcon = getHugeIconComponent(topic.icon);
                             return (
                                 <Link
                                     key={topic._id ?? topic.slug}
                                     to={`/explore/${topic.slug}`}
                                     className={styles["topic-card"]}
                                 >
-                                    <span>{TopicIcon ? createElement(TopicIcon) : <ReadOutlined />}</span>
+                                    <span>{TopicIcon ? createElement(TopicIcon) : <BookIcon />}</span>
                                     <strong>{topic.name}</strong>
                                 </Link>
                             );
@@ -171,7 +171,7 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
                                     <Avatar
                                         size={62}
                                         src={instructor.avatar ? `${BASE_URL}/upload/avatars/${instructor.avatar}` : undefined}
-                                        icon={!instructor.avatar ? <TeamOutlined /> : undefined}
+                                        icon={!instructor.avatar ? <UsersIcon /> : undefined}
                                     >
                                         {instructor.name.slice(0, 2).toUpperCase()}
                                     </Avatar>
@@ -182,7 +182,7 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
                                 </div>
                                 <Space size={[8, 8]} wrap className={styles["instructor-meta"]}>
                                     <Tag bordered={false} color="green">
-                                        {instructor.rating.toFixed(1)} <StarFilled />
+                                        {instructor.rating.toFixed(1)} <StarIconStroke />
                                     </Tag>
                                     <Tag bordered={false}>{instructor.learners}</Tag>
                                     <Tag bordered={false}>{instructor.courses}</Tag>

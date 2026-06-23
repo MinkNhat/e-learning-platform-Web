@@ -1,5 +1,5 @@
 
-import { GlobalOutlined } from "@ant-design/icons";
+import { GlobalIconStroke } from "@/components/share/hugeicons";
 import { Col, Divider, Row, Select, Space, Typography } from "antd";
 import styles from "@/styles/client.module.scss";
 
@@ -148,7 +148,7 @@ const Footer = () => {
                     </Space>
 
                     <Space size={10}>
-                        <GlobalOutlined style={{ color: "rgba(255, 255, 255, 0.78)", fontSize: 18 }} />
+                        <GlobalIconStroke style={{ color: "rgba(255, 255, 255, 0.78)", fontSize: 18 }} />
                         <Select
                             className={styles["footer-language-select"]}
                             defaultValue="vi"

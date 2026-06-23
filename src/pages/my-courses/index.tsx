@@ -1,7 +1,6 @@
 import MyCourseCard from '@/components/client/card/my-course.card';
 import { callFetchMyCourses } from '@/config/api';
 import { IEnrollment } from '@/types/backend';
-import { BookOutlined } from '@ant-design/icons';
 import { Empty, Pagination, Row, Col, Skeleton, Typography, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import styles from 'styles/client.module.scss';
