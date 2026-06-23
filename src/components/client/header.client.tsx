@@ -35,6 +35,9 @@ const Header = (props: any) => {
     const [rootCategories, setRootCategories] = useState<ICategory[]>([]);
     const [hoveredRootSlug, setHoveredRootSlug] = useState('');
     const [childrenByRoot, setChildrenByRoot] = useState<Record<string, ICategory[]>>({});
+    const [searchClearSignal, setSearchClearSignal] = useState(0);
+
+    const clearHeaderSearch = () => setSearchClearSignal((currentSignal) => currentSignal + 1);
 
     useEffect(() => {
         setCurrent(location.pathname.startsWith('/explore') ? '/explore' : location.pathname);
@@ -126,9 +129,11 @@ const Header = (props: any) => {
     const onClick: MenuProps['onClick'] = (e) => {
         setCurrent(e.key);
         setOpenMobileMenu(false);
+        clearHeaderSearch();
     };
 
     const handleLogout = async () => {
+        clearHeaderSearch();
         const res = await callLogout();
         if (res && res.data) {
             dispatch(setLogoutAction({}));
@@ -139,7 +144,7 @@ const Header = (props: any) => {
 
     const itemsDropdown: MenuProps['items'] = [
         {
-            label: <Link to={"/admin"}>Trang Quản Trị</Link>,
+            label: <Link to={"/admin"} onClick={clearHeaderSearch}>Trang Quản Trị</Link>,
             key: 'admin',
             icon: <MoreHorizontalIcon />
         },
@@ -155,7 +160,7 @@ const Header = (props: any) => {
 
     const loginItem: MenuProps['items'] = [
         {
-            label: <Link to={'/login'}>Đăng Nhập</Link>,
+            label: <Link to={'/login'} onClick={clearHeaderSearch}>Đăng Nhập</Link>,
             key: '/login',
         }
     ];
@@ -170,7 +175,10 @@ const Header = (props: any) => {
                 <div className={styles["container"]}>
                     {!isMobileLayout ?
                         <div className={styles['header-desktop']}>
-                            <div className={styles['brand']} onClick={() => navigate('/')}>
+                            <div className={styles['brand']} onClick={() => {
+                                clearHeaderSearch();
+                                navigate('/');
+                            }}>
                                 <img 
                                     src="/capy-logo.png" 
                                     alt="Logo" 
@@ -198,6 +206,7 @@ const Header = (props: any) => {
                                                                 navLinkRefs.current[item.path] = element;
                                                             }}
                                                             className={`${styles['nav-link']} ${current === item.path ? styles['active'] : ''}`}
+                                                            onClick={clearHeaderSearch}
                                                         >
                                                             {item.label}
                                                         </Link>
@@ -211,7 +220,10 @@ const Header = (props: any) => {
                                                                             to={`/explore/${category.slug}`}
                                                                             className={`${styles['explore-menu-item']} ${hoveredRootSlug === category.slug ? styles['active'] : ''}`}
                                                                             onMouseEnter={() => setHoveredRootSlug(category.slug)}
-                                                                            onClick={() => setIsExploreMenuOpen(false)}
+                                                                            onClick={() => {
+                                                                                clearHeaderSearch();
+                                                                                setIsExploreMenuOpen(false);
+                                                                            }}
                                                                         >
                                                                             <span>{category.name}</span>
                                                                             <ArrowRight01Icon />
@@ -225,7 +237,10 @@ const Header = (props: any) => {
                                                                                 key={category._id ?? category.slug}
                                                                                 to={`/explore/${category.slug}`}
                                                                                 className={styles['explore-menu-item']}
-                                                                                onClick={() => setIsExploreMenuOpen(false)}
+                                                                                onClick={() => {
+                                                                                    clearHeaderSearch();
+                                                                                    setIsExploreMenuOpen(false);
+                                                                                }}
                                                                             >
                                                                                 <span>{category.name}</span>
                                                                             </Link>
@@ -234,7 +249,10 @@ const Header = (props: any) => {
                                                                         <Link
                                                                             to={activeRoot ? `/explore/${activeRoot.slug}` : '/explore'}
                                                                             className={styles['explore-menu-empty']}
-                                                                            onClick={() => setIsExploreMenuOpen(false)}
+                                                                            onClick={() => {
+                                                                                clearHeaderSearch();
+                                                                                setIsExploreMenuOpen(false);
+                                                                            }}
                                                                         >
                                                                             Xem tất cả trong danh mục này
                                                                         </Link>
@@ -254,6 +272,7 @@ const Header = (props: any) => {
                                                         navLinkRefs.current[item.path] = element;
                                                     }}
                                                     className={`${styles['nav-link']} ${current === item.path ? styles['active'] : ''}`}
+                                                    onClick={clearHeaderSearch}
                                                 >
                                                     {item.label}
                                                 </Link>
@@ -268,13 +287,13 @@ const Header = (props: any) => {
                                         />
                                     </nav>
                                     <div className={styles['search-wrapper']}>
-                                        <SearchClient />
+                                        <SearchClient clearSignal={searchClearSignal} />
                                     </div>
                                 </div>
                                 
                                 <div className={styles['extra']}>
                                     {isAuthenticated === false ?
-                                        <Link to={'/login'}>Đăng Nhập</Link>
+                                        <Link to={'/login'} onClick={clearHeaderSearch}>Đăng Nhập</Link>
                                         :
                                         <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
                                             <Space style={{ cursor: "pointer" }}>
@@ -289,7 +308,10 @@ const Header = (props: any) => {
                         </div>
                         :
                         <div className={styles['header-mobile']}>
-                            <div className={styles['brand']} onClick={() => navigate('/')}>
+                            <div className={styles['brand']} onClick={() => {
+                                clearHeaderSearch();
+                                navigate('/');
+                            }}>
                                 <img 
                                     src="/capy-logo.png" 
                                     alt="Logo" 

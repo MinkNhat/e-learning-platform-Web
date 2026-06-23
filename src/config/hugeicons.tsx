@@ -52,6 +52,7 @@ import {
     ContentWritingIcon as ContentWritingGlyph,
     CpuIcon as CpuGlyph,
     CubeIcon as CubeGlyph,
+    CancelCircleIcon as CancelCircleGlyph,
     // DanceIcon as DanceGlyph,
     Database01Icon as Database01Glyph,
     DatabaseIcon as DatabaseGlyph,
@@ -254,6 +255,7 @@ export const Configuration01Icon = createIcon(Configuration01Glyph);
 export const ContentWritingIcon = createIcon(ContentWritingGlyph);
 export const CpuIcon = createIcon(CpuGlyph);
 export const CubeIcon = createIcon(CubeGlyph);
+export const CancelCircleIcon = createIcon(CancelCircleGlyph);
 // export const DanceIcon = createIcon(DanceGlyph);
 export const Database01Icon = createIcon(Database01Glyph);
 export const DatabaseIcon = createIcon(DatabaseGlyph);

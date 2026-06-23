@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { AutoComplete, Button, Form, Image, Typography } from 'antd';
-import { Search01Icon } from '@/config/hugeicons';
+import { CancelCircleIcon, Search01Icon } from '@/config/hugeicons';
 import { ProForm } from '@ant-design/pro-components';
 import debounce from 'lodash/debounce';
 import styles from '@/styles/client.module.scss';
@@ -8,12 +8,20 @@ import { callSearchCourseSuggestions } from '@/config/api';
 import { useNavigate } from 'react-router-dom';
 import { ICourseSearchResult } from '@/types/backend';
 
-const SearchClient = () => {
+interface SearchClientProps {
+    clearSignal?: number;
+}
+
+const SearchClient = ({ clearSignal }: SearchClientProps) => {
     const [form] = Form.useForm();
     const [options, setOptions] = useState<{ value: string; label: ReactNode }[]>([]);
+    const [isFocused, setIsFocused] = useState(false);
+    const searchKeyword = Form.useWatch('keyword', form) as string | undefined;
+    const searchRequestId = useRef(0);
     const navigate = useNavigate();
 
     const searchCourse = async (keyword: string) => {
+        const requestId = ++searchRequestId.current;
         if (!keyword?.trim()) {
             setOptions([]);
             return;
@@ -21,6 +29,8 @@ const SearchClient = () => {
 
         try {
             const res = await callSearchCourseSuggestions(keyword);
+            if (requestId !== searchRequestId.current) return;
+
             const suggestions = (res?.data?.result ?? [] as ICourseSearchResult[])
                 .map((course) => ({
                     value: course.title,
@@ -53,6 +63,17 @@ const SearchClient = () => {
         if (keyword) navigate(`/search?q=${encodeURIComponent(keyword)}`);
     };
 
+    const clearSearch = () => {
+        debouncedSearch.cancel();
+        searchRequestId.current += 1;
+        form.setFieldValue('keyword', '');
+        setOptions([]);
+    };
+
+    useEffect(() => {
+        if (clearSignal) clearSearch();
+    }, [clearSignal]);
+
     return (
         <ProForm
             form={form}
@@ -73,6 +94,8 @@ const SearchClient = () => {
                         popupMatchSelectWidth={560}
                         onSearch={debouncedSearch}
                         filterOption={false}
+                        onFocus={() => setIsFocused(true)}
+                        onBlur={() => setIsFocused(false)}
                         onSelect={(value) => form.setFieldValue('keyword', value)}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {
@@ -82,6 +105,18 @@ const SearchClient = () => {
                         }}
                     />
                 </ProForm.Item>
+
+                {isFocused && (searchKeyword || options.length > 0) && <Button
+                    type="text"
+                    shape="circle"
+                    size="small"
+                    aria-label="Xóa nội dung tìm kiếm"
+                    title="Xóa nội dung tìm kiếm"
+                    style={{ flex: '0 0 auto', color: '#667085', fontSize: 14, lineHeight: 1 }}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={clearSearch}
+                    icon={<CancelCircleIcon />}
+                />}
 
                 <Button
                     type="primary"
