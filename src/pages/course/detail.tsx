@@ -15,7 +15,7 @@ dayjs.extend(relativeTime)
 const ClientCourseDetailPage = (props: any) => {
     const { slug } = useParams<{ slug: string }>();
     const [course, setCourse] = useState<ICourse | null>(null);
-    const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
+    const [isEnrolled, setIsEnrolled] = useState<boolean | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isPaymentLoading, setIsPaymentLoading] = useState<boolean>(false);
     const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
@@ -27,11 +27,6 @@ const ClientCourseDetailPage = (props: any) => {
         return authors?.map(author => `${author.name}`).join(", ") ?? "";
     }
 
-    useEffect(() => {
-        fetchDetailCourse();
-        checkUserEnrollment();
-    }, [slug]);
-
     const fetchDetailCourse = async () => {
         if (slug) {
             setIsLoading(true);
@@ -39,6 +34,7 @@ const ClientCourseDetailPage = (props: any) => {
                 const res = await callFetchCourseById(slug);
                 if (res.data) {
                     setCourse(res.data);
+                    await checkUserEnrollment(res.data._id || '');
                 }
             } catch (error) {
                 notification.error({
@@ -52,10 +48,11 @@ const ClientCourseDetailPage = (props: any) => {
         }
     }
 
-    const checkUserEnrollment = async () => {
-        if (slug) {
+    const checkUserEnrollment = async (courseId: string) => {
+        if (courseId && user?._id) {
             try {
-                const res = await callCheckEnrollment(slug, user?._id);
+                const res = await callCheckEnrollment(courseId, user?._id);
+                console.log('Enrollment status:', res);
                 if (res.data) {
                     setIsEnrolled(res.data.isEnrolled);
                 }
@@ -68,6 +65,10 @@ const ClientCourseDetailPage = (props: any) => {
         }
         return false;
     }
+
+    useEffect(() => {
+        fetchDetailCourse();
+    }, [slug]);
 
     const handleBuyCourse = async() => {
         setIsPaymentLoading(true);
@@ -360,7 +361,21 @@ const ClientCourseDetailPage = (props: any) => {
                                                     )}
                                                 </Space>
 
-                                                {isEnrolled ? (
+                                                {isEnrolled === true ? (
+                                                    <Button
+                                                        type="primary"
+                                                        size="large"
+                                                        block
+                                                        style={{
+                                                            background: 'var(--primary-color)',
+                                                            fontWeight: 600,
+                                                            marginBottom: 10,
+                                                        }}
+                                                        onClick={handleContinueCourse}
+                                                    >
+                                                        Tiếp tục học
+                                                    </Button>
+                                                ) : (
                                                     <>
                                                         <Button
                                                             type="primary"
@@ -381,20 +396,6 @@ const ClientCourseDetailPage = (props: any) => {
                                                             Thêm vào giỏ hàng
                                                         </Button>
                                                     </>
-                                                ) : (
-                                                    <Button
-                                                        type="primary"
-                                                        size="large"
-                                                        block
-                                                        style={{
-                                                            background: 'var(--primary-color)',
-                                                            fontWeight: 600,
-                                                            marginBottom: 10,
-                                                        }}
-                                                        onClick={handleContinueCourse}
-                                                    >
-                                                        Tiếp tục học
-                                                    </Button>
                                                 )}
 
                                                 <Text strong style={{ fontSize: 13, display: 'block', marginBottom: 10, marginTop: 20 }}>
