@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AutoComplete, Button, Form } from 'antd';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { AutoComplete, Button, Form, Image, Typography } from 'antd';
 import { Search01Icon } from '@/config/hugeicons';
 import { ProForm } from '@ant-design/pro-components';
 import debounce from 'lodash/debounce';
 import styles from '@/styles/client.module.scss';
-import { callSearchCourses } from '@/config/api';
+import { callSearchCourseSuggestions } from '@/config/api';
 import { useNavigate } from 'react-router-dom';
+import { ICourseSearchResult } from '@/types/backend';
 
 const SearchClient = () => {
     const [form] = Form.useForm();
-    const [options, setOptions] = useState<any[]>([]);
+    const [options, setOptions] = useState<{ value: string; label: ReactNode }[]>([]);
     const navigate = useNavigate();
 
     const searchCourse = async (keyword: string) => {
@@ -19,15 +20,20 @@ const SearchClient = () => {
         }
 
         try {
-            // Backend search also checks module and lesson titles. Fetch its maximum
-            // suggestion window, then deliberately retain only course-title matches.
-            const res = await callSearchCourses(keyword, 1, 100);
-            const suggestions = (res?.data?.result ?? [])
-                .filter((course) => course.matches.some((match) => match.type === 'course'))
-                .slice(0, 6)
+            const res = await callSearchCourseSuggestions(keyword);
+            const suggestions = (res?.data?.result ?? [] as ICourseSearchResult[])
                 .map((course) => ({
                     value: course.title,
-                    label: course.title,
+                    label: <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '5px 2px' }}>
+                        <Image
+                            preview={false}
+                            src={course.thumbnail ? `${import.meta.env.VITE_BACKEND_URL || ''}/upload/thumbnails/${course.thumbnail}` : undefined}
+                            width={72}
+                            height={48}
+                            style={{ flex: '0 0 auto', borderRadius: 8, objectFit: 'cover', background: '#eef2f7' }}
+                        />
+                        <Typography.Text ellipsis style={{ minWidth: 0 }}>{course.title}</Typography.Text>
+                    </div>,
                 }));
             setOptions(suggestions);
         } catch (error) {
@@ -64,6 +70,7 @@ const SearchClient = () => {
                         className={styles.searchInput}
                         placeholder="Bạn muốn học gì?"
                         options={options}
+                        popupMatchSelectWidth={560}
                         onSearch={debouncedSearch}
                         filterOption={false}
                         onSelect={(value) => form.setFieldValue('keyword', value)}

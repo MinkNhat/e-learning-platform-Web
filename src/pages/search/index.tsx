@@ -1,7 +1,7 @@
 import CourseCard from '@/components/client/card/course.card';
 import { callSearchCourses } from '@/config/api';
 import { ICourseSearchResult } from '@/types/backend';
-import { BookOpenIcon, FilterIcon, PlayCircleIcon } from '@/config/hugeicons';
+import { FilterIcon, PlayCircleIcon } from '@/config/hugeicons';
 import { Empty, Pagination, Select, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -75,7 +75,7 @@ const SearchPage = () => {
         <main className={`${styles.container} ${styles['home-section']}`} style={{ marginTop: 32, marginBottom: 56 }}>
             <Typography.Title level={2} style={{ marginBottom: 4, color: '#182033' }}>Kết quả tìm kiếm</Typography.Title>
             <Typography.Paragraph type="secondary" style={{ fontSize: 16, marginBottom: 24 }}>
-                {keyword ? <>Khám phá {total} khóa học phù hợp với <strong>“{keyword}”</strong></> : 'Nhập từ khóa để tìm khóa học, nội dung module và bài học.'}
+                {keyword ? <>Khám phá {total} khóa học phù hợp với <strong>“{keyword}”</strong></> : 'Nhập từ khóa để tìm khóa học và bài học.'}
             </Typography.Paragraph>
 
             {!!keyword && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, padding: '14px 0 22px', borderTop: '1px solid #e7e9f0' }}>
@@ -93,7 +93,7 @@ const SearchPage = () => {
                     : filteredResults.length === 0 ? <Empty description="Không tìm thấy khóa học phù hợp với bộ lọc hiện tại." />
                         : <div className={styles['course-grid']}>
                             {filteredResults.map((course) => {
-                                const hasSearchMatches = course.matches.some((match) => match.type !== 'course');
+                                const hasSearchMatches = course.matches.some((match) => match.type === 'lesson');
                                 return <div
                                     key={course._id}
                                     style={hasSearchMatches ? {
@@ -118,18 +118,16 @@ const SearchPage = () => {
 };
 
 const MatchPanel = ({ matches, keyword }: { matches: ICourseSearchResult['matches']; keyword: string }) => {
-    const contentMatches = matches.filter((match) => match.type !== 'course');
-    const visibleMatches = contentMatches.slice(0, 3);
+    const lessonMatches = matches.filter((match) => match.type === 'lesson');
+    const visibleMatches = lessonMatches.slice(0, 3);
     if (!visibleMatches.length) return null;
 
-    const remainingMatches = contentMatches.length - visibleMatches.length;
+    const remainingMatches = lessonMatches.length - visibleMatches.length;
     return <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '15px 16px 16px', border: '1px solid #e7e9f0', borderTop: '1px solid #edf0f3', borderRadius: '0 0 18px 18px', background: '#fff' }}>
         <div style={{ flex: 1, display: 'grid', alignContent: 'start', gap: 8, padding: 12, borderRadius: 12, background: '#f6f9f7' }}>
             {visibleMatches.map((match) => <div key={`${match.type}-${match.id}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, color: '#4f5f57', fontSize: 14 }}>
-                {match.type === 'lesson'
-                    ? <PlayCircleIcon style={{ color: '#00a65a', marginTop: 2 }} />
-                    : <BookOpenIcon style={{ color: '#00a65a', marginTop: 2 }} />}
-                <span>{match.title}</span>
+                <PlayCircleIcon style={{ flex: '0 0 auto', width: 18, height: 18, color: '#00a65a', marginTop: 1 }} />
+                <span style={{ minWidth: 0 }}>{match.title}</span>
             </div>)}
         </div>
         {remainingMatches > 0 && <Typography.Text type="secondary" style={{ display: 'block', marginTop: 'auto', paddingTop: 12, fontSize: 13 }}>

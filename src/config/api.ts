@@ -122,6 +122,11 @@ export const callSearchCourses = (keyword: string, page = 1, limit = 12) => {
     return axios.get<IBackendRes<IModelPaginate<ICourseSearchResult>>>(`/api/v1/courses/search?${params.toString()}`);
 }
 
+export const callSearchCourseSuggestions = (keyword: string, limit = 6) => {
+    const params = new URLSearchParams({ q: keyword, page: '1', limit: String(limit), scope: 'course' });
+    return axios.get<IBackendRes<IModelPaginate<ICourseSearchResult>>>(`/api/v1/courses/search?${params.toString()}`);
+}
+
 export const callFetchCourseById = (id: string) => {
     return axios.get<IBackendRes<ICourse>>(`/api/v1/courses/${id}`);
 }

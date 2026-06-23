@@ -93,14 +93,10 @@ export interface ICourse {
 }
 
 export type ICourseSearchMatch = {
-    type: 'course' | 'module' | 'lesson';
+    type: 'course' | 'lesson';
     field: 'title' | 'name';
     id: string;
     title: string;
-    module?: {
-        id: string;
-        title: string;
-    };
 };
 
 export type ICourseSearchResult = ICourse & {
