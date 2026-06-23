@@ -71,6 +71,11 @@ const ClientCourseDetailPage = (props: any) => {
     }, [slug]);
 
     const handleBuyCourse = async() => {
+        if(!user._id || user._id === '') {
+            navigate('/login?callback=/course/' + slug);
+            return;
+        }
+
         setIsPaymentLoading(true);
         try {
             const res = await callCreatePayment({
