@@ -5,9 +5,10 @@ import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image
 import { Award01Icon, Calendar01Icon, Certificate01Icon, CheckmarkCircle02Icon, ComputerIcon, File01Icon, MobileNavigator01Icon, PlayCircleIcon, UserAdd01Icon, UserIcon } from "@/config/hugeicons";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { callCheckEnrollment, callCreatePayment, callFetchCourseById, callFetchMyRecentLesson } from "@/config/api";
+import { callCheckEnrollment, callCreatePayment, callEnrollFreeCourse, callFetchCourseById, callFetchMyRecentLesson } from "@/config/api";
 import ClientBreadcrumb from "@/components/client/breadcrumb.client";
 import { useAppSelector } from "@/redux/hooks";
+import CommentSection from "@/components/client/comment.section";
 const { Title, Paragraph, Text } = Typography;
 dayjs.extend(relativeTime)
 
@@ -96,6 +97,27 @@ const ClientCourseDetailPage = (props: any) => {
                 message: 'Lỗi',
                 description: 'Có lỗi xảy ra khi tạo đơn hàng'
             });
+        } finally {
+            setIsPaymentLoading(false);
+        }
+    }
+
+    const handleStartFreeCourse = async () => {
+        if (!user._id) {
+            navigate('/login?callback=/course/' + slug);
+            return;
+        }
+
+        setIsPaymentLoading(true);
+        try {
+            const res = await callEnrollFreeCourse(course?._id || '');
+            if (res.data) {
+                setIsEnrolled(true);
+                notification.success({ message: 'Đăng ký thành công', description: 'Bạn có thể bắt đầu học ngay.' });
+                await handleContinueCourse();
+            }
+        } catch (error) {
+            notification.error({ message: 'Lỗi', description: 'Không thể đăng ký khoá học miễn phí' });
         } finally {
             setIsPaymentLoading(false);
         }
@@ -302,7 +324,7 @@ const ClientCourseDetailPage = (props: any) => {
                                             <Text type="secondary" style={{ fontSize: 13 }}>
                                                 {course.modules?.length || 0} chương •{' '}
                                                 {course.modules?.reduce(
-                                                    (acc, m) => acc + (m.lessons?.length || 0),
+                                                    (acc, m) => acc + (m.items?.length || 0),
                                                     0
                                                 )}{' '}
                                                 bài giảng
@@ -321,16 +343,17 @@ const ClientCourseDetailPage = (props: any) => {
                                                     children: (
                                                         <List
                                                             size="small"
-                                                            dataSource={module.lessons || []}
-                                                            renderItem={(lesson) => (
+                                                            dataSource={module.items || []}
+                                                            renderItem={(item) => (
                                                                 <List.Item style={{ padding: '8px 0' }}>
                                                                     <Space>
                                                                         <PlayCircleIcon
                                                                             style={{ color: 'var(--primary-color)', fontSize: 13 }}
                                                                         />
                                                                         <Text style={{ fontSize: 13 }}>
-                                                                            {lesson.name}
+                                                                            {item.type === 'quiz' ? item.title : item.name}
                                                                         </Text>
+                                                                        {item.type === 'quiz' && <Tag color="purple">Quiz</Tag>}
                                                                     </Space>
                                                                 </List.Item>
                                                             )}
@@ -340,6 +363,10 @@ const ClientCourseDetailPage = (props: any) => {
                                             }
                                         />
                                     </Card>
+
+                                    {course._id && <Card title="Bình luận" style={{ marginBottom: 20, borderRadius: 16 }}>
+                                        <CommentSection targetType="course" targetId={course._id} />
+                                    </Card>}
                                 </Col>
 
                                 <Col xs={24} lg={8}>
@@ -357,9 +384,11 @@ const ClientCourseDetailPage = (props: any) => {
                                             <div style={{ padding: 20 }}>
                                                 <Space align="baseline" style={{ marginBottom: 16 }}>
                                                     <Title level={2} style={{ marginBottom: 0 }}>
-                                                        {course.price?.toLocaleString('vi-VN')} đ
+                                                        {course.price == null || Number(course.price) === 0
+                                                            ? 'Miễn phí'
+                                                            : `${course.price.toLocaleString('vi-VN')} đ`}
                                                     </Title>
-                                                    {course.price && (
+                                                    {course.price != null && Number(course.price) > 0 && (
                                                         <Text delete type="secondary" style={{ fontSize: 14 }}>
                                                             {course.price.toLocaleString('vi-VN')} đ
                                                         </Text>
@@ -379,6 +408,20 @@ const ClientCourseDetailPage = (props: any) => {
                                                         onClick={handleContinueCourse}
                                                     >
                                                         Tiếp tục học
+                                                    </Button>
+                                                ) : (course.price == null || Number(course.price) === 0 ? (
+                                                    <Button
+                                                        type="primary"
+                                                        size="large"
+                                                        block
+                                                        style={{
+                                                            background: 'var(--primary-color)',
+                                                            fontWeight: 600,
+                                                        }}
+                                                        onClick={handleStartFreeCourse}
+                                                        loading={isPaymentLoading}
+                                                    >
+                                                        Bắt đầu học ngay
                                                     </Button>
                                                 ) : (
                                                     <>
@@ -401,7 +444,7 @@ const ClientCourseDetailPage = (props: any) => {
                                                             Thêm vào giỏ hàng
                                                         </Button>
                                                     </>
-                                                )}
+                                                ))}
 
                                                 <Text strong style={{ fontSize: 13, display: 'block', marginBottom: 10, marginTop: 20 }}>
                                                     Khóa học bao gồm:
