@@ -18,6 +18,7 @@ const CourseCard = ({ course, onClick, hasSearchMatches = false }: IProps) => {
     }
 
     const categoryName = typeof course.category === "string" ? course.category : course.category?.name;
+    const isFree = course.price == null || Number(course.price) === 0;
 
     return (
         <div
@@ -119,7 +120,7 @@ const CourseCard = ({ course, onClick, hasSearchMatches = false }: IProps) => {
                 
                 <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
                     <Text strong style={{ fontSize: 20, color: 'var(--primary-color-dark)'}}>
-                        {course.price.toLocaleString('vi-VN')} đ
+                        {isFree ? 'Miễn phí' : `${course.price?.toLocaleString('vi-VN')} đ`}
                     </Text>
                     {/* <Text delete type="secondary" style={{ fontSize: 14 }}>
                         {course.price.toLocaleString('vi-VN')} đ

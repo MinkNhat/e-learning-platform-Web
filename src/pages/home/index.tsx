@@ -6,11 +6,15 @@ import { ICourse } from '@/types/backend';
 import { Award01Icon, BulbIcon, PlayCircleIcon, SketchIcon } from '@/config/hugeicons';
 import { Typography } from 'antd';
 import { useEffect, useState } from 'react';
+import { useAppSelector } from '@/redux/hooks';
 import styles from 'styles/client.module.scss';
 
 const HomePage = () => {
     const [highlightCourses, setHighlightCourses] = useState<ICourse[] | null>(null);
     const [isLoadingHighlightCourses, setIsLoadingHighlightCourses] = useState<boolean>(false);
+    const [freeCourses, setFreeCourses] = useState<ICourse[] | null>(null);
+    const [isLoadingFreeCourses, setIsLoadingFreeCourses] = useState<boolean>(false);
+    const user = useAppSelector(state => state.account.user);
 
     const aiCareerBenefits = [
         { icon: <SketchIcon />, title: 'Tìm hiểu về AI và nhiều chủ đề khác', color: '#c9bcff' },
@@ -21,7 +25,8 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchHighlightCourses();
-    }, []);
+        fetchFreeCourses();
+    }, [user._id]);
 
     const fetchHighlightCourses = async () => {
         setIsLoadingHighlightCourses(true);
@@ -30,6 +35,22 @@ const HomePage = () => {
             setHighlightCourses(res.data.result);
         }
         setIsLoadingHighlightCourses(false);
+    }
+
+    const fetchFreeCourses = async () => {
+        setIsLoadingFreeCourses(true);
+
+        const freeCourseFilter = encodeURIComponent(JSON.stringify({
+            $or: [{ price: null }, { price: 0 }],
+        }));
+
+        const enrollmentFilter = user._id ? `&excludeEnrolled=true&userId=${encodeURIComponent(user._id)}`: '';
+        
+        const res = await callFetchCourse(`current=1&pageSize=4&sort=-updatedAt&filter=${freeCourseFilter}${enrollmentFilter}`);
+        if (res && res.data) {
+            setFreeCourses(res.data.result);
+        }
+        setIsLoadingFreeCourses(false);
     }
 
     return (
@@ -111,24 +132,20 @@ const HomePage = () => {
                     </div>
                 </section>
 
-                {/* Highlight Courses Section */}
                 <CourseSection
                     title='Khoá học nổi bật'
                     courses={highlightCourses}
                     isLoading={isLoadingHighlightCourses}
                 />
 
-                {/* Recent Courses Section */}
                 <RecentCourseSection />
 
-                {/* For-You Courses Section */}
                 <CourseSection
-                    title='Khoá học dành cho bạn'
-                    courses={highlightCourses}
-                    isLoading={isLoadingHighlightCourses}
+                    title='Khoá học miễn phí dành cho bạn'
+                    courses={freeCourses}
+                    isLoading={isLoadingFreeCourses}
                 />
 
-                {/* Categories Section */}
                 <CategorySection />
             </div>
         </div>
