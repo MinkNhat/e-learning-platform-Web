@@ -119,7 +119,7 @@ const CourseCard = ({ course, onClick, hasSearchMatches = false }: IProps) => {
                 </div>
                 
                 <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-                    <Text strong style={{ fontSize: 20, color: 'var(--primary-color-dark)'}}>
+                    <Text strong style={{ fontSize: 18, color: 'var(--primary-color-dark)'}}>
                         {isFree ? 'Miễn phí' : `${course.price?.toLocaleString('vi-VN')} đ`}
                     </Text>
                     {/* <Text delete type="secondary" style={{ fontSize: 14 }}>

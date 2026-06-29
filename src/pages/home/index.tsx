@@ -28,9 +28,25 @@ const HomePage = () => {
         fetchFreeCourses();
     }, [user._id]);
 
+    const buildCourseQuery = (extraParams?: Record<string, string>) => {
+        const params = new URLSearchParams({
+            current: '1',
+            pageSize: '4',
+            sort: '-updatedAt',
+            ...extraParams,
+        });
+
+        if (user._id) {
+            params.set('excludeEnrolled', 'true');
+            params.set('userId', user._id);
+        }
+
+        return params.toString();
+    }
+
     const fetchHighlightCourses = async () => {
         setIsLoadingHighlightCourses(true);
-        const res = await callFetchCourse('current=1&pageSize=4&sort=-updatedAt');
+        const res = await callFetchCourse(buildCourseQuery());
         if (res && res.data) {
             setHighlightCourses(res.data.result);
         }
@@ -40,13 +56,11 @@ const HomePage = () => {
     const fetchFreeCourses = async () => {
         setIsLoadingFreeCourses(true);
 
-        const freeCourseFilter = encodeURIComponent(JSON.stringify({
+        const freeCourseFilter = JSON.stringify({
             $or: [{ price: null }, { price: 0 }],
-        }));
-
-        const enrollmentFilter = user._id ? `&excludeEnrolled=true&userId=${encodeURIComponent(user._id)}`: '';
+        });
         
-        const res = await callFetchCourse(`current=1&pageSize=4&sort=-updatedAt&filter=${freeCourseFilter}${enrollmentFilter}`);
+        const res = await callFetchCourse(buildCourseQuery({ filter: freeCourseFilter }));
         if (res && res.data) {
             setFreeCourses(res.data.result);
         }
