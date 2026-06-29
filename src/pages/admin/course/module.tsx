@@ -116,7 +116,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
                 <LessonManager
                     moduleOrder={module.order}
                     moduleId={module._id!}
-                    lessons={module.lessons}
+                    lessons={(module.items || []).filter((item) => item.type === 'lesson').map((item: any) => ({ ...item, type: item.lessonType })) as ILesson[]}
                     onRefetch={onRefetch}
                 />
             ),

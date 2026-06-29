@@ -77,9 +77,10 @@ const ClientLessonDetailPage = () => {
 
     const allLessons = useMemo(() => {
         return courseModules.flatMap(moduleItem =>
-            [...(moduleItem.lessons || [])]
+            [...(moduleItem.items || [])]
+                .filter((item) => item.type === 'lesson')
                 .sort((a, b) => (a.order || 0) - (b.order || 0))
-                .map(item => ({ ...item, moduleName: moduleItem.name }))
+                .map((item: any) => ({ ...item, type: item.lessonType, moduleName: moduleItem.name } as ILesson & { moduleName: string }))
         );
     }, [courseModules]);
 
@@ -137,7 +138,7 @@ const ClientLessonDetailPage = () => {
                     progress: res.data!,
                     modules: prev.modules.map(moduleItem => ({
                         ...moduleItem,
-                        lessons: moduleItem.lessons?.map(item => item._id === lesson._id
+                        items: moduleItem.items?.map(item => item.type === 'lesson' && item._id === lesson._id
                             ? { ...item, progressStatus: 'completed' }
                             : item
                         )
@@ -236,7 +237,7 @@ const ClientLessonDetailPage = () => {
                     className={styles["lesson-module-collapse"]}
                     bordered={false}
                     items={courseModules.map((moduleItem) => {
-                        const lessons = [...(moduleItem.lessons || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
+                        const lessons = (moduleItem.items || []).filter((item) => item.type === 'lesson').sort((a, b) => (a.order || 0) - (b.order || 0)).map((item: any) => ({ ...item, type: item.lessonType } as ILesson));
                         return {
                             key: moduleItem._id || moduleItem.name,
                             label: (

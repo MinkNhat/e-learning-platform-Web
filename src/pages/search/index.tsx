@@ -50,8 +50,10 @@ const SearchPage = () => {
     const categoryOptions = useMemo(() => Array.from(new Set(results.map((course) =>
         typeof course.category === 'string' ? course.category : course.category?.name
     ).filter(Boolean))).map((value) => ({ value, label: value })), [results]);
+
     const languageOptions = useMemo(() => Array.from(new Set(results.flatMap((course) => course.languages ?? [])))
         .map((value) => ({ value, label: value })), [results]);
+
     const levelOptions = useMemo(() => Array.from(new Set(results.map((course) => course.level).filter(Boolean)))
         .map((value) => ({ value, label: value })), [results]);
 
@@ -63,10 +65,11 @@ const SearchPage = () => {
                 && (level === 'all' || course.level === level)
                 && (rating === 'all' || (course.rating ?? 0) >= Number(rating));
         });
+        
         return [...filtered].sort((a, b) => {
             if (sort === 'rating') return (b.rating ?? 0) - (a.rating ?? 0);
-            if (sort === 'price-low') return a.price - b.price;
-            if (sort === 'price-high') return b.price - a.price;
+            if (sort === 'price-low') return (a.price ?? 0) - (b.price ?? 0);
+            if (sort === 'price-high') return (b.price ?? 0) - (a.price ?? 0);
             return b.matches.length - a.matches.length;
         });
     }, [results, category, language, level, rating, sort]);
@@ -94,19 +97,21 @@ const SearchPage = () => {
                         : <div className={styles['course-grid']}>
                             {filteredResults.map((course) => {
                                 const hasSearchMatches = course.matches.some((match) => match.type === 'lesson');
-                                return <div
-                                    key={course._id}
-                                    style={hasSearchMatches ? {
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        height: '100%',
-                                        borderRadius: 18,
-                                        boxShadow: '0 14px 34px rgba(20, 31, 55, 0.08)',
-                                    } : undefined}
-                                >
-                                    <CourseCard course={course} hasSearchMatches={hasSearchMatches} onClick={() => navigate(`/course/${course.slug}`)} />
-                                    <MatchPanel matches={course.matches} keyword={keyword} />
-                                </div>;
+                                return (
+                                    <div
+                                        key={course._id}
+                                        style={hasSearchMatches ? {
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            height: '100%',
+                                            borderRadius: 18,
+                                            boxShadow: '0 14px 34px rgba(20, 31, 55, 0.08)',
+                                        } : undefined}
+                                    >
+                                        <CourseCard course={course} hasSearchMatches={hasSearchMatches} onClick={() => navigate(`/course/${course.slug}`)} />
+                                        <MatchPanel matches={course.matches} keyword={keyword} />
+                                    </div>
+                                )
                             })}
                         </div>}
 
