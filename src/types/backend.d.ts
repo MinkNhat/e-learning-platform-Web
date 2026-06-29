@@ -65,7 +65,7 @@ export interface ICourse {
     description: string;
     objectives: string[];
     requirement: string;
-    price: number;
+    price: number | null;
     slug?: string;
     thumbnail?: string;
     level: string;
@@ -175,6 +175,27 @@ export interface ILesson {
     updatedAt?: string;
 }
 
+export interface IQuiz {
+    _id?: string;
+    type: 'quiz';
+    title: string;
+    description?: string;
+    module?: string | IModule;
+    order: number;
+    isActive?: boolean;
+    isFree?: boolean;
+    timeLimitSeconds?: number;
+    passingScore?: number;
+    maxAttempts?: number;
+    shuffleQuestions?: boolean;
+    shuffleOptions?: boolean;
+    showResultAfterSubmit?: boolean;
+    questions?: IQuestion[];
+}
+
+export type ICourseLessonItem = Omit<ILesson, 'type'> & { type: 'lesson'; lessonType: 'video' | 'article' };
+export type ICourseItem = ICourseLessonItem | IQuiz;
+
 export interface IModule {
     _id?: string;
     name: string;
@@ -182,7 +203,7 @@ export interface IModule {
     order: number;
     isActive?: boolean;
     course?: string | ICourse;
-    lessons?: ILesson[];
+    items?: ICourseItem[];
 
     createdBy?: string;
     isDeleted?: boolean;
@@ -245,4 +266,64 @@ export interface ICreatePayment {
 export interface IResponsePayment {
     paymentUrl: string;
     orderId: string;
+}
+
+export interface IBlog {
+    _id?: string;
+    title: string;
+    slug?: string;
+    content: string;
+    coverImage?: string;
+    author?: string | Pick<IUser, '_id' | 'name'> & { avatar?: string };
+    category: string | ICategory;
+    status?: 'draft' | 'published' | 'archived';
+    publishedAt?: string;
+    isFeatured?: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface IComment {
+    _id?: string;
+    targetType: 'blog' | 'course';
+    targetId: string;
+    content: string;
+    author?: string | Pick<IUser, '_id' | 'name'> & { avatar?: string };
+    parent?: string | IComment;
+    replies?: IComment[];
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface IQuestionOption { 
+    _id?: string; 
+    content: string; 
+    isCorrect?: boolean; 
+    order: number; 
+}
+
+export interface IQuestion { 
+    _id?: string; 
+    quiz?: string; 
+    type: 'single_choice' | 'multi_choice' | 'true_false' | 'fill_blank'; 
+    content: string; 
+    explanation?: string; 
+    points?: number; 
+    order: number; 
+    options?: IQuestionOption[]; 
+    acceptedAnswers?: string[]; 
+    caseSensitive?: boolean; 
+}
+
+export interface IQuizAttempt { 
+    _id?: string; 
+    quiz: string | IQuiz; 
+    status: 'in_progress' | 'submitted' | 'expired'; 
+    attemptNumber: number; 
+    score?: number; 
+    maxScore?: number; 
+    percentage?: number; 
+    passed?: boolean; 
+    startedAt?: string; 
+    submittedAt?: string; 
 }

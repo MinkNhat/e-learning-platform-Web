@@ -1,4 +1,4 @@
-import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, ICourseSearchResult, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment, IMyLessonDetail } from '@/types/backend';
+import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, ICourseSearchResult, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment, IMyLessonDetail, IBlog, IComment, IQuiz, IQuestion, IQuizAttempt } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -201,6 +201,97 @@ export const callDeleteLesson = (lessonId: string) => {
 
 /**
  * 
+Module Blog
+ */
+export const callFetchBlogs = (query = '') => {
+    return axios.get<IBackendRes<IModelPaginate<IBlog>>>(`/api/v1/blogs?${query}`);
+};
+
+export const callFetchBlog = (idOrSlug: string) => {
+    return axios.get<IBackendRes<IBlog>>(`/api/v1/blogs/${idOrSlug}`);
+};
+
+export const callCreateBlog = (blog: IBlog) => {
+    return axios.post<IBackendRes<IBlog>>('/api/v1/blogs', blog);
+};
+
+export const callUpdateBlog = (id: string, blog: Partial<IBlog>) => {
+    return axios.patch<IBackendRes<IBlog>>(`/api/v1/blogs/${id}`, blog);
+};
+
+export const callDeleteBlog = (id: string) => {
+    return axios.delete<IBackendRes<IBlog>>(`/api/v1/blogs/${id}`);
+};
+
+
+/** Module Comment */
+export const callFetchComments = (targetType: IComment['targetType'], targetId: string, current = 1, pageSize = 10) => {
+    return axios.get<IBackendRes<IModelPaginate<IComment>>>(`/api/v1/comments?targetType=${targetType}&targetId=${targetId}&current=${current}&pageSize=${pageSize}`);
+};
+
+export const callCreateComment = (comment: Pick<IComment, 'targetType' | 'targetId' | 'content' | 'parent'>) => {
+    return axios.post<IBackendRes<IComment>>('/api/v1/comments', comment);
+};
+
+export const callUpdateComment = (id: string, content: string) => {
+    return axios.patch<IBackendRes<IComment>>(`/api/v1/comments/${id}`, { content });
+};
+
+export const callDeleteComment = (id: string) => {
+    return axios.delete<IBackendRes<IComment>>(`/api/v1/comments/${id}`);
+};
+
+
+/** Module Quiz */
+export const callCreateQuiz = (quiz: IQuiz) => {
+    return axios.post<IBackendRes<IQuiz>>('/api/v1/quizzes', quiz);
+};
+
+export const callUpdateQuiz = (id: string, quiz: Partial<IQuiz>) => {
+    return axios.patch<IBackendRes<IQuiz>>(`/api/v1/quizzes/${id}`, quiz);
+};
+
+export const callDeleteQuiz = (id: string) => {
+    return axios.delete<IBackendRes<IQuiz>>(`/api/v1/quizzes/${id}`);
+};
+
+export const callFetchQuiz = (id: string) => {
+    return axios.get<IBackendRes<IQuiz>>(`/api/v1/quizzes/${id}`);
+};
+
+
+export const callCreateQuestion = (question: IQuestion) => {
+    return axios.post<IBackendRes<IQuestion>>('/api/v1/quizzes/questions', question);
+};
+
+export const callUpdateQuestion = (id: string, question: Partial<IQuestion>) => {
+    return axios.patch<IBackendRes<IQuestion>>(`/api/v1/quizzes/questions/${id}`, question);
+};
+
+export const callDeleteQuestion = (id: string) => {
+    return axios.delete<IBackendRes<IQuestion>>(`/api/v1/quizzes/questions/${id}`);
+};
+
+
+export const callStartQuizAttempt = (quizId: string) => {
+    return axios.post<IBackendRes<{ attempt: IQuizAttempt; quiz: IQuiz; questions: IQuestion[] }>>(`/api/v1/quizzes/${quizId}/attempts`);
+};
+
+export const callSaveQuizAnswer = (attemptId: string, questionId: string, answer: { selectedOptionIds?: string[]; textAnswer?: string }) => {
+    return axios.put<IBackendRes<unknown>>(`/api/v1/quizzes/attempts/${attemptId}/answers/${questionId}`, answer);
+};
+
+export const callSubmitQuizAttempt = (attemptId: string) => {
+    return axios.post<IBackendRes<unknown>>(`/api/v1/quizzes/attempts/${attemptId}/submit`);
+};
+
+export const callFetchMyQuizAttempts = (quizId: string) => {
+    return axios.get<IBackendRes<IQuizAttempt[]>>(`/api/v1/quizzes/${quizId}/attempts/me`);
+};
+
+
+/**
+ * 
 Module Permission
  */
 export const callCreatePermission = (permission: IPermission) => {
@@ -277,6 +368,10 @@ export const callCompleteMyLesson = (courseSlug: string, lessonId: string) => {
 
 export const callCheckEnrollment = (courseId: string, userId: string) => {
     return axios.get<IBackendRes<{ isEnrolled: boolean }>>(`/api/v1/enrollments/check?courseId=${courseId}&userId=${userId}`);
+}
+
+export const callEnrollFreeCourse = (courseId: string) => {
+    return axios.post<IBackendRes<IEnrollment>>('/api/v1/enrollments/free', { courseId });
 }
 
 /**
