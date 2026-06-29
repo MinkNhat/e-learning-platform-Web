@@ -272,6 +272,7 @@ export interface IBlog {
     _id?: string;
     title: string;
     slug?: string;
+    description?: string;
     content: string;
     coverImage?: string;
     author?: string | Pick<IUser, '_id' | 'name'> & { avatar?: string };

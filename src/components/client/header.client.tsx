@@ -16,6 +16,13 @@ type HeaderNavItem = {
     path: string;
 };
 
+const getActiveNavPath = (pathname: string) => {
+    if (pathname.startsWith('/explore')) return '/explore';
+    if (pathname.startsWith('/blog')) return '/blog';
+
+    return pathname;
+};
+
 const Header = (props: any) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -40,7 +47,7 @@ const Header = (props: any) => {
     const clearHeaderSearch = () => setSearchClearSignal((currentSignal) => currentSignal + 1);
 
     useEffect(() => {
-        setCurrent(location.pathname.startsWith('/explore') ? '/explore' : location.pathname);
+        setCurrent(getActiveNavPath(location.pathname));
     }, [location])
 
     useEffect(() => {
@@ -78,6 +85,10 @@ const Header = (props: any) => {
         {
             label: 'Khám phá',
             path: '/explore',
+        },
+        {
+            label: 'Diễn đàn',
+            path: '/blog',
         },
         // {
         //     label: 'Trình độ',
