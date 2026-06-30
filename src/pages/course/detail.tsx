@@ -8,7 +8,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { callCheckEnrollment, callCreatePayment, callEnrollFreeCourse, callFetchCourseById, callFetchMyRecentLesson } from "@/config/api";
 import ClientBreadcrumb from "@/components/client/breadcrumb.client";
 import { useAppSelector } from "@/redux/hooks";
-import CommentSection from "@/components/client/comment.section";
+import CommentSection from "@/components/client/section/comment.section";
 const { Title, Paragraph, Text } = Typography;
 dayjs.extend(relativeTime)
 

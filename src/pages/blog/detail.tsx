@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { callFetchBlog } from '@/config/api';
 import ClientBreadcrumb from '@/components/client/breadcrumb.client';
-import CommentSection from '@/components/client/comment.section';
+import CommentSection from '@/components/client/section/comment.section';
 import { IBlog } from '@/types/backend';
 import {
   FavouriteIcon,
