@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { IModule, ILesson } from "@/types/backend";
+import { IModule, ICourseItem } from "@/types/backend";
 import { callCreateModule, callUpdateModule, callDeleteModule } from "@/config/api";
-import { Button, Collapse, Empty, Form, Input, Modal, Popconfirm, Space, Tag, message, notification } from "antd";
+import { Button, Collapse, Empty, Form, Input, Modal, Popconfirm, Space, Switch, message, notification } from "antd";
 import { Add01Icon, Delete02Icon, PencilEdit02Icon } from "@/config/hugeicons";
 import LessonManager from './lesson';
 import styles from '@/styles/admin.module.scss';
@@ -32,6 +32,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
             name: module.name,
             description: module.description,
             order: module.order,
+            isActive: module.isActive,
         });
         setOpenModal(true);
     };
@@ -41,9 +42,8 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
         setIsLoading(true);
         try {
             if (editingModule?._id) {
-                // Update
                 const res = await callUpdateModule(
-                    { ...values, course: courseId } as IModule,
+                    values as IModule,
                     editingModule._id
                 );
                 if (res?.data) {
@@ -116,7 +116,7 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
                 <LessonManager
                     moduleOrder={module.order}
                     moduleId={module._id!}
-                    lessons={(module.items || []).filter((item) => item.type === 'lesson').map((item: any) => ({ ...item, type: item.lessonType })) as ILesson[]}
+                    items={(module.items || []) as ICourseItem[]}
                     onRefetch={onRefetch}
                 />
             ),
@@ -174,6 +174,14 @@ const ModuleManager = ({ courseId, modules, onRefetch }: ModuleManagerProps) => 
                         rules={[{ required: true, message: 'Please enter the order' }]}
                     >
                         <Input type="number" placeholder="Enter order" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Active"
+                        name="isActive"
+                        initialValue={true}
+                        valuePropName="checked"
+                    >
+                        <Switch />
                     </Form.Item>
                 </Form>
             </Modal>
