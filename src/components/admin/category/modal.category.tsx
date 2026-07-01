@@ -1,8 +1,8 @@
-import { ModalForm, ProFormDigit, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ModalForm, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Col, Form, Row, message, notification } from "antd";
 import { isMobile } from 'react-device-detect';
 import { useEffect, useState } from "react";
-import { callCreateCategory, callFetchCategory, callUpdateCategory } from "@/config/api";
+import { callCreateCategory, callFetchRootCategory, callUpdateCategory } from "@/config/api";
 import { ICategory } from "@/types/backend";
 import { DebounceSelect } from "@/components/admin/user/debouce.select";
 
@@ -38,15 +38,14 @@ const ModalCategory = (props: IProps) => {
     }, [dataInit]);
 
     const submitCategory = async (valuesForm: any) => {
-        const { name, description, slug, isActive, parent, icon } = valuesForm;
+        const { name, description, isActive, parent, icon } = valuesForm;
         const parentValue = Array.isArray(parent) ? parent[0] : parent;
         const category = {
             name,
             description,
-            slug,
             isActive,
             icon,
-            parent: parentValue?.value ?? parentValue?._id,
+            parent: parentValue?.value ?? parentValue?._id ?? null,
         } as ICategory;
 
         if (dataInit?._id) {
@@ -84,9 +83,10 @@ const ModalCategory = (props: IProps) => {
     }
 
     async function fetchParentList(name: string): Promise<ICategorySelect[]> {
-        const res = await callFetchCategory(`current=1&pageSize=100&name=/${name}/i`);
+        const query = name ? `name=/${name}/i` : '';
+        const res = await callFetchRootCategory(query);
         if (res && res.data) {
-            const list = res.data.result;
+            const list = res.data;
             return list
                 .filter(item => item._id !== dataInit?._id)
                 .map(item => ({
@@ -139,16 +139,7 @@ const ModalCategory = (props: IProps) => {
                             }}
                         />
                     </Col>
-                    
-                    <Col lg={8} md={8} sm={24} xs={24}>
-                        <ProFormText
-                            label="Slug"
-                            name="slug"
-                            placeholder="Nhập slug"
-                        />
-                    </Col>
-
-                    <Col lg={8} md={8} sm={24} xs={24}>
+                    <Col lg={12} md={12} sm={24} xs={24}>
                         <ProFormText
                             label={<a href="https://hugeicons.com/icons" target="_blank" rel="noopener noreferrer">Hugeicons Stroke</a>}
                             name="icon"
@@ -156,7 +147,7 @@ const ModalCategory = (props: IProps) => {
                         />
                     </Col>
                     
-                    <Col lg={8} md={8} sm={24} xs={24}>
+                    <Col lg={12} md={12} sm={24} xs={24}>
                         <Form.Item
                             name="parent"
                             label="Category cha"

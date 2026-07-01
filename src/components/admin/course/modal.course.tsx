@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ModalForm, ProFormDigit, ProFormSelect, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
+import { ModalForm, ProFormDigit, ProFormSelect, ProFormSwitch, ProFormText, ProFormTextArea } from "@ant-design/pro-components";
 import { Avatar, Col, Form, Mentions, Row, Space, message, notification, Upload } from "antd";
 import { Upload01Icon } from "@/config/hugeicons";
 import { isMobile } from 'react-device-detect';
@@ -39,7 +39,7 @@ const ModalCourse = (props: IProps) => {
     }
 
     const submitCourse = async (valuesForm: any) => {
-        const { title, shortDescription, description, objectives, requirement, price, level, languages, authors, thumbnail, category } = valuesForm;
+        const { title, shortDescription, description, objectives, requirement, price, level, languages, authors, thumbnail, category, isPublished, isProcessLimit } = valuesForm;
         const authorIds = parseAuthorsFromMentions(authors);
         
         if (dataInit?._id) {
@@ -55,7 +55,9 @@ const ModalCourse = (props: IProps) => {
                 languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
                 authors: authorIds,
                 category,
-                thumbnail: thumbnail?.originFileObj || dataInit.thumbnail,
+                isPublished,
+                isProcessLimit,
+                thumbnail: thumbnail?.originFileObj,
             } as any;
 
             const res = await callUpdateCourse(course, dataInit._id);
@@ -82,6 +84,8 @@ const ModalCourse = (props: IProps) => {
                 languages: languages ? languages.split(';').map((item: string) => item.trim()) : [],
                 authors: authorIds,
                 category,
+                isPublished,
+                isProcessLimit,
                 thumbnail: thumbnail?.originFileObj,
             } as any;
             
@@ -121,6 +125,8 @@ const ModalCourse = (props: IProps) => {
         category: typeof categoryInit === 'string' ? categoryInit : categoryInit?._id,
     } : {
         authors: defaultAuthor ? formatAuthorsToMentions([defaultAuthor]) : "",
+        isPublished: true,
+        isProcessLimit: false,
     };
 
     const mentionOptions = useMemo(() => authorOptions, [authorOptions]);
@@ -206,12 +212,28 @@ const ModalCourse = (props: IProps) => {
                 initialValues={initialValues}
             >
                 <Row gutter={16}>
-                    <Col lg={24} md={24} sm={24} xs={24}>
+                    <Col lg={16} md={16} sm={24} xs={24}>
                         <ProFormText
                             label="Course Name"
                             name="title"
                             rules={[{ required: true, message: 'Please enter the value' }]}
                             placeholder="Enter course name"
+                        />
+                    </Col>
+                    <Col lg={4} md={4} sm={12} xs={12}>
+                        <ProFormSwitch
+                            label="Published"
+                            name="isPublished"
+                            checkedChildren="YES"
+                            unCheckedChildren="NO"
+                        />
+                    </Col>
+                    <Col lg={4} md={4} sm={12} xs={12}>
+                        <ProFormSwitch
+                            label="Process limit"
+                            name="isProcessLimit"
+                            checkedChildren="YES"
+                            unCheckedChildren="NO"
                         />
                     </Col>
                     <Col lg={6} md={6} sm={12} xs={12}>
