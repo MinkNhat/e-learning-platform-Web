@@ -36,6 +36,9 @@ import ExplorePage from './pages/explore';
 import SearchPage from './pages/search';
 import BlogPage from './pages/blog';
 import BlogDetailPage from './pages/blog/detail';
+import BlogAdminPage from './pages/admin/blog';
+import AdminPaymentPage from './pages/admin/payment';
+import AdminEnrollmentPage from './pages/admin/enrollment';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -144,6 +147,27 @@ export default function App() {
           element:
             <ProtectedRoute>
               <CategoryPage />
+            </ProtectedRoute>
+        },
+        {
+          path: "blog",
+          element:
+            <ProtectedRoute>
+              <BlogAdminPage />
+            </ProtectedRoute>
+        },
+        {
+          path: "payment",
+          element:
+            <ProtectedRoute>
+              <AdminPaymentPage />
+            </ProtectedRoute>
+        },
+        {
+          path: "enrollment",
+          element:
+            <ProtectedRoute>
+              <AdminEnrollmentPage />
             </ProtectedRoute>
         },
         {

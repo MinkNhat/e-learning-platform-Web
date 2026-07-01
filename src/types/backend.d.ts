@@ -43,10 +43,8 @@ export interface IUser {
     name: string;
     email: string;
     password?: string;
-    age: number;
-    gender: string;
-    address: string;
-    role?: {
+    phone?: string;
+    role?: string | {
         _id: string;
         name: string;
     }
@@ -107,9 +105,9 @@ export interface ICategory {
     _id?: string;
     name: string;
     description?: string;
-    slug: string;
-    level: number;
-    isActive: boolean;
+    slug?: string;
+    level?: number;
+    isActive?: boolean;
     parent?: ICategory | string;
     icon?: string;
 
@@ -228,21 +226,12 @@ export interface IMyLessonDetail {
     };
 }
 
-export interface ISubscribers {
-    _id?: string;
-    name?: string;
-    email?: string;
-    skills: string[];
-    createdBy?: string;
-    isDeleted?: boolean;
-    deletedAt?: boolean | null;
-    createdAt?: string;
-    updatedAt?: string;
-}
-
 export interface IEnrollment {
     _id?: string;
     course: string | ICourse;
+    user?: string | Pick<IUser, '_id' | 'name' | 'email'>;
+    order?: string | IOrder;
+    isActive?: boolean;
     progress: number;
     completedLessonsCount?: number;
     totalLessonsSnapshot?: number;
@@ -258,6 +247,18 @@ export interface IEnrollment {
     updatedAt?: string;
 }
 
+export interface IOrder {
+    _id?: string;
+    user: string | Pick<IUser, '_id' | 'name' | 'email'>;
+    course: string | Pick<ICourse, '_id' | 'title' | 'price'>;
+    amount: number;
+    currency?: string;
+    payment?: string | IPayment;
+    status: 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled';
+    createdAt?: string;
+    updatedAt?: string;
+}
+
 export interface ICreatePayment {
     courseId: string;
     provider: string;
@@ -268,13 +269,36 @@ export interface IResponsePayment {
     orderId: string;
 }
 
+export interface IPayment {
+    _id?: string;
+    order: string | IOrder;
+    user: string | Pick<IUser, '_id' | 'name' | 'email'>;
+    provider: string;
+    amount: number;
+    currency?: string;
+    status: 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled';
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface IDashboardStats {
+    users: number;
+    courses: number;
+    publishedCourses: number;
+    draftCourses: number;
+    blogs: number;
+    enrollments: number;
+    orders: number;
+    payments: number;
+}
+
 export interface IBlog {
     _id?: string;
     title: string;
     slug?: string;
     description?: string;
     content: string;
-    coverImage?: string;
+    coverImage?: string | File;
     author?: string | Pick<IUser, '_id' | 'name'> & { avatar?: string };
     category: string | ICategory;
     status?: 'draft' | 'published' | 'archived';

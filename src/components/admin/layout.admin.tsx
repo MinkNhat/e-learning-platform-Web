@@ -4,8 +4,11 @@ import {
     AppStoreIcon,
     BookOpenIcon,
     CodeIcon,
+    ContentWritingIcon,
     Menu01Icon,
+    Money01Icon,
     MoreHorizontalIcon,
+    OnlineLearning01Icon,
     TagsIcon,
     UserIcon,
 } from '@/config/hugeicons';
@@ -56,6 +59,21 @@ const LayoutAdmin = () => {
                 && item.method === ALL_PERMISSIONS.CATEGORIES.GET_PAGINATE.method
             )
 
+            const viewBlog = permissions.find(item =>
+                item.apiPath === ALL_PERMISSIONS.BLOGS.GET_PAGINATE.apiPath
+                && item.method === ALL_PERMISSIONS.BLOGS.GET_PAGINATE.method
+            )
+
+            const viewPayment = permissions.find(item =>
+                item.apiPath === ALL_PERMISSIONS.PAYMENTS.GET_PAGINATE.apiPath
+                && item.method === ALL_PERMISSIONS.PAYMENTS.GET_PAGINATE.method
+            )
+
+            const viewEnrollment = permissions.find(item =>
+                item.apiPath === ALL_PERMISSIONS.ENROLLMENTS.GET_PAGINATE.apiPath
+                && item.method === ALL_PERMISSIONS.ENROLLMENTS.GET_PAGINATE.method
+            )
+
             const viewPermission = permissions.find(item =>
                 item.apiPath === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE.apiPath
                 && item.method === ALL_PERMISSIONS.PERMISSIONS.GET_PAGINATE.method
@@ -81,6 +99,21 @@ const LayoutAdmin = () => {
                     label: <Link to='/admin/category'>Category</Link>,
                     key: '/admin/category',
                     icon: <TagsIcon />
+                }] : []),
+                ...(viewBlog ? [{
+                    label: <Link to='/admin/blog'>Blog</Link>,
+                    key: '/admin/blog',
+                    icon: <ContentWritingIcon />
+                }] : []),
+                ...(viewPayment ? [{
+                    label: <Link to='/admin/payment'>Payment</Link>,
+                    key: '/admin/payment',
+                    icon: <Money01Icon />
+                }] : []),
+                ...(viewEnrollment ? [{
+                    label: <Link to='/admin/enrollment'>Enrollment</Link>,
+                    key: '/admin/enrollment',
+                    icon: <OnlineLearning01Icon />
                 }] : []),
                 ...(viewPermission ? [{
                     label: <Link to='/admin/permission'>Permission</Link>,

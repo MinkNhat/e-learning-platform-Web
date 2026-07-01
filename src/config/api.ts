@@ -1,4 +1,4 @@
-import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, ICourseSearchResult, IPermission, IRole, ISubscribers, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment, IMyLessonDetail, IBlog, IComment, IQuiz, IQuestion, IQuizAttempt } from '@/types/backend';
+import { IBackendRes, IAccount, IUser, IModelPaginate, IGetAccount, ICourse, ICourseSearchResult, IPermission, IRole, IModule, ILesson, ICategory, ICreatePayment, IResponsePayment, IEnrollment, IMyLessonDetail, IBlog, IComment, IQuiz, IQuestion, IQuizAttempt, IDashboardStats, IPayment } from '@/types/backend';
 import axios from 'config/axios-customize';
 
 /**
@@ -46,11 +46,11 @@ export const callUploadSingleFile = (file: any, folderType: string) => {
  * 
 Module User
  */
-export const callCreateUser = (user: IUser) => {
+export const callCreateUser = (user: Partial<IUser>) => {
     return axios.post<IBackendRes<IUser>>('/api/v1/users', { ...user })
 }
 
-export const callUpdateUser = (user: IUser, id: string) => {
+export const callUpdateUser = (user: Partial<IUser>, id: string) => {
     return axios.patch<IBackendRes<IUser>>(`/api/v1/users/${id}`, { ...user })
 }
 
@@ -207,16 +207,42 @@ export const callFetchBlogs = (query = '') => {
     return axios.get<IBackendRes<IModelPaginate<IBlog>>>(`/api/v1/blogs?${query}`);
 };
 
+export const callFetchBlogsForManage = (query = '') => {
+    return axios.get<IBackendRes<IModelPaginate<IBlog>>>(`/api/v1/blogs/manage?${query}`);
+};
+
 export const callFetchBlog = (idOrSlug: string) => {
     return axios.get<IBackendRes<IBlog>>(`/api/v1/blogs/${idOrSlug}`);
 };
 
 export const callCreateBlog = (blog: IBlog) => {
-    return axios.post<IBackendRes<IBlog>>('/api/v1/blogs', blog);
+    const formData = new FormData();
+    Object.entries(blog).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            formData.append(key, value as any);
+        }
+    });
+
+    return axios.post<IBackendRes<IBlog>>('/api/v1/blogs', formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
 };
 
 export const callUpdateBlog = (id: string, blog: Partial<IBlog>) => {
-    return axios.patch<IBackendRes<IBlog>>(`/api/v1/blogs/${id}`, blog);
+    const formData = new FormData();
+    Object.entries(blog).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            formData.append(key, value as any);
+        }
+    });
+
+    return axios.patch<IBackendRes<IBlog>>(`/api/v1/blogs/${id}`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
 };
 
 export const callDeleteBlog = (id: string) => {
@@ -257,6 +283,10 @@ export const callDeleteQuiz = (id: string) => {
 
 export const callFetchQuiz = (id: string) => {
     return axios.get<IBackendRes<IQuiz>>(`/api/v1/quizzes/${id}`);
+};
+
+export const callFetchQuizForManage = (id: string) => {
+    return axios.get<IBackendRes<IQuiz>>(`/api/v1/quizzes/${id}/manage`);
 };
 
 
@@ -346,6 +376,10 @@ export const callCreatePayment = (payment: ICreatePayment) => {
     return axios.post<IBackendRes<IResponsePayment>>('/api/v1/payments/create', { ...payment })
 }
 
+export const callFetchPayments = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IPayment>>>(`/api/v1/payments?${query}`);
+}
+
 /**
  * 
 Module Me
@@ -374,30 +408,18 @@ export const callEnrollFreeCourse = (courseId: string) => {
     return axios.post<IBackendRes<IEnrollment>>('/api/v1/enrollments/free', { courseId });
 }
 
+export const callFetchEnrollments = (query: string) => {
+    return axios.get<IBackendRes<IModelPaginate<IEnrollment>>>(`/api/v1/enrollments?${query}`);
+}
+
+export const callCreateEnrollment = (payload: { userId: string; courseId: string }) => {
+    return axios.post<IBackendRes<IEnrollment>>('/api/v1/enrollments', payload);
+}
+
 /**
  * 
-Module Subscribers
+Module Dashboard
  */
-export const callCreateSubscriber = (subs: ISubscribers) => {
-    return axios.post<IBackendRes<ISubscribers>>('/api/v1/subscribers', { ...subs })
-}
-
-export const callGetSubscriberSkills = () => {
-    return axios.post<IBackendRes<ISubscribers>>('/api/v1/subscribers/skills')
-}
-
-export const callUpdateSubscriber = (subs: ISubscribers) => {
-    return axios.patch<IBackendRes<ISubscribers>>(`/api/v1/subscribers`, { ...subs })
-}
-
-export const callDeleteSubscriber = (id: string) => {
-    return axios.delete<IBackendRes<ISubscribers>>(`/api/v1/subscribers/${id}`);
-}
-
-export const callFetchSubscriber = (query: string) => {
-    return axios.get<IBackendRes<IModelPaginate<ISubscribers>>>(`/api/v1/subscribers?${query}`);
-}
-
-export const callFetchSubscriberById = (id: string) => {
-    return axios.get<IBackendRes<ISubscribers>>(`/api/v1/subscribers/${id}`);
+export const callFetchDashboardStats = () => {
+    return axios.get<IBackendRes<IDashboardStats>>('/api/v1/dashboard/stats');
 }
