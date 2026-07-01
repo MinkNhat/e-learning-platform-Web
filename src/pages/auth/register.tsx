@@ -12,9 +12,9 @@ const RegisterPage = () => {
     const [isSubmit, setIsSubmit] = useState(false);
 
     const onFinish = async (values: IUser) => {
-        const { name, email, password, age, gender, address } = values;
+        const { name, email, password } = values;
         setIsSubmit(true);
-        const res = await callRegister(name, email, password as string, +age, gender, address);
+        const res = await callRegister(name, email, password as string);
         setIsSubmit(false);
         if (res?.data?._id) {
             message.success('Đăng ký tài khoản thành công!');
@@ -74,43 +74,6 @@ const RegisterPage = () => {
                             >
                                 <Input.Password />
                             </Form.Item>
-                            <Form.Item
-                                labelCol={{ span: 24 }} //whole column
-                                label="Tuổi"
-                                name="age"
-                                rules={[{ required: true, message: 'Tuổi không được để trống!' }]}
-                            >
-                                <Input type='number' />
-                            </Form.Item>
-
-
-                            <Form.Item
-                                labelCol={{ span: 24 }} //whole column
-                                name="gender"
-                                label="Giới tính"
-                                rules={[{ required: true, message: 'Giới tính không được để trống!' }]}
-                            >
-                                <Select
-                                    // placeholder="Select a option and change input text above"
-                                    // onChange={onGenderChange}
-                                    allowClear
-                                >
-                                    <Option value="male">Nam</Option>
-                                    <Option value="female">Nữ</Option>
-                                    <Option value="other">Khác</Option>
-                                </Select>
-                            </Form.Item>
-
-
-                            <Form.Item
-                                labelCol={{ span: 24 }} //whole column
-                                label="Địa chỉ"
-                                name="address"
-                                rules={[{ required: true, message: 'Địa chỉ không được để trống!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
-
                             < Form.Item
                             // wrapperCol={{ offset: 6, span: 16 }}
                             >

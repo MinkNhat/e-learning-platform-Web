@@ -230,7 +230,7 @@ const Header = (props: any) => {
                                                                             key={category._id ?? category.slug}
                                                                             to={`/explore/${category.slug}`}
                                                                             className={`${styles['explore-menu-item']} ${hoveredRootSlug === category.slug ? styles['active'] : ''}`}
-                                                                            onMouseEnter={() => setHoveredRootSlug(category.slug)}
+                                                                            onMouseEnter={() => category.slug && setHoveredRootSlug(category.slug)}
                                                                             onClick={() => {
                                                                                 clearHeaderSearch();
                                                                                 setIsExploreMenuOpen(false);

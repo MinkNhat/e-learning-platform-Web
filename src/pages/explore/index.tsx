@@ -91,7 +91,7 @@ const ExploreOverviewPage = () => {
                             key={category._id ?? category.slug}
                             type="button"
                             className={`${styles["filter-pill"]} ${popularCategorySlug === category.slug ? styles["active"] : ''}`}
-                            onClick={() => setPopularCategorySlug(category.slug)}
+                            onClick={() => category.slug && setPopularCategorySlug(category.slug)}
                         >
                             {category.name}
                         </button>
