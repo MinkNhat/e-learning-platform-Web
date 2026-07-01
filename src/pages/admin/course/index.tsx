@@ -6,7 +6,6 @@ import { ActionType, ProColumns, ProFormSelect } from '@ant-design/pro-component
 import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
 import { useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
-import dayjs from 'dayjs';
 import { callDeleteCourse } from "@/config/api";
 import queryString from 'query-string';
 import { fetchCourse } from "@/redux/slice/courseSlide";
@@ -74,6 +73,12 @@ const CoursePage = () => {
             },
         },
         {
+            title: 'Authors',
+            dataIndex: 'authors',
+            hideInSearch: true,
+            render: (_dom, entity) => entity.authors?.map(author => author.name).join(', ') || '-',
+        },
+        {
             title: 'Level',
             dataIndex: 'level',
             renderFormItem: (item, props, form) => (
@@ -82,11 +87,9 @@ const CoursePage = () => {
                     mode="multiple"
                     allowClear
                     valueEnum={{
-                        INTERN: 'INTERN',
-                        FRESHER: 'FRESHER',
-                        JUNIOR: 'JUNIOR',
-                        MIDDLE: 'MIDDLE',
-                        SENIOR: 'SENIOR',
+                        beginner: 'beginner',
+                        intermediate: 'intermediate',
+                        advanced: 'advanced',
                     }}
                     placeholder="Chọn level"
                 />
@@ -101,31 +104,6 @@ const CoursePage = () => {
                         {entity.isPublished ? "PUBLISHED" : "DRAFT"}
                     </Tag>
                 </>
-            },
-            hideInSearch: true,
-        },
-
-        {
-            title: 'CreatedAt',
-            dataIndex: 'createdAt',
-            width: 200,
-            sorter: true,
-            render: (text, record, index, action) => {
-                return (
-                    <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
-                )
-            },
-            hideInSearch: true,
-        },
-        {
-            title: 'UpdatedAt',
-            dataIndex: 'updatedAt',
-            width: 200,
-            sorter: true,
-            render: (text, record, index, action) => {
-                return (
-                    <>{dayjs(record.updatedAt).format('DD-MM-YYYY HH:mm:ss')}</>
-                )
             },
             hideInSearch: true,
         },
@@ -182,7 +160,7 @@ const CoursePage = () => {
     ];
 
     const buildQuery = (params: any, sort: any, filter: any) => {
-        const clone = { ...params };
+        const clone = { ...params, includeUnpublished: true };
         if (clone.title) clone.title = `/${clone.title}/i`;
         if (clone.price) clone.price = `/${clone.price}/i`;
         if (clone?.level?.length) {
@@ -198,13 +176,6 @@ const CoursePage = () => {
         if (sort && sort.price) {
             sortBy = sort.price === 'ascend' ? "sort=price" : "sort=-price";
         }
-        if (sort && sort.createdAt) {
-            sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
-        }
-        if (sort && sort.updatedAt) {
-            sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt" : "sort=-updatedAt";
-        }
-
         //mặc định sort theo updatedAt
         if (Object.keys(sortBy).length === 0) {
             temp = `${temp}&sort=-updatedAt`;

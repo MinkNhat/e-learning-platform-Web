@@ -21,7 +21,6 @@ const AdminCourseDetail = () => {
                 setIsLoading(true);
                 try {
                     const res = await callFetchCourseForManage(courseId);
-                    console.log('Course detail response:', res);
                     if (res?.data) {
                         setCourseDetail(res.data);
                     }
@@ -46,7 +45,10 @@ const AdminCourseDetail = () => {
                     setCourseDetail(res.data);
                 }
             } catch (error) {
-                console.error('Error refetching course', error);
+                notification.error({
+                    message: 'Lỗi',
+                    description: 'Không thể tải lại thông tin khóa học'
+                });
             }
         }
     };
@@ -82,7 +84,7 @@ const AdminCourseDetail = () => {
                                 </Tag>
                             </Descriptions.Item>
                             <Descriptions.Item label="Languages">{courseDetail.languages?.join(', ')}</Descriptions.Item>
-                            <Descriptions.Item label="Authors">{courseDetail.authors?.join(', ')}</Descriptions.Item>
+                            <Descriptions.Item label="Authors">{courseDetail.authors?.map(author => author.name).join(', ')}</Descriptions.Item>
                             <Descriptions.Item label="Created At">
                                 {dayjs(courseDetail.createdAt).format('DD-MM-YYYY HH:mm:ss')}
                             </Descriptions.Item>
@@ -94,7 +96,7 @@ const AdminCourseDetail = () => {
                        
                     </Card>
 
-                    <Card title="Lessons" headStyle={{ borderBottom: 'none' }} bodyStyle={{ paddingTop: 0 }}>
+                    <Card title="Course outline" headStyle={{ borderBottom: 'none' }} bodyStyle={{ paddingTop: 0 }}>
                         {courseId && (
                             <ModuleManager
                                 courseId={courseId}

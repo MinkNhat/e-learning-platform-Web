@@ -72,6 +72,15 @@ const UserPage = () => {
             dataIndex: 'email',
             sorter: true,
         },
+        {
+            title: 'Role',
+            dataIndex: 'role',
+            hideInSearch: true,
+            render: (_text, record) => {
+                if (!record.role) return '-';
+                return typeof record.role === 'string' ? record.role : record.role.name;
+            },
+        },
 
         {
             title: 'CreatedAt',
@@ -81,18 +90,6 @@ const UserPage = () => {
             render: (text, record, index, action) => {
                 return (
                     <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
-                )
-            },
-            hideInSearch: true,
-        },
-        {
-            title: 'UpdatedAt',
-            dataIndex: 'updatedAt',
-            width: 200,
-            sorter: true,
-            render: (text, record, index, action) => {
-                return (
-                    <>{dayjs(record.updatedAt).format('DD-MM-YYYY HH:mm:ss')}</>
                 )
             },
             hideInSearch: true,
@@ -166,10 +163,6 @@ const UserPage = () => {
         if (sort && sort.createdAt) {
             sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
         }
-        if (sort && sort.updatedAt) {
-            sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt" : "sort=-updatedAt";
-        }
-
         //mặc định sort theo updatedAt
         if (Object.keys(sortBy).length === 0) {
             temp = `${temp}&sort=-updatedAt`;

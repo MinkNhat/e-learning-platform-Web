@@ -5,7 +5,6 @@ import { Add01Icon, Delete02Icon, PencilEdit02Icon } from "@/config/hugeicons";
 import { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Popconfirm, Space, Tag, message, notification } from "antd";
 import { useState, useRef, createElement } from 'react';
-import dayjs from 'dayjs';
 import { callDeleteCategory } from "@/config/api";
 import queryString from 'query-string';
 import { fetchCategory } from "@/redux/slice/categorySlide";
@@ -76,12 +75,6 @@ const CategoryPage = () => {
             hideInSearch: true,
         },
         {
-            title: 'Slug',
-            dataIndex: 'slug',
-            sorter: true,
-            hideInSearch: true,
-        },
-        {
             title: 'Level',
             dataIndex: 'level',
             sorter: true,
@@ -106,30 +99,6 @@ const CategoryPage = () => {
                 if (!entity.parent) return '-';
                 if (typeof entity.parent === 'string') return entity.parent;
                 return entity.parent.name;
-            },
-            hideInSearch: true,
-        },
-        {
-            title: 'CreatedAt',
-            dataIndex: 'createdAt',
-            width: 200,
-            sorter: true,
-            render: (_text, record) => {
-                return (
-                    <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
-                )
-            },
-            hideInSearch: true,
-        },
-        {
-            title: 'UpdatedAt',
-            dataIndex: 'updatedAt',
-            width: 200,
-            sorter: true,
-            render: (_text, record) => {
-                return (
-                    <>{dayjs(record.updatedAt).format('DD-MM-YYYY HH:mm:ss')}</>
-                )
             },
             hideInSearch: true,
         },
@@ -195,13 +164,6 @@ const CategoryPage = () => {
         if (sort && sort.level) {
             sortBy = sort.level === 'ascend' ? "sort=level" : "sort=-level";
         }
-        if (sort && sort.createdAt) {
-            sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
-        }
-        if (sort && sort.updatedAt) {
-            sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt" : "sort=-updatedAt";
-        }
-
         //mặc định sort theo updatedAt
         if (Object.keys(sortBy).length === 0) {
             temp = `${temp}&sort=-updatedAt`;

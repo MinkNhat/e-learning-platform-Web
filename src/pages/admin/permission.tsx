@@ -89,18 +89,6 @@ const PermissionPage = () => {
             sorter: true,
         },
         {
-            title: 'CreatedAt',
-            dataIndex: 'createdAt',
-            width: 200,
-            sorter: true,
-            render: (text, record, index, action) => {
-                return (
-                    <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
-                )
-            },
-            hideInSearch: true,
-        },
-        {
             title: 'UpdatedAt',
             dataIndex: 'updatedAt',
             width: 200,
@@ -185,9 +173,6 @@ const PermissionPage = () => {
         }
         if (sort && sort.module) {
             sortBy = sort.module === 'ascend' ? "sort=module" : "sort=-module";
-        }
-        if (sort && sort.createdAt) {
-            sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
         }
         if (sort && sort.updatedAt) {
             sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt" : "sort=-updatedAt";

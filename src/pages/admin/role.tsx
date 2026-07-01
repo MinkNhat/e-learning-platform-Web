@@ -74,15 +74,10 @@ const RolePage = () => {
             hideInSearch: true,
         },
         {
-            title: 'CreatedAt',
-            dataIndex: 'createdAt',
-            width: 200,
-            sorter: true,
-            render: (text, record, index, action) => {
-                return (
-                    <>{dayjs(record.createdAt).format('DD-MM-YYYY HH:mm:ss')}</>
-                )
-            },
+            title: 'Permission count',
+            dataIndex: 'permissions',
+            align: 'center',
+            render: (_text, record) => Array.isArray(record.permissions) ? record.permissions.length : 0,
             hideInSearch: true,
         },
         {
@@ -90,7 +85,7 @@ const RolePage = () => {
             dataIndex: 'updatedAt',
             width: 200,
             sorter: true,
-            render: (text, record, index, action) => {
+            render: (_text, record) => {
                 return (
                     <>{dayjs(record.updatedAt).format('DD-MM-YYYY HH:mm:ss')}</>
                 )
@@ -158,13 +153,9 @@ const RolePage = () => {
         if (sort && sort.name) {
             sortBy = sort.name === 'ascend' ? "sort=name" : "sort=-name";
         }
-        if (sort && sort.createdAt) {
-            sortBy = sort.createdAt === 'ascend' ? "sort=createdAt" : "sort=-createdAt";
-        }
         if (sort && sort.updatedAt) {
             sortBy = sort.updatedAt === 'ascend' ? "sort=updatedAt" : "sort=-updatedAt";
         }
-
         //mặc định sort theo updatedAt
         if (Object.keys(sortBy).length === 0) {
             temp = `${temp}&sort=-updatedAt`;
