@@ -46,7 +46,10 @@ const HomePage = () => {
 
     const fetchHighlightCourses = async () => {
         setIsLoadingHighlightCourses(true);
-        const res = await callFetchCourse(buildCourseQuery());
+        const res = await callFetchCourse(buildCourseQuery({ 
+            filter: JSON.stringify({ price: { $ne: null, $gt: 0 } }) 
+        }));
+
         if (res && res.data) {
             setHighlightCourses(res.data.result);
         }
