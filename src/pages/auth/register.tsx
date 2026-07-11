@@ -1,24 +1,22 @@
-import { Button, Divider, Form, Input, Row, Select, message, notification } from 'antd';
-import { useState } from 'react';
+import { Button, Form, Input, message, notification } from 'antd';
+import { useState, type MouseEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { callRegister } from 'config/api';
 import styles from 'styles/auth.module.scss';
-import { IUser } from '@/types/backend';
-const { Option } = Select;
-
+import { navigateWithAuthTransition } from './auth-transition';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
     const [isSubmit, setIsSubmit] = useState(false);
 
-    const onFinish = async (values: IUser) => {
+    const onFinish = async (values: { name: string; email: string; password: string }) => {
         const { name, email, password } = values;
         setIsSubmit(true);
         const res = await callRegister(name, email, password as string);
         setIsSubmit(false);
         if (res?.data?._id) {
             message.success('Đăng ký tài khoản thành công!');
-            navigate('/login')
+            navigateWithAuthTransition(navigate, '/login', 'to-login');
         } else {
             notification.error({
                 message: "Có lỗi xảy ra",
@@ -29,65 +27,78 @@ const RegisterPage = () => {
         }
     };
 
+    const handleLoginNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+        navigateWithAuthTransition(navigate, '/login', 'to-login');
+    };
 
     return (
-        <div className={styles["register-page"]} >
+        <div className={styles["register-page"]}>
+            <main>
+                <div className={styles["login-container"]}>
+                    <section className={styles["login-shell"]}>
+                        <div className={styles["login-panel"]}>
+                            <div className={styles.heading}>
+                                <h3 className={styles["text-large"]}>Đăng ký</h3>
+                            </div>
 
-            <main className={styles.main} >
-                <div className={styles.container} >
-                    <section className={styles.wrapper} >
-                        <div className={styles.heading} >
-                            <h2 className={`${styles.text} ${styles["text-large"]}`}> Đăng Ký Tài Khoản </h2>
-                            < Divider />
+                            <Form
+                                name="register"
+                                onFinish={onFinish}
+                                autoComplete="off"
+                                layout="vertical"
+                                className={styles["login-form"]}
+                            >
+                                <Form.Item
+                                    label="Họ tên"
+                                    name="name"
+                                    rules={[{ required: true, message: 'Họ tên không được để trống!' }]}
+                                >
+                                    <Input size="large" />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Email"
+                                    name="email"
+                                    rules={[
+                                        { required: true, message: 'Email không được để trống!' },
+                                        { type: 'email', message: 'Email không hợp lệ!' }
+                                    ]}
+                                >
+                                    <Input size="large" />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Mật khẩu"
+                                    name="password"
+                                    rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
+                                    hasFeedback
+                                >
+                                    <Input.Password size="large" />
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        loading={isSubmit}
+                                        block
+                                        size="large"
+                                        className={styles["login-submit"]}
+                                    >
+                                        Đăng ký
+                                    </Button>
+                                </Form.Item>
+
+                                <p className={styles["signup-copy"]}>Đã có tài khoản?
+                                    <Link to='/login' onClick={handleLoginNavigate}> Đăng nhập</Link>
+                                </p>
+                            </Form>
                         </div>
-                        < Form<IUser>
-                            name="basic"
-                            // style={{ maxWidth: 600, margin: '0 auto' }}
-                            onFinish={onFinish}
-                            autoComplete="off"
-                        >
-                            <Form.Item
-                                labelCol={{ span: 24 }} //whole column
-                                label="Họ tên"
-                                name="name"
-                                rules={[{ required: true, message: 'Họ tên không được để trống!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
 
-
-                            <Form.Item
-                                labelCol={{ span: 24 }
-                                } //whole column
-                                label="Email"
-                                name="email"
-                                rules={[{ required: true, message: 'Email không được để trống!' }]}
-                            >
-                                <Input type='email' />
-                            </Form.Item>
-
-                            <Form.Item
-                                labelCol={{ span: 24 }} //whole column
-                                label="Mật khẩu"
-                                name="password"
-                                rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
-                            < Form.Item
-                            // wrapperCol={{ offset: 6, span: 16 }}
-                            >
-                                <Button type="primary" htmlType="submit" loading={isSubmit} >
-                                    Đăng ký
-                                </Button>
-                            </Form.Item>
-                            <Divider> Or </Divider>
-                            <p className="text text-normal" > Đã có tài khoản ?
-                                <span>
-                                    <Link to='/login' > Đăng Nhập </Link>
-                                </span>
-                            </p>
-                        </Form>
+                        <aside className={styles["login-visual"]} aria-label="Không gian học tập trực tuyến">
+                            <img src="/register.png" alt="Minh họa đăng ký nền phong cảnh" />
+                        </aside>
                     </section>
                 </div>
             </main>

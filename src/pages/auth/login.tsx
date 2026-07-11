@@ -1,11 +1,12 @@
 import { Button, Divider, Form, Input, message, notification } from 'antd';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { callLogin } from 'config/api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUserLoginInfo } from '@/redux/slice/accountSlide';
 import styles from 'styles/auth.module.scss';
 import { useAppSelector } from '@/redux/hooks';
+import { navigateWithAuthTransition } from './auth-transition';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -18,9 +19,7 @@ const LoginPage = () => {
     const callback = params?.get("callback");
 
     useEffect(() => {
-        //đã login => redirect to '/'
         if (isAuthenticated) {
-            // navigate('/');
             window.location.href = '/';
         }
     }, [])
@@ -45,55 +44,116 @@ const LoginPage = () => {
         }
     };
 
+    const handleGoogleLogin = () => {
+        if (callback) {
+            sessionStorage.setItem('google_login_callback', callback);
+        } else {
+            sessionStorage.removeItem('google_login_callback');
+        }
+
+        const redirectUri = `${window.location.origin}/auth/google/success`;
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/google?redirect_uri=${encodeURIComponent(redirectUri)}`;
+    };
+
+    const handleUnavailableProvider = (provider: string) => {
+        notification.info({
+            message: `${provider} chưa khả dụng`,
+            description: 'Bạn có thể đăng nhập bằng email hoặc Google.',
+            duration: 3
+        });
+    };
+
+    const handleRegisterNavigate = (event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+        navigateWithAuthTransition(navigate, '/register', 'to-register');
+    };
+
 
     return (
         <div className={styles["login-page"]}>
-            <main className={styles.main}>
-                <div className={styles.container}>
-                    <section className={styles.wrapper}>
-                        <div className={styles.heading}>
-                            <h2 className={`${styles.text} ${styles["text-large"]}`}>Đăng Nhập</h2>
-                            <Divider />
+            <main>
+                <div className={styles["login-container"]}>
+                    <section className={styles["login-shell"]}>
+                        <div className={styles["login-panel"]}>
+                            <div className={styles.heading}>
+                                <h3 className={styles["text-large"]}>Đăng nhập</h3>
+                            </div>
+                            <Form
+                                name="basic"
+                                onFinish={onFinish}
+                                autoComplete="off"
+                                layout="vertical"
+                                className={styles["login-form"]}
+                            >
+                                <Form.Item
+                                    label="Email"
+                                    name="username"
+                                    rules={[
+                                        { required: true, message: 'Email không được để trống!' },
+                                        { type: 'email', message: 'Email không hợp lệ!' }
+                                    ]}
+                                >
+                                    <Input size="large" />
+                                </Form.Item>
 
+                                <Form.Item
+                                    label="Mật khẩu"
+                                    name="password"
+                                    rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
+                                >
+                                    <Input.Password size="large" />
+                                </Form.Item>
+
+                                <Form.Item>
+                                    <Button
+                                        type="primary"
+                                        htmlType="submit"
+                                        loading={isSubmit}
+                                        block
+                                        size="large"
+                                        className={styles["login-submit"]}
+                                    >
+                                        Đăng nhập
+                                    </Button>
+                                </Form.Item>
+
+                                <p className={styles["signup-copy"]}>Chưa có tài khoản?
+                                    <Link to='/register' onClick={handleRegisterNavigate}> Đăng ký</Link>
+                                </p>
+
+                                <Divider className={styles["social-divider"]}>Hoặc đăng nhập bằng</Divider>
+
+                                <div className={styles["social-options"]}>
+                                    <button
+                                        type="button"
+                                        className={styles["social-button"]}
+                                        onClick={handleGoogleLogin}
+                                        aria-label="Đăng nhập với Google"
+                                    >
+                                        <img src="/google.svg" alt="" className={styles["provider-icon"]} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={styles["social-button"]}
+                                        onClick={() => handleUnavailableProvider('Apple')}
+                                        aria-label="Đăng nhập với Apple"
+                                    >
+                                        <img src="/apple.svg" alt="" className={styles["provider-icon"]} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={styles["social-button"]}
+                                        onClick={() => handleUnavailableProvider('Facebook')}
+                                        aria-label="Đăng nhập với Facebook"
+                                    >
+                                        <img src="/facebook.svg" alt="" className={styles["provider-icon"]} />
+                                    </button>
+                                </div>
+                            </Form>
                         </div>
-                        <Form
-                            name="basic"
-                            // style={{ maxWidth: 600, margin: '0 auto' }}
-                            onFinish={onFinish}
-                            autoComplete="off"
-                        >
-                            <Form.Item
-                                labelCol={{ span: 24 }} //whole column
-                                label="Email"
-                                name="username"
-                                rules={[{ required: true, message: 'Email không được để trống!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
-
-                            <Form.Item
-                                labelCol={{ span: 24 }} //whole column
-                                label="Mật khẩu"
-                                name="password"
-                                rules={[{ required: true, message: 'Mật khẩu không được để trống!' }]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
-
-                            <Form.Item
-                            // wrapperCol={{ offset: 6, span: 16 }}
-                            >
-                                <Button type="primary" htmlType="submit" loading={isSubmit}>
-                                    Đăng nhập
-                                </Button>
-                            </Form.Item>
-                            <Divider>Or</Divider>
-                            <p className="text text-normal">Chưa có tài khoản ?
-                                <span>
-                                    <Link to='/register' > Đăng Ký </Link>
-                                </span>
-                            </p>
-                        </Form>
+                        <aside className={styles["login-visual"]} aria-label="Không gian học tập trực tuyến">
+                            <img src="/login.png" alt="Minh họa đăng nhập nền phong cảnh" />
+                        </aside>
                     </section>
                 </div>
             </main>

@@ -14,6 +14,7 @@ import {
     ArrowRight01Icon as ArrowRight01Glyph,
     Award01Icon as Award01Glyph,
     BitcoinCircleIcon as BitcoinCircleGlyph,
+    Book02Icon as Book02Glyph,
     BookOpen01Icon as BookOpen01Glyph,
     BookOpen02Icon as BookOpen02Glyph,
     BookOpenIcon as BookOpenGlyph,
@@ -48,6 +49,7 @@ import {
     CompassIcon as CompassGlyph,
     ComputerIcon as ComputerGlyph,
     ComputerPhoneSyncIcon as ComputerPhoneSyncGlyph,
+    ComputerVideoIcon as ComputerVideoGlyph,
     Configuration01Icon as Configuration01Glyph,
     ContentWritingIcon as ContentWritingGlyph,
     CpuIcon as CpuGlyph,
@@ -89,6 +91,7 @@ import {
     LaptopIcon as LaptopGlyph,
     LegalDocument01Icon as LegalDocument01Glyph,
     // LifeLineIcon as LifeLineGlyph,
+    LockPasswordIcon as LockPasswordGlyph,
     Logout01Icon as Logout01Glyph,
     MagicWand01Icon as MagicWand01Glyph,
     // MakeupIcon as MakeupGlyph,
@@ -126,6 +129,7 @@ import {
     Presentation01Icon as Presentation01Glyph,
     ProjectorIcon as ProjectorGlyph,
     // PublicIcon as PublicGlyph,
+    Quiz02Icon as Quiz02Glyph,
     RefreshIcon as RefreshGlyph,
     Restaurant01Icon as Restaurant01Glyph,
     Rocket01Icon as Rocket01Glyph,
@@ -217,6 +221,7 @@ export const ArrowLeft01Icon = createIcon(ArrowLeft01Glyph);
 export const ArrowRight01Icon = createIcon(ArrowRight01Glyph);
 export const Award01Icon = createIcon(Award01Glyph);
 export const BitcoinCircleIcon = createIcon(BitcoinCircleGlyph);
+export const Book02Icon = createIcon(Book02Glyph);
 export const BookOpen01Icon = createIcon(BookOpen01Glyph);
 export const BookOpen02Icon = createIcon(BookOpen02Glyph);
 export const BookOpenIcon = createIcon(BookOpenGlyph);
@@ -251,6 +256,7 @@ export const ColorPickerIcon = createIcon(ColorPickerGlyph);
 export const CompassIcon = createIcon(CompassGlyph);
 export const ComputerIcon = createIcon(ComputerGlyph);
 export const ComputerPhoneSyncIcon = createIcon(ComputerPhoneSyncGlyph);
+export const ComputerVideoIcon = createIcon(ComputerVideoGlyph);
 export const Configuration01Icon = createIcon(Configuration01Glyph);
 export const ContentWritingIcon = createIcon(ContentWritingGlyph);
 export const CpuIcon = createIcon(CpuGlyph);
@@ -292,6 +298,7 @@ export const Invoice01Icon = createIcon(Invoice01Glyph);
 export const LaptopIcon = createIcon(LaptopGlyph);
 export const LegalDocument01Icon = createIcon(LegalDocument01Glyph);
 // export const LifeLineIcon = createIcon(LifeLineGlyph);
+export const LockPasswordIcon = createIcon(LockPasswordGlyph);
 export const Logout01Icon = createIcon(Logout01Glyph);
 export const MagicWand01Icon = createIcon(MagicWand01Glyph);
 // export const MakeupIcon = createIcon(MakeupGlyph);
@@ -328,6 +335,7 @@ export const PlayCircleIcon = createIcon(PlayCircleGlyph);
 // export const PrayingHandsIcon = createIcon(PrayingHandsGlyph);
 export const Presentation01Icon = createIcon(Presentation01Glyph);
 export const ProjectorIcon = createIcon(ProjectorGlyph);
+export const Quiz02Icon = createIcon(Quiz02Glyph);
 // export const PublicIcon = createIcon(PublicGlyph);
 export const RefreshIcon = createIcon(RefreshGlyph);
 export const Restaurant01Icon = createIcon(Restaurant01Glyph);
