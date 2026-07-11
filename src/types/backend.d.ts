@@ -21,6 +21,8 @@ export interface IAccount {
         _id: string;
         email: string;
         name: string;
+        authProvider?: 'local' | 'google' | 'facebook' | 'apple';
+        avatar?: string;
         role: {
             _id: string;
             name: string;
@@ -42,6 +44,8 @@ export interface IUser {
     _id?: string;
     name: string;
     email: string;
+    authProvider?: 'local' | 'google' | 'facebook' | 'apple';
+    avatar?: string;
     password?: string;
     phone?: string;
     role?: string | {

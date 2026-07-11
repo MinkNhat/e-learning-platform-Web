@@ -19,6 +19,8 @@ interface IState {
         _id: string;
         email: string;
         name: string;
+        authProvider?: 'local' | 'google' | 'facebook' | 'apple';
+        avatar?: string;
         role: {
             _id: string;
             name: string;
@@ -43,6 +45,8 @@ const initialState: IState = {
         _id: "",
         email: "",
         name: "",
+        authProvider: "local",
+        avatar: "",
         role: {
             _id: "",
             name: "",
@@ -69,6 +73,8 @@ export const accountSlide = createSlice({
             state.user._id = action?.payload?._id;
             state.user.email = action.payload.email;
             state.user.name = action.payload.name;
+            state.user.authProvider = action.payload.authProvider;
+            state.user.avatar = action.payload.avatar;
             state.user.role = action?.payload?.role;
             state.user.permissions = action?.payload?.permissions;
         },
@@ -79,6 +85,8 @@ export const accountSlide = createSlice({
                 _id: "",
                 email: "",
                 name: "",
+                authProvider: "local",
+                avatar: "",
                 role: {
                     _id: "",
                     name: "",
@@ -108,6 +116,8 @@ export const accountSlide = createSlice({
                 state.user._id = action?.payload?.user?._id;
                 state.user.email = action.payload.user?.email;
                 state.user.name = action.payload.user?.name;
+                state.user.authProvider = action.payload.user?.authProvider;
+                state.user.avatar = action.payload.user?.avatar;
                 state.user.role = action?.payload?.user?.role;
                 state.user.permissions = action?.payload?.user?.permissions;
             }

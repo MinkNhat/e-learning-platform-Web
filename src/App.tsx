@@ -12,6 +12,7 @@ import NotFound from 'components/share/not.found';
 import Loading from 'components/share/loading';
 import LoginPage from 'pages/auth/login';
 import RegisterPage from 'pages/auth/register';
+import GoogleLoginSuccessPage from 'pages/auth/google-success';
 import LayoutAdmin from 'components/admin/layout.admin';
 import ProtectedRoute from 'components/share/protected-route.ts';
 import Header from 'components/client/header.client';
@@ -72,6 +73,7 @@ export default function App() {
     if (
       window.location.pathname === '/login'
       || window.location.pathname === '/register'
+      || window.location.pathname === '/auth/google/success'
     )
       return;
     dispatch(fetchAccount())
@@ -196,6 +198,11 @@ export default function App() {
     {
       path: "/register",
       element: <RegisterPage />,
+    },
+
+    {
+      path: "/auth/google/success",
+      element: <GoogleLoginSuccessPage />,
     },
   ]);
 
