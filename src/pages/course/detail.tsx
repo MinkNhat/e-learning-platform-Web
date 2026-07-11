@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { ICourse } from "@/types/backend";
+import { ICourse, ICourseItem } from "@/types/backend";
 import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image, Button, Spin, Empty, notification, Tag, Statistic, Skeleton } from "antd";
-import { Award01Icon, Calendar01Icon, Certificate01Icon, CheckmarkCircle02Icon, ComputerIcon, File01Icon, MobileNavigator01Icon, PlayCircleIcon, UserAdd01Icon, UserIcon } from "@/config/hugeicons";
+import { Award01Icon, Book02Icon, Calendar01Icon, Certificate01Icon, CheckmarkCircle02Icon, ComputerIcon, ComputerVideoIcon, File01Icon, LockPasswordIcon, MobileNavigator01Icon, Quiz02Icon, UserAdd01Icon, UserIcon } from "@/config/hugeicons";
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { callCheckEnrollment, callCreatePayment, callEnrollFreeCourse, callFetchCourseById, callFetchMyRecentLesson } from "@/config/api";
@@ -26,6 +26,49 @@ const ClientCourseDetailPage = (props: any) => {
 
     const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
         return authors?.map(author => `${author.name}`).join(", ") ?? "";
+    }
+
+    const renderCourseItemIcon = (item: ICourseItem) => {
+        const lessonType = item.type === 'quiz' ? 'quiz' : item.lessonType;
+        const commonStyle = { fontSize: 15, color: '#374151' };
+
+        if (lessonType === 'video') return <ComputerVideoIcon style={commonStyle} />;
+        if (lessonType === 'article') return <Book02Icon style={commonStyle} />;
+        return <Quiz02Icon style={commonStyle} />;
+    }
+
+    const renderCourseItem = (item: ICourseItem) => {
+        const title = item.type === 'quiz' ? item.title : item.name;
+        const durationString = item.type === 'quiz' ? '' : item.metadata?.durationString;
+
+        return (
+            <div
+                style={{
+                    width: '100%',
+                    display: 'grid',
+                    gridTemplateColumns: '20px minmax(0, 1fr) 20px',
+                    alignItems: 'center',
+                    gap: 10,
+                }}
+            >
+                {renderCourseItemIcon(item)}
+                <div style={{ minWidth: 0 }}>
+                    <Text style={{ display: 'block', fontSize: 13, lineHeight: 1.4 }}>
+                        {title}
+                    </Text>
+                    {durationString && (
+                        <Text type="secondary" style={{ display: 'block', fontSize: 12, lineHeight: 1.4, marginTop: 2 }}>
+                            {durationString}
+                        </Text>
+                    )}
+                </div>
+                {item.isFree === false ? (
+                    <LockPasswordIcon style={{ fontSize: 15, color: '#374151' }} />
+                ) : (
+                    <span />
+                )}
+            </div>
+        );
     }
 
     const fetchDetailCourse = async () => {
@@ -346,15 +389,7 @@ const ClientCourseDetailPage = (props: any) => {
                                                             dataSource={module.items || []}
                                                             renderItem={(item) => (
                                                                 <List.Item style={{ padding: '8px 0' }}>
-                                                                    <Space>
-                                                                        <PlayCircleIcon
-                                                                            style={{ color: 'var(--primary-color)', fontSize: 13 }}
-                                                                        />
-                                                                        <Text style={{ fontSize: 13 }}>
-                                                                            {item.type === 'quiz' ? item.title : item.name}
-                                                                        </Text>
-                                                                        {item.type === 'quiz' && <Tag color="purple">Quiz</Tag>}
-                                                                    </Space>
+                                                                    {renderCourseItem(item)}
                                                                 </List.Item>
                                                             )}
                                                         />
@@ -364,7 +399,7 @@ const ClientCourseDetailPage = (props: any) => {
                                         />
                                     </Card>
 
-                                    {course._id && <Card title="Bình luận" style={{ marginBottom: 20, borderRadius: 16 }}>
+                                    {course._id && isEnrolled === true && <Card title="Bình luận" style={{ marginBottom: 20, borderRadius: 16 }}>
                                         <CommentSection targetType="course" targetId={course._id} />
                                     </Card>}
                                 </Col>

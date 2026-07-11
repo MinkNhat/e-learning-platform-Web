@@ -1,12 +1,15 @@
 import { callCompleteMyLesson, callFetchMyLessonById } from '@/config/api';
 import { getYoutubeId } from '@/config/utils';
-import { ILesson, IMyLessonDetail } from '@/types/backend';
+import { ILesson, IMyLessonDetail, IQuiz } from '@/types/backend';
 import {
+    Book02Icon,
     CheckmarkCircle02Icon,
+    ComputerVideoIcon,
     Sad01Icon,
     ArrowLeft01Icon,
     Menu01Icon,
     ArrowRight01Icon,
+    Quiz02Icon,
 } from '@/config/hugeicons';
 import { Button, Collapse, Drawer, Empty, Progress, Skeleton, Space, Typography, notification } from 'antd';
 import { type UIEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -14,6 +17,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styles from 'styles/lesson.module.scss';
 
 const { Text } = Typography;
+
+type LessonNavigationItem = ILesson | (IQuiz & { progressStatus?: ILesson['progressStatus'] });
 
 declare global {
     interface Window {
@@ -99,6 +104,14 @@ const ClientLessonDetailPage = () => {
             navigate(`/my-course/${targetCourseSlug}/${target._id}`);
         }
     }, [course?.slug, courseSlug, navigate]);
+
+    const renderLessonTypeIcon = (type: LessonNavigationItem['type'], isActive = false) => {
+        const className = `${styles["lesson-nav-icon"]} ${isActive ? styles["lesson-nav-icon-active"] : ''}`;
+
+        if (type === 'video') return <ComputerVideoIcon className={className} />;
+        if (type === 'article') return <Book02Icon className={className} />;
+        return <Quiz02Icon className={className} />;
+    }
 
     const handleToggleLessonNavigation = useCallback(() => {
         setIsBottomBarVisible(true);
@@ -207,18 +220,26 @@ const ClientLessonDetailPage = () => {
         }
     }, [youtubeId, handleVideoEnded]);
 
-    const renderLessonButton = (item: ILesson, index: number) => {
+    const renderLessonButton = (item: LessonNavigationItem, index: number) => {
+        const isQuiz = item.type === 'quiz';
         const isActive = item._id === lesson?._id;
+        const durationString = item.type === 'quiz' ? '' : item.metadata?.durationString;
         return (
             <button
-                key={item._id || `${item.name}-${index}`}
+                key={item._id || `${isQuiz ? item.title : item.name}-${index}`}
                 type="button"
-                onClick={() => handleNavigateLesson(item)}
-                className={`${styles["lesson-nav-item"]} ${isActive ? styles["lesson-nav-item-active"] : ''}`}
+                onClick={() => {
+                    if (item.type !== 'quiz') handleNavigateLesson(item);
+                }}
+                disabled={isQuiz}
+                className={`${styles["lesson-nav-item"]} ${isActive ? styles["lesson-nav-item-active"] : ''} ${isQuiz ? styles["lesson-nav-item-disabled"] : ''}`}
             >
-                <span className={styles["lesson-nav-index"]}>{index + 1}</span>
-                <span className={styles["lesson-nav-title"]}>{item.name}</span>
-                {item.progressStatus === 'completed' && <CheckmarkCircle02Icon />}
+                {renderLessonTypeIcon(item.type, isActive)}
+                <span className={styles["lesson-nav-content"]}>
+                    <span className={styles["lesson-nav-title"]}>{isQuiz ? item.title : item.name}</span>
+                    {durationString && <span className={styles["lesson-nav-duration"]}>{durationString}</span>}
+                </span>
+                {item.progressStatus === 'completed' && <CheckmarkCircle02Icon className={styles["lesson-nav-complete"]} />}
             </button>
         )
     }
@@ -237,13 +258,13 @@ const ClientLessonDetailPage = () => {
                     className={styles["lesson-module-collapse"]}
                     bordered={false}
                     items={courseModules.map((moduleItem) => {
-                        const lessons = (moduleItem.items || []).filter((item) => item.type === 'lesson').sort((a, b) => (a.order || 0) - (b.order || 0)).map((item: any) => ({ ...item, type: item.lessonType } as ILesson));
+                        const lessons = (moduleItem.items || []).sort((a, b) => (a.order || 0) - (b.order || 0)).map((item: any) => item.type === 'quiz' ? item as LessonNavigationItem : ({ ...item, type: item.lessonType } as LessonNavigationItem));
                         return {
                             key: moduleItem._id || moduleItem.name,
                             label: (
                                 <span className={styles["lesson-module-label"]}>
                                     <span>{moduleItem.name}</span>
-                                    <small>{lessons.length} bài học</small>
+                                    <small>{lessons.length} nội dung</small>
                                 </span>
                             ),
                             children: lessons.length > 0

@@ -233,52 +233,63 @@
     text-align: left;
     cursor: pointer;
     display: grid;
-    grid-template-columns: 26px minmax(0, 1fr) 18px;
+    grid-template-columns: 22px minmax(0, 1fr) 18px;
     gap: 10px;
     align-items: center;
     color: #667085;
-    transition: color 0.2s ease, box-shadow 0.2s ease;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
-        color: var(--primary-color-dark);
+        background: #f4fbf7;
     }
 
-    :global(.anticon) {
-        color: var(--primary-color-dark);
-    }
 }
 
 .lesson-nav-item-active {
-    color: var(--text-primary-dark);
+    background: #eaf7f0;
     box-shadow: inset 3px 0 0 var(--primary-color);
 }
 
-.lesson-nav-index {
-    width: 26px;
-    height: 26px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #f2f5f8;
-    color: #667085;
-    font-size: 12px;
-    font-weight: 800;
+.lesson-nav-item-disabled {
+    cursor: default;
 }
 
-.lesson-nav-item-active .lesson-nav-index {
+.lesson-nav-icon {
+    color: #667085;
+    font-size: 18px;
+}
+
+.lesson-nav-icon-active {
     color: var(--primary-color-dark);
 }
 
-.lesson-nav-title {
+.lesson-nav-complete {
+    color: var(--primary-color-dark);
+    font-size: 18px;
+}
+
+.lesson-nav-content {
     min-width: 0;
-    color: currentColor;
+}
+
+.lesson-nav-title {
+    display: block;
+    min-width: 0;
+    color: #667085;
     line-height: 1.45;
     font-size: 14px;
 }
 
+.lesson-nav-duration {
+    display: block;
+    color: #98a2b3;
+    font-size: 12px;
+    line-height: 1.35;
+    margin-top: 2px;
+}
+
 .lesson-nav-item-active .lesson-nav-title {
-    color: var(--text-primary-dark);
+    color: #667085;
     font-weight: 700;
 }
 
