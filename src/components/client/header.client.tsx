@@ -26,6 +26,7 @@ const getActiveNavPath = (pathname: string) => {
 const Header = (props: any) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
     const user = useAppSelector(state => state.account.user);
@@ -45,6 +46,45 @@ const Header = (props: any) => {
     const [searchClearSignal, setSearchClearSignal] = useState(0);
 
     const clearHeaderSearch = () => setSearchClearSignal((currentSignal) => currentSignal + 1);
+
+    const resolveAvatarUrl = (avatar?: string, authProvider?: string) => {
+        if (!avatar) return undefined;
+
+        const normalizedAvatar = avatar.trim();
+        if (!normalizedAvatar) return undefined;
+
+        const hasAbsoluteUrl = /^[a-z][a-z\d+\-.]*:/i.test(normalizedAvatar) || normalizedAvatar.startsWith('//');
+        if (hasAbsoluteUrl) return normalizedAvatar;
+
+        const normalizedProvider = authProvider?.trim().toLowerCase();
+        if (normalizedProvider && normalizedProvider !== 'local') {
+            return normalizedAvatar;
+        }
+
+        if (!BASE_URL) return normalizedAvatar;
+
+        if (normalizedAvatar.startsWith('/')) {
+            return `${BASE_URL}${normalizedAvatar}`;
+        }
+
+        if (normalizedAvatar.startsWith('upload/')) {
+            return `${BASE_URL}/${normalizedAvatar}`;
+        }
+
+        return `${BASE_URL}/upload/avatars/${normalizedAvatar}`;
+    };
+
+    const renderAvatarSrc = (avatar?: string, authProvider?: string) => {
+        const avatarUrl = resolveAvatarUrl(avatar, authProvider);
+        if (!avatarUrl) return undefined;
+
+        const normalizedProvider = authProvider?.trim().toLowerCase();
+        if (normalizedProvider && normalizedProvider !== 'local') {
+            return <img src={avatarUrl} alt={user?.name || 'avatar'} referrerPolicy="no-referrer" />;
+        }
+
+        return avatarUrl;
+    };
 
     useEffect(() => {
         setCurrent(getActiveNavPath(location.pathname));
@@ -153,21 +193,33 @@ const Header = (props: any) => {
         }
     }
 
+    const canAccessAdmin = user?.role?.name?.trim().toUpperCase() !== 'USER';
     const itemsDropdown: MenuProps['items'] = [
+        ...(canAccessAdmin
+            ? [{
+                label: 'Trang Quản Trị',
+                key: 'admin',
+                icon: <MoreHorizontalIcon />
+            }]
+            : []),
         {
-            label: <Link to={"/admin"} onClick={clearHeaderSearch}>Trang Quản Trị</Link>,
-            key: 'admin',
-            icon: <MoreHorizontalIcon />
-        },
-        {
-            label: 
-                <label style={{ cursor: 'pointer' }} onClick={() => handleLogout()}>
-                    Đăng xuất
-                </label>,
+            label: 'Đăng xuất',
             key: 'logout',
             icon: <Logout01Icon />
         },
     ];
+
+    const onAccountDropdownClick: MenuProps['onClick'] = ({ key }) => {
+        if (key === 'admin') {
+            clearHeaderSearch();
+            navigate('/admin');
+            return;
+        }
+
+        if (key === 'logout') {
+            handleLogout();
+        }
+    };
 
     const loginItem: MenuProps['items'] = [
         {
@@ -179,6 +231,14 @@ const Header = (props: any) => {
     const mobileAccountItems: MenuProps['items'] = isAuthenticated
         ? itemsDropdown
         : loginItem;
+
+    const onMobileAccountClick: MenuProps['onClick'] = (info) => {
+        onClick(info);
+
+        if (isAuthenticated) {
+            onAccountDropdownClick(info);
+        }
+    };
 
     return (
         <>
@@ -306,10 +366,10 @@ const Header = (props: any) => {
                                     {isAuthenticated === false ?
                                         <Link to={'/login'} onClick={clearHeaderSearch}>Đăng Nhập</Link>
                                         :
-                                        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
+                                        <Dropdown menu={{ items: itemsDropdown, onClick: onAccountDropdownClick }} trigger={['click']}>
                                             <Space style={{ cursor: "pointer" }}>
                                                 <span>Welcome {user?.name}</span>
-                                                <Avatar> {user?.name?.substring(0, 2)?.toUpperCase()} </Avatar>
+                                                <Avatar src={renderAvatarSrc(user?.avatar, user?.authProvider)}> {user?.name?.substring(0, 2)?.toUpperCase()} </Avatar>
                                             </Space>
                                         </Dropdown>
                                     }
@@ -348,7 +408,7 @@ const Header = (props: any) => {
                 />
                 <Divider className={styles['mobile-menu-divider']} />
                 <Menu
-                    onClick={onClick}
+                    onClick={onMobileAccountClick}
                     selectedKeys={[current]}
                     mode="vertical"
                     items={mobileAccountItems}
