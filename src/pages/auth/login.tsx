@@ -13,7 +13,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const [isSubmit, setIsSubmit] = useState(false);
     const dispatch = useDispatch();
-    const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
+    const isAuthenticated = useAppSelector(state => state.account.isAuthenticated); 
 
     const location = useLocation();
     const callback = new URLSearchParams(location.search).get("callback");
@@ -52,9 +52,11 @@ const LoginPage = () => {
             sessionStorage.removeItem(SOCIAL_LOGIN_CALLBACK_KEY);
         }
 
-        const authUrl = new URL(`/api/v1/auth/${provider}`, import.meta.env.VITE_BACKEND_URL);
+        console.log('>>> MODE: ', import.meta.env.MODE);
+        console.log('>>> backend url: ', import.meta.env.VITE_BACKEND_URL);
+        // const authUrl = new URL(`/api/v1/auth/${provider}`, import.meta.env.VITE_BACKEND_URL);
 
-        window.location.href = authUrl.toString();
+        window.location.href = `/api/v1/auth/${provider}`;
     };
 
     const handleUnavailableProvider = (provider: string) => {
