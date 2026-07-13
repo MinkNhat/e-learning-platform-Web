@@ -7,7 +7,7 @@ import { setUserLoginInfo } from '@/redux/slice/accountSlide';
 import styles from 'styles/auth.module.scss';
 import { useAppSelector } from '@/redux/hooks';
 import { navigateWithAuthTransition } from './auth-transition';
-import { SOCIAL_AUTH_CALLBACK_PATH, SOCIAL_LOGIN_CALLBACK_KEY, type SocialProvider } from './social-auth';
+import { SOCIAL_LOGIN_CALLBACK_KEY, type SocialProvider } from './social-auth';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -52,11 +52,7 @@ const LoginPage = () => {
             sessionStorage.removeItem(SOCIAL_LOGIN_CALLBACK_KEY);
         }
 
-        const redirectUrl = new URL(SOCIAL_AUTH_CALLBACK_PATH, window.location.origin);
-        redirectUrl.searchParams.set('provider', provider);
-
         const authUrl = new URL(`/api/v1/auth/${provider}`, import.meta.env.VITE_BACKEND_URL);
-        authUrl.searchParams.set('redirect_uri', redirectUrl.toString());
 
         window.location.href = authUrl.toString();
     };

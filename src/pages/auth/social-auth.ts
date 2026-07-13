@@ -1,6 +1,5 @@
 export type SocialProvider = 'google' | 'facebook';
 
-export const SOCIAL_AUTH_CALLBACK_PATH = '/auth/social/success';
 export const SOCIAL_LOGIN_CALLBACK_KEY = 'social_login_callback';
 
 export const SOCIAL_PROVIDER_LABEL: Record<SocialProvider, string> = {
