@@ -4,8 +4,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { callFetchAccount } from '@/config/api';
 import { setUserLoginInfo } from '@/redux/slice/accountSlide';
+import { getSocialProvider, SOCIAL_LOGIN_CALLBACK_KEY, SOCIAL_PROVIDER_LABEL } from './social-auth';
 
-const GoogleLoginSuccessPage = () => {
+const SocialLoginSuccessPage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -17,21 +18,25 @@ const GoogleLoginSuccessPage = () => {
             hasHandledLogin.current = true;
 
             const accessToken = searchParams.get('access_token');
-            const callback = sessionStorage.getItem('google_login_callback') || '/';
+            const errorMessage = searchParams.get('error');
+            const provider = getSocialProvider(searchParams.get('provider'));
+            const providerLabel = SOCIAL_PROVIDER_LABEL[provider];
+            const callback = sessionStorage.getItem(SOCIAL_LOGIN_CALLBACK_KEY) || '/';
 
-            if (!accessToken) {
-                message.error('Đăng nhập Google thất bại.');
+            sessionStorage.removeItem(SOCIAL_LOGIN_CALLBACK_KEY);
+
+            if (errorMessage || !accessToken) {
+                message.error(errorMessage || `Đăng nhập ${providerLabel} thất bại.`);
                 navigate('/login', { replace: true });
                 return;
             }
 
             localStorage.setItem('access_token', accessToken);
-            sessionStorage.removeItem('google_login_callback');
 
             const res = await callFetchAccount();
             if (res?.data?.user) {
                 dispatch(setUserLoginInfo(res.data.user));
-                message.success('Đăng nhập Google thành công!');
+                message.success(`Đăng nhập ${providerLabel} thành công!`);
                 navigate(callback, { replace: true });
                 return;
             }
@@ -51,4 +56,4 @@ const GoogleLoginSuccessPage = () => {
     );
 };
 
-export default GoogleLoginSuccessPage;
+export default SocialLoginSuccessPage;

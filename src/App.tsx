@@ -12,7 +12,7 @@ import NotFound from 'components/share/not.found';
 import Loading from 'components/share/loading';
 import LoginPage from 'pages/auth/login';
 import RegisterPage from 'pages/auth/register';
-import GoogleLoginSuccessPage from 'pages/auth/google-success';
+import SocialLoginSuccessPage from 'pages/auth/social-success';
 import LayoutAdmin from 'components/admin/layout.admin';
 import ProtectedRoute from 'components/share/protected-route.ts';
 import Header from 'components/client/header.client';
@@ -73,7 +73,7 @@ export default function App() {
     if (
       window.location.pathname === '/login'
       || window.location.pathname === '/register'
-      || window.location.pathname === '/auth/google/success'
+      || window.location.pathname === '/auth/social/success'
     )
       return;
     dispatch(fetchAccount())
@@ -201,8 +201,8 @@ export default function App() {
     },
 
     {
-      path: "/auth/google/success",
-      element: <GoogleLoginSuccessPage />,
+      path: "/auth/social/success",
+      element: <SocialLoginSuccessPage />,
     },
   ]);
 

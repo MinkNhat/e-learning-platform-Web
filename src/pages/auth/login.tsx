@@ -7,6 +7,7 @@ import { setUserLoginInfo } from '@/redux/slice/accountSlide';
 import styles from 'styles/auth.module.scss';
 import { useAppSelector } from '@/redux/hooks';
 import { navigateWithAuthTransition } from './auth-transition';
+import { SOCIAL_AUTH_CALLBACK_PATH, SOCIAL_LOGIN_CALLBACK_KEY, type SocialProvider } from './social-auth';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -14,9 +15,8 @@ const LoginPage = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
 
-    let location = useLocation();
-    let params = new URLSearchParams(location.search);
-    const callback = params?.get("callback");
+    const location = useLocation();
+    const callback = new URLSearchParams(location.search).get("callback");
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -29,6 +29,7 @@ const LoginPage = () => {
         setIsSubmit(true);
         const res = await callLogin(username, password);
         setIsSubmit(false);
+
         if (res?.data) {
             localStorage.setItem('access_token', res.data.access_token);
             dispatch(setUserLoginInfo(res.data.user))
@@ -44,21 +45,26 @@ const LoginPage = () => {
         }
     };
 
-    const handleGoogleLogin = () => {
+    const handleSocialLogin = (provider: SocialProvider) => {
         if (callback) {
-            sessionStorage.setItem('google_login_callback', callback);
+            sessionStorage.setItem(SOCIAL_LOGIN_CALLBACK_KEY, callback);
         } else {
-            sessionStorage.removeItem('google_login_callback');
+            sessionStorage.removeItem(SOCIAL_LOGIN_CALLBACK_KEY);
         }
 
-        const redirectUri = `${window.location.origin}/auth/google/success`;
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/google?redirect_uri=${encodeURIComponent(redirectUri)}`;
+        const redirectUrl = new URL(SOCIAL_AUTH_CALLBACK_PATH, window.location.origin);
+        redirectUrl.searchParams.set('provider', provider);
+
+        const authUrl = new URL(`/api/v1/auth/${provider}`, import.meta.env.VITE_BACKEND_URL);
+        authUrl.searchParams.set('redirect_uri', redirectUrl.toString());
+
+        window.location.href = authUrl.toString();
     };
 
     const handleUnavailableProvider = (provider: string) => {
         notification.info({
             message: `${provider} chưa khả dụng`,
-            description: 'Bạn có thể đăng nhập bằng email hoặc Google.',
+            description: 'Bạn có thể đăng nhập bằng phương thức khác trong thời gian chờ đợi',
             duration: 3
         });
     };
@@ -127,7 +133,7 @@ const LoginPage = () => {
                                     <button
                                         type="button"
                                         className={styles["social-button"]}
-                                        onClick={handleGoogleLogin}
+                                        onClick={() => handleSocialLogin('google')}
                                         aria-label="Đăng nhập với Google"
                                     >
                                         <img src="/google.svg" alt="" className={styles["provider-icon"]} />
@@ -143,7 +149,7 @@ const LoginPage = () => {
                                     <button
                                         type="button"
                                         className={styles["social-button"]}
-                                        onClick={() => handleUnavailableProvider('Facebook')}
+                                        onClick={() => handleSocialLogin('facebook')}
                                         aria-label="Đăng nhập với Facebook"
                                     >
                                         <img src="/facebook.svg" alt="" className={styles["provider-icon"]} />
