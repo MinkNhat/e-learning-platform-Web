@@ -52,11 +52,8 @@ const LoginPage = () => {
             sessionStorage.removeItem(SOCIAL_LOGIN_CALLBACK_KEY);
         }
 
-        console.log('>>> MODE: ', import.meta.env.MODE);
-        console.log('>>> backend url: ', import.meta.env.VITE_BACKEND_URL);
-        // const authUrl = new URL(`/api/v1/auth/${provider}`, import.meta.env.VITE_BACKEND_URL);
-
-        window.location.href = `/api/v1/auth/${provider}`;
+        const authUrl = new URL(`/api/v1/auth/${provider}`, import.meta.env.VITE_BACKEND_URL);
+        window.location.href = authUrl.toString();
     };
 
     const handleUnavailableProvider = (provider: string) => {
