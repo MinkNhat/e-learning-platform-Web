@@ -79,6 +79,8 @@ export const ALL_PERMISSIONS = {
         GET_MY_RECENT_LESSON: { method: "GET", apiPath: '/api/v1/me/courses/:courseSlug/continue', module: "ME" },
         GET_MY_LESSON: { method: "GET", apiPath: '/api/v1/me/lessons/:lessonId', module: "ME" },
         COMPLETE_MY_LESSON: { method: "PATCH", apiPath: '/api/v1/me/lessons/:lessonId/complete', module: "ME" },
+        UPDATE_MY_AVATAR: { method: "PATCH", apiPath: '/api/v1/me/avatar', module: "ME" },
+        CHANGE_MY_PASSWORD: { method: "PATCH", apiPath: '/api/v1/me/password', module: "ME" },
     }
 }
 

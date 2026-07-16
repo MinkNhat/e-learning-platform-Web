@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
-import { Avatar, Button, Empty, Image, Skeleton, Tabs, Typography, Upload, message, notification } from 'antd';
+import { Avatar, Button, Empty, Form, Image, Input, Modal, Skeleton, Tabs, Typography, Upload, message, notification } from 'antd';
 import type { UploadProps } from 'antd';
 import {
     BookOpen02Icon,
@@ -11,19 +11,26 @@ import {
     ContentWritingIcon,
     FireIcon,
     LockPasswordIcon,
+    Logout01Icon,
     Megaphone01Icon,
     SecurityLockIcon,
     UserLove01Icon,
     UserMultipleIcon,
 } from '@/config/hugeicons';
-import { callFetchBlogs, callFetchCourse, callFetchMyCourses, callFetchUserById, callUpdateUser, callUploadSingleFile } from '@/config/api';
-import { setUserLoginInfo } from '@/redux/slice/accountSlide';
+import { callChangePassword, callFetchBlogs, callFetchCourse, callFetchMyCourses, callFetchUserById, callLogout, callUpdateMyAvatar } from '@/config/api';
+import { setLogoutAction, setUserLoginInfo } from '@/redux/slice/accountSlide';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { IBlog, ICourse, IEnrollment, IUser } from '@/types/backend';
 import { resolveUserAvatarUrl } from '@/config/utils';
 import styles from '@/styles/profile.module.scss';
 
 const { Text, Title } = Typography;
+
+type ChangePasswordFormValues = {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+};
 
 dayjs.locale('vi');
 
@@ -95,6 +102,7 @@ const MinimalItemCard = ({
 
 const ProfilePage = () => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const user = useAppSelector(state => state.account.user);
     const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
     const { userId } = useParams<{ userId?: string }>();
@@ -112,6 +120,10 @@ const ProfilePage = () => {
     const [loadingAuthoredCourses, setLoadingAuthoredCourses] = useState(true);
     const [loadingBlogs, setLoadingBlogs] = useState(true);
     const [loadingProfile, setLoadingProfile] = useState(false);
+    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [changingPassword, setChangingPassword] = useState(false);
+    const [loggingOut, setLoggingOut] = useState(false);
+    const [passwordForm] = Form.useForm<ChangePasswordFormValues>();
 
     const displayUser = isOwnProfile ? user : profileUser;
 
@@ -237,21 +249,29 @@ const ProfilePage = () => {
             return Upload.LIST_IGNORE;
         }
 
+        if (file.size > 2 * 1024 * 1024) {
+            message.error('Ảnh đại diện không được vượt quá 2MB');
+            return Upload.LIST_IGNORE;
+        }
+
         setUploadingAvatar(true);
         try {
-            const uploadRes = await callUploadSingleFile(file, 'avatar');
-            const fileName = uploadRes?.data?.fileName;
+            const updateRes = await callUpdateMyAvatar(file);
+            const nextAvatar = updateRes?.data?.avatar;
 
-            if (!fileName) {
-                throw new Error('Missing uploaded file name');
+            if (!nextAvatar) {
+                notification.error({
+                    message: 'Lỗi',
+                    description: updateRes?.message || 'Không thể cập nhật ảnh đại diện',
+                });
+                return Upload.LIST_IGNORE;
             }
-
-            const updateRes = await callUpdateUser({ avatar: fileName }, user._id);
-            const nextAvatar = updateRes?.data?.avatar ?? fileName;
 
             dispatch(setUserLoginInfo({
                 ...user,
                 avatar: nextAvatar,
+                role: updateRes.data?.role ?? user.role,
+                permissions: user.permissions,
             }));
             message.success('Cập nhật ảnh đại diện thành công');
         } catch (error) {
@@ -264,6 +284,46 @@ const ProfilePage = () => {
         }
 
         return Upload.LIST_IGNORE;
+    };
+
+    const handleChangePassword = async (values: ChangePasswordFormValues) => {
+        setChangingPassword(true);
+        try {
+            const res = await callChangePassword(values.currentPassword, values.newPassword);
+
+            if (res?.data) {
+                message.success('Đổi mật khẩu thành công');
+                passwordForm.resetFields();
+                setPasswordModalOpen(false);
+                return;
+            }
+
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: res?.message || 'Không thể đổi mật khẩu',
+            });
+        } catch (error) {
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: 'Không thể đổi mật khẩu',
+            });
+        } finally {
+            setChangingPassword(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        setLoggingOut(true);
+        try {
+            const res = await callLogout();
+            if (res?.data) {
+                dispatch(setLogoutAction({}));
+                message.success('Đăng xuất thành công');
+                navigate('/');
+            }
+        } finally {
+            setLoggingOut(false);
+        }
     };
 
     const renderCourseList = () => {
@@ -406,9 +466,24 @@ const ProfilePage = () => {
 
                     {isOwnProfile &&
                         <div className={styles['profile-actions']}>
-                            <Button icon={<LockPasswordIcon />}>Đổi mật khẩu</Button>
+                            <Button
+                                icon={<LockPasswordIcon />}
+                                onClick={() => setPasswordModalOpen(true)}
+                            >
+                                Đổi mật khẩu
+                            </Button>
                             <Button icon={<Megaphone01Icon />}>Cài đặt thông báo</Button>
                             <Button icon={<SecurityLockIcon />}>Bảo mật tài khoản</Button>
+                            <Button
+                                danger
+                                type="primary"
+                                icon={<Logout01Icon />}
+                                loading={loggingOut}
+                                onClick={handleLogout}
+                                className={styles['profile-logout-button']}
+                            >
+                                Đăng xuất
+                            </Button>
                         </div>
                     }
                 </aside>
@@ -494,6 +569,64 @@ const ProfilePage = () => {
                     />
                 </section>
             </section>
+
+            <Modal
+                title="Đổi mật khẩu"
+                open={passwordModalOpen}
+                okText="Cập nhật"
+                cancelText="Hủy"
+                confirmLoading={changingPassword}
+                onOk={() => passwordForm.submit()}
+                onCancel={() => {
+                    setPasswordModalOpen(false);
+                    passwordForm.resetFields();
+                }}
+                destroyOnClose
+            >
+                <Form
+                    form={passwordForm}
+                    layout="vertical"
+                    onFinish={handleChangePassword}
+                    preserve={false}
+                >
+                    <Form.Item
+                        label="Mật khẩu hiện tại"
+                        name="currentPassword"
+                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu hiện tại' }]}
+                    >
+                        <Input.Password placeholder="Nhập mật khẩu hiện tại" autoComplete="current-password" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Mật khẩu mới"
+                        name="newPassword"
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập mật khẩu mới' },
+                            { min: 6, message: 'Mật khẩu mới phải có ít nhất 6 ký tự' },
+                        ]}
+                    >
+                        <Input.Password placeholder="Nhập mật khẩu mới" autoComplete="new-password" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Xác nhận mật khẩu mới"
+                        name="confirmPassword"
+                        dependencies={['newPassword']}
+                        rules={[
+                            { required: true, message: 'Vui lòng xác nhận mật khẩu mới' },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (!value || getFieldValue('newPassword') === value) {
+                                        return Promise.resolve();
+                                    }
+
+                                    return Promise.reject(new Error('Mật khẩu xác nhận không khớp'));
+                                },
+                            }),
+                        ]}
+                    >
+                        <Input.Password placeholder="Nhập lại mật khẩu mới" autoComplete="new-password" />
+                    </Form.Item>
+                </Form>
+            </Modal>
         </main>
     );
 };

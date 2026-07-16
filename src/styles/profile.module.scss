@@ -151,6 +151,21 @@
             color: #111827 !important;
         }
     }
+
+}
+
+.profile-actions {
+    .profile-logout-button {
+        background: #e65f5f !important;
+        border-color: #e65f5f !important;
+        color: #fff !important;
+
+        &:hover {
+            background: #e45959 !important;
+            border-color: #e45959 !important;
+            color: #fff !important;
+        }
+    }
 }
 
 .profile-main {
