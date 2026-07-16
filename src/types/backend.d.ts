@@ -23,6 +23,7 @@ export interface IAccount {
         name: string;
         authProvider?: 'local' | 'google' | 'facebook' | 'apple';
         avatar?: string;
+        createdAt?: string;
         role: {
             _id: string;
             name: string;
@@ -356,4 +357,3 @@ export interface IQuizAttempt {
     startedAt?: string; 
     submittedAt?: string; 
 }
-

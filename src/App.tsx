@@ -40,6 +40,7 @@ import BlogDetailPage from './pages/blog/detail';
 import BlogAdminPage from './pages/admin/blog';
 import AdminPaymentPage from './pages/admin/payment';
 import AdminEnrollmentPage from './pages/admin/enrollment';
+import ProfilePage from './pages/profile';
 
 const LayoutClient = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,6 +94,20 @@ export default function App() {
         { path: "blog/:slug", element: <BlogDetailPage /> },
         { path: "search", element: <SearchPage /> },
         { path: "course/:slug", element: <ClientCourseDetailPage /> },
+        {
+          path: "profile",
+          element:
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+        },
+        {
+          path: "profile/:userId",
+          element:
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+        },
         {
           path: "my-courses",
           element:

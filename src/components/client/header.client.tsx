@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowRight01Icon, Logout01Icon, Menu01Icon, MoreHorizontalIcon } from '@/config/hugeicons';
+import { ArrowRight01Icon, Logout01Icon, Menu01Icon, MoreHorizontalIcon, UserIcon } from '@/config/hugeicons';
 import { Avatar, Divider, Drawer, Dropdown, Grid, MenuProps, Space, message } from 'antd';
 import { Menu } from 'antd';
 import styles from '@/styles/client.module.scss';
@@ -10,6 +10,7 @@ import { callFetchChildCategory, callFetchRootCategory, callLogout } from '@/con
 import { setLogoutAction } from '@/redux/slice/accountSlide';
 import SearchClient from './search.client';
 import { ICategory } from '@/types/backend';
+import { resolveUserAvatarUrl } from '@/config/utils';
 
 type HeaderNavItem = {
     label: string;
@@ -26,7 +27,6 @@ const getActiveNavPath = (pathname: string) => {
 const Header = (props: any) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     const isAuthenticated = useAppSelector(state => state.account.isAuthenticated);
     const user = useAppSelector(state => state.account.user);
@@ -47,44 +47,7 @@ const Header = (props: any) => {
 
     const clearHeaderSearch = () => setSearchClearSignal((currentSignal) => currentSignal + 1);
 
-    const resolveAvatarUrl = (avatar?: string, authProvider?: string) => {
-        if (!avatar) return undefined;
-
-        const normalizedAvatar = avatar.trim();
-        if (!normalizedAvatar) return undefined;
-
-        const hasAbsoluteUrl = /^[a-z][a-z\d+\-.]*:/i.test(normalizedAvatar) || normalizedAvatar.startsWith('//');
-        if (hasAbsoluteUrl) return normalizedAvatar;
-
-        const normalizedProvider = authProvider?.trim().toLowerCase();
-        if (normalizedProvider && normalizedProvider !== 'local') {
-            return normalizedAvatar;
-        }
-
-        if (!BASE_URL) return normalizedAvatar;
-
-        if (normalizedAvatar.startsWith('/')) {
-            return `${BASE_URL}${normalizedAvatar}`;
-        }
-
-        if (normalizedAvatar.startsWith('upload/')) {
-            return `${BASE_URL}/${normalizedAvatar}`;
-        }
-
-        return `${BASE_URL}/upload/avatars/${normalizedAvatar}`;
-    };
-
-    const renderAvatarSrc = (avatar?: string, authProvider?: string) => {
-        const avatarUrl = resolveAvatarUrl(avatar, authProvider);
-        if (!avatarUrl) return undefined;
-
-        const normalizedProvider = authProvider?.trim().toLowerCase();
-        if (normalizedProvider && normalizedProvider !== 'local') {
-            return <img src={avatarUrl} alt={user?.name || 'avatar'} referrerPolicy="no-referrer" />;
-        }
-
-        return avatarUrl;
-    };
+    const renderAvatarSrc = (avatar?: string) => resolveUserAvatarUrl(avatar);
 
     useEffect(() => {
         setCurrent(getActiveNavPath(location.pathname));
@@ -203,6 +166,11 @@ const Header = (props: any) => {
             }]
             : []),
         {
+            label: 'Trang cá nhân',
+            key: 'profile',
+            icon: <UserIcon />
+        },
+        {
             label: 'Đăng xuất',
             key: 'logout',
             icon: <Logout01Icon />
@@ -210,6 +178,12 @@ const Header = (props: any) => {
     ];
 
     const onAccountDropdownClick: MenuProps['onClick'] = ({ key }) => {
+        if (key === 'profile') {
+            clearHeaderSearch();
+            navigate('/profile');
+            return;
+        }
+
         if (key === 'admin') {
             clearHeaderSearch();
             navigate('/admin');
@@ -369,7 +343,7 @@ const Header = (props: any) => {
                                         <Dropdown menu={{ items: itemsDropdown, onClick: onAccountDropdownClick }} trigger={['click']}>
                                             <Space style={{ cursor: "pointer" }}>
                                                 <span>Welcome {user?.name}</span>
-                                                <Avatar src={renderAvatarSrc(user?.avatar, user?.authProvider)}> {user?.name?.substring(0, 2)?.toUpperCase()} </Avatar>
+                                                <Avatar src={renderAvatarSrc(user?.avatar)} />
                                             </Space>
                                         </Dropdown>
                                     }
