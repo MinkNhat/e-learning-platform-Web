@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { ICourse, ICourseItem } from "@/types/backend";
 import { Col, Divider, Row, Rate, Typography, Card, Space, Collapse, List, Image, Button, Spin, Empty, notification, Tag, Statistic, Skeleton } from "antd";
@@ -23,10 +23,6 @@ const ClientCourseDetailPage = (props: any) => {
     const user = useAppSelector(state => state.account.user);
     const navigate = useNavigate();
     const [isNavigating, setIsNavigating] = useState(false);
-
-    const formatAuthorsToMentions = (authors?: ICourse["authors"]) => {
-        return authors?.map(author => `${author.name}`).join(", ") ?? "";
-    }
 
     const renderCourseItemIcon = (item: ICourseItem) => {
         const lessonType = item.type === 'quiz' ? 'quiz' : item.lessonType;
@@ -224,8 +220,19 @@ const ClientCourseDetailPage = (props: any) => {
                                     <div style={{ color: '#9ca3af', fontSize: 14, marginBottom: 6 }}>
                                         <UserIcon style={{ marginRight: 4 }}/>
                                         Giảng viên:{' '}
-                                        <span style={{ color: 'var(--primary-color)', fontWeight: 600 }}>
-                                            {formatAuthorsToMentions(course.authors)}
+                                        <span>
+                                            {course.authors?.map((author, index) => (
+                                                <span key={author._id || author.name}>
+                                                    {index > 0 && <span style={{ color: '#9ca3af' }}>, </span>}
+                                                    <Link
+                                                        to={`/profile/${author._id}`}
+                                                        state={{ profileUser: author }}
+                                                        style={{ color: 'var(--primary-color)', fontWeight: 600 }}
+                                                    >
+                                                        {author.name}
+                                                    </Link>
+                                                </span>
+                                            ))}
                                         </span>
                                     </div>
 

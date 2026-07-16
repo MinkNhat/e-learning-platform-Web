@@ -12,6 +12,7 @@ import {
   ShareKnowledgeIcon,
 } from '@/config/hugeicons';
 import { callFetchBlogs, callFetchRootCategory } from '@/config/api';
+import { resolveUserAvatarUrl } from '@/config/utils';
 import { IBlog, ICategory } from '@/types/backend';
 import blogStyles from 'styles/blog.module.scss';
 
@@ -85,14 +86,6 @@ export default function BlogPage() {
     return blog.author.name;
   }
 
-  const getAuthorAvatar = (blog: IBlog) => {
-    if (!blog.author || typeof blog.author === 'string' || !blog.author.avatar) {
-      return undefined;
-    }
-
-    return `${BASE_URL}/upload/avatars/${blog.author.avatar}`;
-  }
-
   const getBlogCategoryValues = (blog: IBlog) => {
     const category = blog.category as ICategory | undefined;
     if (!category) return [];
@@ -161,9 +154,10 @@ export default function BlogPage() {
                 <article key={blog._id ?? blog.slug ?? blog.title} className={blogStyles["forum-card"]}>
                   <div className={blogStyles["forum-card-topline"]}>
                     <div className={blogStyles["forum-card-author"]}>
-                      <Avatar src={getAuthorAvatar(blog)} className={blogStyles["forum-card-avatar"]}>
-                        {getAuthorName(blog).slice(0, 2).toUpperCase()}
-                      </Avatar>
+                      <Avatar
+                        src={resolveUserAvatarUrl(typeof blog.author === 'string' ? undefined : blog.author?.avatar)}
+                        className={blogStyles["forum-card-avatar"]}
+                      />
                       <Text className={blogStyles["forum-card-author-name"]}>{getAuthorName(blog)}</Text>
                     </div>
 

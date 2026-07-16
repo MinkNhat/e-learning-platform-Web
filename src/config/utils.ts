@@ -98,6 +98,29 @@ export function getHugeIconComponent(icon?: string) {
     }> | null;
 }
 
+export function isAbsoluteUrl(value?: string) {
+    const normalizedValue = value?.trim();
+    if (!normalizedValue) return false;
+
+    return /^[a-z][a-z\d+\-.]*:/i.test(normalizedValue) || normalizedValue.startsWith('//');
+}
+
+export const DEFAULT_AVATAR_URL = '/avatar-default.png';
+
+export function resolveUserAvatarUrl(avatar?: string) {
+    const normalizedAvatar = avatar?.trim();
+    if (!normalizedAvatar) return DEFAULT_AVATAR_URL;
+
+    if (isAbsoluteUrl(normalizedAvatar)) {
+        return normalizedAvatar;
+    }
+
+    const baseUrl = import.meta.env.VITE_BACKEND_URL || '';
+    if (!baseUrl) return normalizedAvatar;
+
+    return `${baseUrl}/upload/avatar/${normalizedAvatar}`;
+}
+
 export function getYoutubeId(url?: string) {
     if (!url) return '';
     const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^?&/]+)/);

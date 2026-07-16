@@ -1,10 +1,9 @@
 import { callFetchCategoryById, callFetchChildCategory } from '@/config/api';
-import { getHugeIconComponent } from '@/config/utils';
+import { getHugeIconComponent, resolveUserAvatarUrl } from '@/config/utils';
 import type { ICategory } from '@/types/backend';
 import {
     BookOpenIcon,
     StarIcon,
-    UserMultipleIcon,
 } from '@/config/hugeicons';
 import { Avatar, Card, Col, Empty, Row, Skeleton, Space, Tabs, Tag, Typography } from 'antd';
 import { createElement, useEffect, useMemo, useState } from 'react';
@@ -25,7 +24,6 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
     const [relatedTopics, setRelatedTopics] = useState<ICategory[]>([]);
     const [courses, setCourses] = useState<CourseListState>(emptyCourseListState);
     const [isLoadingDetail, setIsLoadingDetail] = useState(false);
-    const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     useEffect(() => {
         const fetchCategoryDetail = async () => {
@@ -170,11 +168,8 @@ const ExploreCategoryDetailPage = ({ slug }: ExploreCategoryDetailPageProps) => 
                                 <div className={styles["instructor-top"]}>
                                     <Avatar
                                         size={62}
-                                        src={instructor.avatar ? `${BASE_URL}/upload/avatars/${instructor.avatar}` : undefined}
-                                        icon={!instructor.avatar ? <UserMultipleIcon /> : undefined}
-                                    >
-                                        {instructor.name.slice(0, 2).toUpperCase()}
-                                    </Avatar>
+                                        src={resolveUserAvatarUrl(instructor.avatar)}
+                                    />
                                     <div>
                                         <Typography.Title level={4}>{instructor.name}</Typography.Title>
                                         <Typography.Text>{instructor.title}</Typography.Text>

@@ -3,6 +3,7 @@ import { Avatar, Button, Dropdown, Empty, Skeleton, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { callFetchBlog } from '@/config/api';
+import { resolveUserAvatarUrl } from '@/config/utils';
 import ClientBreadcrumb from '@/components/client/breadcrumb.client';
 import CommentSection from '@/components/client/section/comment.section';
 import { IBlog } from '@/types/backend';
@@ -18,7 +19,6 @@ export default function BlogDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const [blog, setBlog] = useState<IBlog>();
   const [loading, setLoading] = useState(true);
-  const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
   useEffect(() => {
     if (slug) {
@@ -34,14 +34,6 @@ export default function BlogDetailPage() {
     }
 
     return item.author.name;
-  }
-
-  const getAuthorAvatar = (item: IBlog) => {
-    if (!item.author || typeof item.author === 'string' || !item.author.avatar) {
-      return undefined;
-    }
-
-    return `${BASE_URL}/upload/avatars/${item.author.avatar}`;
   }
 
   const getUpdatedDate = (item: IBlog) => {
@@ -71,9 +63,10 @@ export default function BlogDetailPage() {
 
         <div className={blogStyles["blog-detail-topline"]}>
           <div className={blogStyles["blog-detail-author"]}>
-            <Avatar src={getAuthorAvatar(blog)} className={blogStyles["blog-detail-avatar"]}>
-              {getAuthorName(blog).slice(0, 2).toUpperCase()}
-            </Avatar>
+            <Avatar
+              src={resolveUserAvatarUrl(typeof blog.author === 'string' ? undefined : blog.author?.avatar)}
+              className={blogStyles["blog-detail-avatar"]}
+            />
 
             <div className={blogStyles["blog-detail-author-info"]}>
               <Text className={blogStyles["blog-detail-author-name"]}>{getAuthorName(blog)}</Text>

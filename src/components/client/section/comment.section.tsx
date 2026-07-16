@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/vi';
 import { callCreateComment, callFetchComments } from '@/config/api';
+import { resolveUserAvatarUrl } from '@/config/utils';
 import { IComment } from '@/types/backend';
 import { useAppSelector } from '@/redux/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -14,8 +15,6 @@ const { Text, Paragraph } = Typography;
 dayjs.extend(relativeTime);
 dayjs.locale('vi');
 
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
-
 const getAuthorName = (comment: IComment) => {
   if (!comment.author || typeof comment.author === 'string') {
     return 'Người dùng';
@@ -23,16 +22,6 @@ const getAuthorName = (comment: IComment) => {
 
   return comment.author.name || 'Người dùng';
 };
-
-const getAuthorAvatar = (comment: IComment) => {
-  if (!comment.author || typeof comment.author === 'string' || !comment.author.avatar) {
-    return undefined;
-  }
-
-  return `${BASE_URL}/upload/avatars/${comment.author.avatar}`;
-};
-
-const getInitials = (name: string) => name.trim().slice(0, 2).toUpperCase();
 
 const getCommentTime = (comment: IComment) => {
   if (!comment.createdAt) {
@@ -122,9 +111,10 @@ export default function CommentSection({ targetType, targetId }: { targetType: I
 
     return (
       <article className={`${styles.commentItem} ${isReply ? styles.replyItem : ''}`} key={comment._id}>
-        <Avatar src={getAuthorAvatar(comment)} className={styles.commentAvatar}>
-          {getInitials(authorName)}
-        </Avatar>
+        <Avatar
+          src={resolveUserAvatarUrl(typeof comment.author === 'string' ? undefined : comment.author?.avatar)}
+          className={styles.commentAvatar}
+        />
 
         <div className={styles.commentMain}>
           <div className={styles.commentBubble}>

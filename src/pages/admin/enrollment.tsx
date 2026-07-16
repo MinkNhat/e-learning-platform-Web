@@ -3,6 +3,7 @@ import Access from "@/components/share/access";
 import { callCreateEnrollment, callFetchCourse, callFetchEnrollments, callFetchUser } from "@/config/api";
 import { Add01Icon } from "@/config/hugeicons";
 import { ALL_PERMISSIONS } from "@/config/permissions";
+import { resolveUserAvatarUrl } from "@/config/utils";
 import { ICourse, IEnrollment, IUser } from "@/types/backend";
 import { ActionType, ModalForm, ProColumns } from "@ant-design/pro-components";
 import { AutoComplete, Avatar, Button, Form, Input, Space, Tag, message, notification } from "antd";
@@ -34,7 +35,6 @@ const AdminEnrollmentPage = () => {
     const [userOptions, setUserOptions] = useState<SearchOption[]>([]);
     const [courseOptions, setCourseOptions] = useState<SearchOption[]>([]);
     const [form] = Form.useForm();
-    const BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
     const reloadTable = () => tableRef.current?.reload();
 
@@ -72,9 +72,7 @@ const AdminEnrollmentPage = () => {
                 display: `${item.name} (${item.email})`,
                 label: (
                     <Space>
-                        <Avatar size="small" src={avatar ? `${BASE_URL}/upload/avatars/${avatar}` : undefined}>
-                            {item.name?.substring(0, 2)?.toUpperCase()}
-                        </Avatar>
+                        <Avatar size="small" src={resolveUserAvatarUrl(avatar)} />
                         <span>{item.name}</span>
                         <span style={{ color: '#8c8c8c' }}>{item.email}</span>
                     </Space>

@@ -7,6 +7,7 @@ import { callCreateCourse, callFetchCategory, callFetchUser, callUpdateCourse } 
 import { ICategory, ICourse, IUser } from "@/types/backend";
 import { COURSE_LEVEL_LIST } from "@/config/enum";
 import { useAppSelector } from "@/redux/hooks";
+import { resolveUserAvatarUrl } from "@/config/utils";
 
 interface IProps {
     openModal: boolean;
@@ -180,9 +181,7 @@ const ModalCourse = (props: IProps) => {
                     value: user.name,
                     label: (
                         <Space>
-                            <Avatar size="small" src={(user as IUser & { avatar?: string }).avatar}>
-                                {user.name?.substring(0, 2)?.toUpperCase()}
-                            </Avatar>
+                            <Avatar size="small" src={resolveUserAvatarUrl((user as IUser & { avatar?: string }).avatar)} />
                             <span>{user.name}</span>
                         </Space>
                     ),
